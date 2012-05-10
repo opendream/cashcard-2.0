@@ -1,4 +1,4 @@
-package th.co.opendream.money
+package th.co.opendream.cashcard
 
 import org.springframework.dao.DataIntegrityViolationException
 

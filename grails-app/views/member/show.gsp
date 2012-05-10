@@ -1,4 +1,4 @@
-<%@ page import="th.co.opendream.money.Member" %>
+<%@ page import="th.co.opendream.cashcard.Member" %>
 
 <html>
     <head>

@@ -1,4 +1,4 @@
-<%@ page import="th.co.opendream.money.Member.Gender" %>
+<%@ page import="th.co.opendream.cashcard.Member.Gender" %>
 <html>
   <head>
     <meta name="layout" content="main" />

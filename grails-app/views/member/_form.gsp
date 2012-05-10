@@ -1,4 +1,4 @@
-<%@ page import="th.co.opendream.money.Member" %>
+<%@ page import="th.co.opendream.cashcard.Member" %>
 
 
 
@@ -55,7 +55,7 @@
 		<g:message code="member.gender.label" default="Gender" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:select name="gender" from="${th.co.opendream.money.Member$Gender?.values()}" keys="${th.co.opendream.money.Member$Gender.values()*.name()}" required="" value="${memberInstance?.gender?.name()}"/>
+	<g:select name="gender" from="${th.co.opendream.cashcard.Member$Gender?.values()}" keys="${th.co.opendream.cashcard.Member$Gender.values()*.name()}" required="" value="${memberInstance?.gender?.name()}"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: memberInstance, field: 'status', 'error')} required">
@@ -63,6 +63,6 @@
 		<g:message code="member.status.label" default="Status" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:select name="status" from="${th.co.opendream.money.Member$Status?.values()}" keys="${th.co.opendream.money.Member$Status.values()*.name()}" required="" value="${memberInstance?.status?.name()}"/>
+	<g:select name="status" from="${th.co.opendream.cashcard.Member$Status?.values()}" keys="${th.co.opendream.cashcard.Member$Status.values()*.name()}" required="" value="${memberInstance?.status?.name()}"/>
 </div>
 

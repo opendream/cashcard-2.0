@@ -42,7 +42,6 @@ class MemberTests {
         def field = 'identificationNumber',
             existingMember = generateValidMember()
 
-        existingMember.identificationNumber = '1234567890123'
         mockForConstraintsTests(Member, [existingMember])
 
         def member = new Member()
@@ -50,15 +49,15 @@ class MemberTests {
         assertFalse member.validate([field])
         assert "nullable" == member.errors[field]
 
-        member.identificationNumber = '1234567890123'
+        member.identificationNumber = '1411900088198'
         assertFalse member.validate([field])
         assert "unique" == member.errors[field]
 
-        member.identificationNumber = '12345ก67890'
+        member.identificationNumber = '1234567890'
         assertFalse member.validate([field])
-        assert "matches" == member.errors[field]
+        assert "invalid id" == member.errors[field]
 
-        member.identificationNumber = '1411900088198'
+        member.identificationNumber = '1159900100015'
         assertTrue member.validate([field])
     }
 

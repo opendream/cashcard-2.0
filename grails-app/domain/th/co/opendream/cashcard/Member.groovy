@@ -36,7 +36,7 @@ class Member {
     static constraints = {
         identificationNumber(blank: false, unique: true, validator: { val, obj ->
             if (UtilService.check_id_card(val) == false) {
-                ['invalid id']
+                return ['invalid.identificationNumber']
             }
         })
         firstname(blank: false)

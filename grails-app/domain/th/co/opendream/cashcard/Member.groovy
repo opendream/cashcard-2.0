@@ -41,7 +41,8 @@ class Member {
         })
         firstname(blank: false)
         lastname(blank: false)
-        address(blank: false)
-        telNo(blank: false, matches: /\d{9,11}/)
+        address(nullable: true, blank: true)
+        telNo(nullable: true, blank: true, matches: /\d{9,11}/)
+        status(nullable: false, blank: false, inList: Status.list())
     }
 }

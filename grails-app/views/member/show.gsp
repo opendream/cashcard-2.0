@@ -1,4 +1,4 @@
-<%@ page import="th.co.opendream.money.Member" %>
+<%@ page import="th.co.opendream.cashcard.Member" %>
 
 <html>
     <head>
@@ -21,22 +21,28 @@
                 <h3>ข้อมูลสมาชิก</h3>
                 <table class="table table-striped table-bordered">
                     <tr>
-                        <td><strong>ชื่อ</strong><td>
+                        <td><strong><g:message code="id_card_number" /></strong></div>
+                        <td>
+                            ${memberInstance?.identificationNumber}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><strong><g:message code="firstname" /></strong></div>
+                        <td>
                             ${memberInstance?.firstname}
                         </td>
                     </tr>
 
                     <tr>
-                        <td><strong>นามสกุล</strong></td>
+                        <td><strong><g:message code="lastname" /></strong></td>
                         <td>
                             ${memberInstance?.lastname}
                         </td>
                     </tr>
 
                     <tr>
-                        <td>
-                            <strong>หมายเลขโทรศัพท์</strong>
-                        </td>
+                        <td><strong><g:message code="tel_no" /></strong></td>
                         <td>
                             <g:if test="${memberInstance.telNo}">
                                 ${memberInstance.telNo}
@@ -46,14 +52,14 @@
                     </tr>
 
                     <tr>
-                        <td><strong>เพศ</strong></td>
+                        <td><strong><g:message code="gender" /></strong></td>
                         <td>
                             ${message(code: 'member.label.'+memberInstance?.gender.toString().toLowerCase(), default: memberInstance?.gender.toString())}
                         </td>
                     </tr>
 
                     <tr>
-                        <td><strong>ที่อยู่</strong></td>
+                        <td><strong><g:message code="address" /></strong></td>
                         <td>
                             <g:if test="${memberInstance.address}">
                                 ${memberInstance.address}
@@ -65,8 +71,7 @@
 
                 <div class="form-actions">
                     <g:link class="btn" action="edit" id="${memberInstance.id}">แก้ไขข้อมูลสมาชิก</g:link>
-
-               </div>
+                </div>
 
             </div>
 

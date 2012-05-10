@@ -1,4 +1,4 @@
-package th.co.opendream.money
+package th.co.opendream.cashcard
 
 
 class Member {
@@ -34,7 +34,11 @@ class Member {
     }
 
     static constraints = {
-        identificationNumber(blank: false, unique: true, matches: /\d{13}/)
+        identificationNumber(blank: false, unique: true, validator: { val, obj ->
+            if (UtilService.check_id_card(val) == false) {
+                ['invalid id']
+            }
+        })
         firstname(blank: false)
         lastname(blank: false)
         address(blank: false)

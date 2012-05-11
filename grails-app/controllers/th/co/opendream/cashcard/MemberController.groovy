@@ -41,6 +41,7 @@ class MemberController {
     def save() {
         def memberInstance = new Member(params)
         if (!memberInstance.save(flush: true)) {
+            println memberInstance.errors
             render(view: "create", model: [memberInstance: memberInstance])
             return
         }

@@ -34,18 +34,18 @@ class LoanTypeTests {
 
         loanType.validate([field])
         assertEquals "Name must fail null validation.",
-            "nullable", loanType.errors['name']
+            "nullable", loanType.errors[field]
 
         loanType.name = ""
         loanType.validate([field])
         assertEquals "Name must fail blank validation.",
-            "blank", loanType.errors['name']
+            "blank", loanType.errors[field]
 
         def existingLoanType = generateValidLoanType("Existing Loan").save()
         loanType.name = "Existing Loan"
         loanType.validate([field])
         assertEquals "Name must fail unique validation.",
-            "unique", loanType.errors['name']
+            "unique", loanType.errors[field]
 
         loanType.name = "Common Loan"
         assertTrue "Name ${loanType.name} must pass all validations.",

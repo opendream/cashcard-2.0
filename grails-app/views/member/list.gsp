@@ -42,7 +42,7 @@
 		        </div>
 
 		        <div class="form-actions">
-		          <button class="btn btn-primary" type="submit"><i class="icon-search icon-white"></i> ${message(code: 'member.label.search', default: 'Search')}</button>
+		          <button class="btn btn-primary" type="submit"><i class="icon-search icon-white"></i> ${message(code: 'Search')}</button>
 		        </div>
 			</g:form>
 		</div>
@@ -54,7 +54,9 @@
 						<th><g:message code="member.label.identificationNumber"></g:message></th>
 						<th><g:message code="member.label.name"></g:message></th>
 						<th><g:message code="member.label.telNo"></g:message></th>
+						<th><g:message code="member.label.gender"></g:message></th>
 						<th><g:message code="member.label.address"></g:message></th>
+						<th><g:message code="member.label.status"></g:message></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -63,7 +65,9 @@
 							<td><a href="${createLink(controller:'member', action:'show', params:[id: member.id])}">${member.identificationNumber}</a></td>
 							<td>${member.firstname} ${member.lastname}</td>
 							<td>${member.telNo}</td>
+							<td>${message(code: 'member.label.'+member?.gender.toString().toLowerCase(), default: member?.gender.toString())}</td>
 							<td>${member.address}</td>
+							<td><g:message code="member.label.status.${member.status}"></g:message></td>
 						</tr>
 					</g:each>
 				</tbody>

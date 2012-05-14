@@ -10,7 +10,7 @@ import org.junit.*
 import th.co.opendream.cashcard.Member.Gender
 import th.co.opendream.cashcard.Member.Status
 
-
+import org.codehaus.groovy.grails.web.servlet.mvc.SynchronizerTokensHolder
 /**
  * See the API for {@link grails.test.mixin.support.GrailsUnitTestMixin} for usage instructions
  */
@@ -91,9 +91,19 @@ class MemberControllerTests {
         assert model.memberInstance.errors.getFieldError('version')
     }
 
-    void testEditInvalidMember() {
+    void testEditInvalidMemberAndInvalidToken() {
+        def token = SynchronizerTokensHolder.store(session)
+        params[SynchronizerTokensHolder.TOKEN_KEY] = null
         controller.edit()
+        assert view == '/member/edit'
+    }
 
+    void testEditInvalidMemberValidToken() {
+        def token = SynchronizerTokensHolder.store(session)
+        params[SynchronizerTokensHolder.TOKEN_URI] = '/member/edit'
+        params[SynchronizerTokensHolder.TOKEN_KEY] = token.generateToken(params[SynchronizerTokensHolder.TOKEN_URI])
+
+        controller.edit()
         assert response.redirectedUrl == '/error'
     }
 
@@ -104,14 +114,10 @@ class MemberControllerTests {
         assert view == '/member/edit'
     }
 
-
-/*
     void testUpdateInvalidMember() {
-        controller.request.invalidToken = false
         controller.update()
 
         assert response.redirectedUrl == '/member/list'
     }
-    */
 
 }

@@ -2,6 +2,8 @@ package th.co.opendream.cashcard
 
 
 class Member {
+    def utilService
+
     String identificationNumber
     String firstname
     String lastname
@@ -12,6 +14,8 @@ class Member {
     BigDecimal balance = 0.000000
     Date dateCreated
     Date lastUpdated
+
+    static transients = ["utilService"]
 
     public enum Gender {
       MALE,
@@ -34,9 +38,9 @@ class Member {
     }
 
     static constraints = {
-        identificationNumber(blank: false, unique: true, validator: { val, obj ->
-            if (UtilService.check_id_card(val) == false) {
-                return ['invalid.identificationNumber']
+        identificationNumber(blank: false, unique: true, validator: { val, self ->
+            if (self.utilService.check_id_card(val) == false) {
+                return ['invalid.id']
             }
         })
         firstname(blank: false)

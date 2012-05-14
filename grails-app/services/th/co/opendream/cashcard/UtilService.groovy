@@ -1,7 +1,7 @@
 package th.co.opendream.cashcard
 
 class UtilService {
-    static def check_id_card(id) {
+    def check_id_card(id) {
 		def check_digit = id[-1] as Integer
 		def mulList = []
 		def sum = 0

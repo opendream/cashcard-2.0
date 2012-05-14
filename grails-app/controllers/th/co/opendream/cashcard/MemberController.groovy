@@ -40,7 +40,7 @@ class MemberController {
 
     def save() {
         def memberInstance = new Member(params)
-        if (!memberInstance.save(flush: true)) {
+        if (!memberInstance.save()) {
             render(view: "create", model: [memberInstance: memberInstance])
             return
         }

@@ -21,6 +21,7 @@
           <label for="id-number" class="control-label">${message(code: 'member.label.identificationNumber', default: 'Identification Number')}</label>
           <div class="controls">
             <input id="id-number" name="identificationNumber" type="text" placeholder="${message(code: 'member.placeholder.identificationNumber', default: 'ID card number')}" value="${memberInstance?.identificationNumber}">
+            <span class="help-block"><g:message code="id_card_help" /></span>
           </div>
         </div>
 
@@ -42,6 +43,7 @@
           <label class="control-label" for="tel">${message(code: 'member.label.telNo', default: 'Tel No.')}</label>
           <div class="controls">
             <input id="tel" name="telNo" type="text" placeholder="${message(code: 'member.label.telNo', default: 'Tel No.')}" value="${memberInstance?.telNo}">
+            <span class="help-block"><g:message code="id_card_help" /></span>
           </div>
         </div>
 

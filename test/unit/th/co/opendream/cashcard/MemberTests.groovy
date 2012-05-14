@@ -45,6 +45,7 @@ class MemberTests {
         mockForConstraintsTests(Member, [existingMember])
 
         def member = new Member()
+        member.utilService = [ check_id_card: { id -> true } ] as UtilService
 
         assertFalse member.validate([field])
         assert "nullable" == member.errors[field]
@@ -53,10 +54,12 @@ class MemberTests {
         assertFalse member.validate([field])
         assert "unique" == member.errors[field]
 
+        member.utilService = [ check_id_card: { id -> false } ] as UtilService
         member.identificationNumber = '1234567890'
-        assertFalse member.validate([field])
-        assert "invalid id" == member.errors[field]
+        assert member.validate([field]) == false
+        assert "invalid.id" == member.errors[field]
 
+        member.utilService = [ check_id_card: { id -> true } ] as UtilService
         member.identificationNumber = '1159900100015'
         assertTrue member.validate([field])
     }

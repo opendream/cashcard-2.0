@@ -104,25 +104,6 @@ class MemberController {
         redirect(action: "show", id: memberInstance.id)
     }
 
-    def delete() {
-        def memberInstance = Member.get(params.id)
-        if (!memberInstance) {
-			flash.message = message(code: 'default.not.found.message', args: [message(code: 'member.label', default: 'Member'), params.id])
-            redirect(action: "list")
-            return
-        }
-
-        try {
-            memberInstance.delete(flush: true)
-			flash.message = message(code: 'default.deleted.message', args: [message(code: 'member.label', default: 'Member'), params.id])
-            redirect(action: "list")
-        }
-        catch (DataIntegrityViolationException e) {
-			flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'member.label', default: 'Member'), params.id])
-            redirect(action: "show", id: params.id)
-        }
-    }
-
     def verifyCard(String cardId) {
         flash.error = null // Clear flash
 

@@ -39,8 +39,10 @@ class Member {
 
     static constraints = {
         identificationNumber(blank: false, unique: true, validator: { val, self ->
-            if (self.utilService.check_id_card(val) == false) {
-                return ['invalid.id']
+            Member.withNewSession {
+                if (self.utilService.check_id_card(val) == false) {
+                    return ['invalid.id']
+                }
             }
         })
         firstname(blank: false)

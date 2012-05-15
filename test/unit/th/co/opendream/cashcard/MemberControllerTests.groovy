@@ -70,6 +70,13 @@ class MemberControllerTests {
         assert response.redirectedUrl == '/member/show/1'
     }
 
+    void testShow() {
+    	params.id = '1'
+
+    	controller.show()
+    	assert view == '/member/show'
+    }
+
     void testShowMemberWithoutId() {
         controller.show()
         assert response.redirectedUrl == '/member/list'

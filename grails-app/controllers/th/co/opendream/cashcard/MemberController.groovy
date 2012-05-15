@@ -57,7 +57,7 @@ class MemberController {
             return
         }
 
-        [memberInstance: memberInstance]
+        render view: 'show', model: [memberInstance: memberInstance]
     }
 
     def edit() {

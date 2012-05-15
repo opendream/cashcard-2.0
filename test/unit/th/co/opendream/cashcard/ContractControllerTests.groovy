@@ -36,7 +36,7 @@ class ContractControllerTests {
 
 		Contract.metaClass.save = { delegate.id = 1; delegate }
 		controller.create()
-		assert response.redirectedUrl == "/contract/show/1"
+		assert response.redirectedUrl == "/member/show/1"
     }
 
     void testCreateFail() {

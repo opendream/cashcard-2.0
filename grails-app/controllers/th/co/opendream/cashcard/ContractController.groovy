@@ -13,7 +13,7 @@ class ContractController {
     		contract.save()
 
     		if (contract.id) {
-    			redirect action: 'show', id: contract.id
+    			redirect action: 'show', controller: 'member', id: member.id
     		}
     		else {
     			redirect action: 'doLoan', controller: 'member', id: member.id, params: [type: loanType.id]

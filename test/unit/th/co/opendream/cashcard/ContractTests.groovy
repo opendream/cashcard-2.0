@@ -26,7 +26,10 @@ class ContractTests {
             interestRate: 2.00,
             loanBalance: 0.00,
             approvalStatus: false,
-            loanReceiveStatus: false
+            loanReceiveStatus: false,
+            guarantor1: "Keng",
+            guarantor2: "Neung",
+            numberOfPeriod: 3
         )
     }
 
@@ -52,7 +55,8 @@ class ContractTests {
         def requiredProperties = [
             'code'          , 'loanType'        , 'loanAmount' ,
             'interestRate'  , 'loanBalance'     , 'approvalStatus' ,
-            'loanReceiveStatus'
+            'loanReceiveStatus', 'guarantor1'   , 'guarantor2' ,
+            'numberOfPeriod'
         ]
 
         def instanceProperties = Contract.metaClass.properties*.name
@@ -175,6 +179,41 @@ class ContractTests {
             false, contract[field]
 
         contract[field] = false
+        assertTrue "${field} must pass all validations.",
+            contract.validate([field])
+    }
+
+    void testValidateGuarantor1() {
+        mockForConstraintsTests(Contract)
+
+        def contract = new Contract(),
+            field = 'guarantor1'
+
+        contract[field] = ''
+        assertTrue "${field} must pass all validations.",
+            contract.validate([field])
+    }
+
+    void testValidateGuarantor2() {
+        mockForConstraintsTests(Contract)
+
+        def contract = new Contract(),
+            field = 'guarantor2'
+
+        contract[field] = ''
+        assertTrue "${field} must pass all validations.",
+            contract.validate([field])
+    }
+
+    void testValidateNumberOfPeriod() {
+        mockForConstraintsTests(Contract)
+
+        def contract = new Contract(),
+            field = 'numberOfPeriod'
+
+        verifyNotNull(contract, field)
+
+        contract[field] = 3
         assertTrue "${field} must pass all validations.",
             contract.validate([field])
     }

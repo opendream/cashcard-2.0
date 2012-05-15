@@ -8,6 +8,9 @@ class Contract {
 	BigDecimal loanBalance = 0.000000
 	Boolean approvalStatus = false
 	Boolean loanReceiveStatus = false
+	String guarantor1
+	String guarantor2
+	Integer numberOfPeriod
 
     static constraints = {
     	code nullable: false, blank: false, unique: true

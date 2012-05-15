@@ -82,4 +82,100 @@ class ContractTests {
             contract.validate([field])
     }
 
+    void testValidateLoanType() {
+        mockForConstraintsTests(Contract)
+
+        def contract = new Contract(),
+            field = 'loanType'
+
+        verifyNotNull(contract, field)
+
+        contract[field] = commonLoan
+        assertTrue "${field} `${contract.code}` must pass all validations.",
+            contract.validate([field])
+    }
+
+    void testValidateLoanAmount() {
+        mockForConstraintsTests(Contract)
+
+        def contract = new Contract(),
+            field = 'loanAmount'
+
+        // default value
+        assertEquals "${field} must have default value as 0.000000",
+            contract[field], 0.000000
+
+        contract[field] = null
+        verifyNotNull(contract, field)
+
+        contract[field] = 0.000000
+        assertTrue "${field} must pass all validations.",
+            contract.validate([field])
+    }
+
+    void testValidateInterestRate() {
+        mockForConstraintsTests(Contract)
+
+        def contract = new Contract(),
+            field = 'interestRate'
+
+        // default value
+        assertEquals "${field} must have default value as 0.00",
+            contract[field], 0.00
+
+        contract[field] = null
+        verifyNotNull(contract, field)
+
+        contract[field] = 0.00
+        assertTrue "${field} must pass all validations.",
+            contract.validate([field])
+    }
+
+    void testValidateLoanBalance() {
+        mockForConstraintsTests(Contract)
+
+        def contract = new Contract(),
+            field = 'loanBalance'
+
+        // default value
+        assertEquals "${field} must have default value as 0.000000",
+            contract[field], 0.000000
+
+        contract[field] = null
+        verifyNotNull(contract, field)
+
+        contract[field] = 0.000000
+        assertTrue "${field} must pass all validations.",
+            contract.validate([field])
+    }
+
+    void testValidateApprovalStatus() {
+        mockForConstraintsTests(Contract)
+
+        def contract = new Contract(),
+            field = 'approvalStatus'
+
+        // default value
+        assertEquals "${field} must have default value as false",
+            false, contract[field]
+
+        contract[field] = false
+        assertTrue "${field} must pass all validations.",
+            contract.validate([field])
+    }
+
+    void testValidateLoanReceiveStatus() {
+        mockForConstraintsTests(Contract)
+
+        def contract = new Contract(),
+            field = 'loanReceiveStatus'
+
+        // default value
+        assertEquals "${field} must have default value as false",
+            false, contract[field]
+
+        contract[field] = false
+        assertTrue "${field} must pass all validations.",
+            contract.validate([field])
+    }
 }

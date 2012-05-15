@@ -120,4 +120,26 @@ class MemberController {
         }
     }
 
+    def loan() {
+        def member = Member.get(params.id)
+
+        if (member) {
+            def availableLoanType = LoanType.list()
+            render view: 'loan', model: [member: member, availableLoanType: availableLoanType]
+        }
+        else {
+            redirect uri: '/error'
+        }
+    }
+
+    def doLoan() {
+        def member = Member.get(params.id)
+
+        if (member) {
+            render view: 'doLoan', model: [member: member]
+        }
+        else {
+            redirect uri: '/error'
+        }
+    }
 }

@@ -70,15 +70,16 @@ class ContractTests {
 
         verifyNotNull(contract, field)
 
-        contract.code = ""
+        contract[field] = ""
         verifyNotBlank(contract, field)
 
         def existingContract = generateValidContract().save()
-        contract.code = "ก.55-1000-20"
+        contract[field] = "ก.55-1000-20"
         verifyUnique(contract, field)
 
-        contract.code = "Common Loan"
-        assertTrue "Code `${contract.code}` must pass all validations.",
+        contract[field] = "Common Loan"
+        assertTrue "${field} `${contract.code}` must pass all validations.",
             contract.validate([field])
     }
+
 }

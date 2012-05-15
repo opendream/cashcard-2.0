@@ -12,6 +12,8 @@ class Contract {
 	String guarantor2
 	Integer numberOfPeriod
 
+	static belongsTo = [member: Member]
+
     static constraints = {
     	code nullable: false, blank: false, unique: true
     }

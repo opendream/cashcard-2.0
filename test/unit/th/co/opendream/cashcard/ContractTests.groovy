@@ -9,6 +9,7 @@ import org.junit.*
  * See the API for {@link grails.test.mixin.domain.DomainClassUnitTestMixin} for usage instructions
  */
 @TestFor(Contract)
+@Mock([Member])
 class ContractTests {
 
     def commonLoan
@@ -19,8 +20,11 @@ class ContractTests {
     }
 
     def generateValidContract() {
+        def member = new Member(identificationNumber:"1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")
+
         new Contract(
             code: "ก.55-1000-20",
+            member: member,
             loanType: commonLoan,
             loanAmount: 2000.00,
             interestRate: 2.00,
@@ -56,7 +60,7 @@ class ContractTests {
             'code'          , 'loanType'        , 'loanAmount' ,
             'interestRate'  , 'loanBalance'     , 'approvalStatus' ,
             'loanReceiveStatus', 'guarantor1'   , 'guarantor2' ,
-            'numberOfPeriod'
+            'numberOfPeriod', 'member'
         ]
 
         def instanceProperties = Contract.metaClass.properties*.name
@@ -82,6 +86,19 @@ class ContractTests {
         verifyUnique(contract, field)
 
         contract[field] = "Common Loan"
+        assertTrue "${field} `${contract.code}` must pass all validations.",
+            contract.validate([field])
+    }
+
+    void testValidateMember() {
+        mockForConstraintsTests(Contract)
+
+        def contract = new Contract(),
+            field = 'member'
+
+        verifyNotNull(contract, field)
+
+        contract[field] = [id: 1]
         assertTrue "${field} `${contract.code}` must pass all validations.",
             contract.validate([field])
     }

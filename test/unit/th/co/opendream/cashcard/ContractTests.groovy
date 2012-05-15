@@ -60,7 +60,8 @@ class ContractTests {
             'code'          , 'loanType'        , 'loanAmount' ,
             'interestRate'  , 'loanBalance'     , 'approvalStatus' ,
             'loanReceiveStatus', 'guarantor1'   , 'guarantor2' ,
-            'numberOfPeriod', 'member'
+            'numberOfPeriod', 'member'          , 'dateCreated' ,
+            'lastUpdated'
         ]
 
         def instanceProperties = Contract.metaClass.properties*.name

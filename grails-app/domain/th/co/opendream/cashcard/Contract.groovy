@@ -11,6 +11,8 @@ class Contract {
 	String guarantor1
 	String guarantor2
 	Integer numberOfPeriod
+	Date dateCreated
+    Date lastUpdated
 
 	static belongsTo = [member: Member]
 

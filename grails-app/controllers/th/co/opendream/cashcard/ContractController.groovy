@@ -70,7 +70,10 @@ class ContractController {
         def contract = Contract.get(params.id)
 
         if (contract) {
-            render view: '/contract/show', model: [contract: contract]
+            render view: '/contract/show', model: [
+                contract: contract,
+                loanType: contract.loanType
+            ]
         }
         else {
             redirect url: '/error'

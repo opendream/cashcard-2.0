@@ -1,5 +1,6 @@
 import th.co.opendream.cashcard.Member
 import th.co.opendream.cashcard.LoanType
+import th.co.opendream.cashcard.Contract
 
 class BootStrap {
 
@@ -11,6 +12,7 @@ class BootStrap {
     	m2.save()
 
     	generateLoanType()
+        generateContract(m1, LoanType.get(1))
     }
     def destroy = {
     }
@@ -23,5 +25,21 @@ class BootStrap {
     	new LoanType(name: "เงินกู้ซื้เครื่องใช้ไฟฟ้า").save()
     	new LoanType(name: "เงินกู้โดยอสังหาริมทรัพย์").save()
     	new LoanType(name: "เงินกู้โดยใช้ทรัพย์สินจำนอง").save()
+    }
+
+    def generateContract(member, loanType) {
+        new Contract(
+            code: "ก.55-1000-20",
+            member: member,
+            loanType: loanType,
+            loanAmount: 2000.00,
+            interestRate: 2.00,
+            loanBalance: 2000.00,
+            approvalStatus: false,
+            loanReceiveStatus: false,
+            guarantor1: "Keng",
+            guarantor2: "Neung",
+            numberOfPeriod: 3
+        ).save()
     }
 }

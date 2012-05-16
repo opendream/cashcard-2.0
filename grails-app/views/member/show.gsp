@@ -77,6 +77,7 @@
                             <th class="string"><g:message code="contract.list.type" /></th>
                             <th class="number"><g:message code="contract.list.loanAmount" /></th>
                             <th class="number"><g:message code="contract.list.loanBalance" /></th>
+                            <th></th>
                         </tr>
                     </thead>
 
@@ -89,6 +90,11 @@
                                     <g:formatNumber type="number" number="${contract.loanAmount}" maxFractionDigits="2" minFractionDigits="2" />
                                 <td class="number">
                                     <g:formatNumber type="number" number="${contract.loanBalance}" maxFractionDigits="2" minFractionDigits="2" />
+                                </td>
+                                <td>
+                                    <g:link controller="contract" action="show" id="${contract.id}">
+                                        <span class="label label-info"><g:message code="contract.list.view.label" /></span>
+                                    </g:link>
                                 </td>
                             </tr>
                         </g:each>

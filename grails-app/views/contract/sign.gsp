@@ -77,7 +77,7 @@
 					<i class="icon-ok icon-white"></i> <g:message code="default.button.ok.label"></g:message>
 				</button>
 			  
-				<g:link action="show" id="${memberInstance?.id}">
+				<g:link action="show" controller="member" id="${member?.id}">
 					<g:message code="default.button.cancel.label"></g:message>
 				</g:link>
 			</div>

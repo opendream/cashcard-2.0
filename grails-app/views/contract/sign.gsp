@@ -68,7 +68,7 @@
 					<g:message code="contract.loaning.form.numberOfPeriod.label" />
 				</label>
 				<div class="controls">
-					<input type="text" id="numberOfPeriod" name="numberOfPeriod" value="${contract.numberOfPeriod}" />
+					<input type="text" id="numberOfPeriod" name="numberOfPeriod" value="${contract.numberOfPeriod}" required="true" />
 				</div>
 			</div>
 

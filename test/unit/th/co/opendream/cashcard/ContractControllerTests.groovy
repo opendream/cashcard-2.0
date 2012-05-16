@@ -4,12 +4,13 @@ package th.co.opendream.cashcard
 
 import grails.test.mixin.*
 import org.junit.*
+import groovy.mock.interceptor.MockFor
 
 /**
  * See the API for {@link grails.test.mixin.web.ControllerUnitTestMixin} for usage instructions
  */
 @TestFor(ContractController)
-@Mock([Member, LoanType])
+@Mock([Member, LoanType, Contract])
 class ContractControllerTests {
 
 	def utilService
@@ -98,5 +99,24 @@ class ContractControllerTests {
         params.type = '42'
         controller.sign()
         assert response.redirectedUrl == '/error'
+    }
+
+    void testShow() {
+        params.id = '1'
+
+        def mock = new MockFor(Contract.class)
+        mock.demand.get() { [id: 1] }
+        mock.use {
+            controller.show()
+            assert view == '/contract/show'
+        }
+
+        mock.demand.get() { null }
+        mock.use {
+            params.id = '42'
+
+            controller.show()
+            assert response.redirectedUrl == '/error'
+        }
     }
 }

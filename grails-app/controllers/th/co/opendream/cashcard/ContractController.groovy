@@ -65,4 +65,15 @@ class ContractController {
             redirect uri: '/error'
         }
     }
+
+    def show() {
+        def contract = Contract.get(params.id)
+
+        if (contract) {
+            render view: '/contract/show', model: [contract: contract]
+        }
+        else {
+            redirect url: '/error'
+        }
+    }
 }

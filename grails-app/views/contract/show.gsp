@@ -15,6 +15,11 @@
 		<div class="row">
 			<div class="span5">
 				<dl class="dl-horizontal">
+					<dt><g:message code="contract.show.debtor" /></dt>
+					<dd>
+						<g:link controller="member" action="show" id="${contract.member.id}">${contract.member}</g:link> <i class="icon-arrow-right"></i>
+					</dd>
+
 					<dt><g:message code="contract.show.loanType" /></dt>
 					<dd>${loanType.name}</dd>
 

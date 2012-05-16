@@ -18,7 +18,7 @@ class ContractControllerTests {
     void setUp() {
     	def commonLoan = new LoanType(name: "Common").save()
 
-        def m1 = new Member(identificationNumber:"1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")
+        def m1 = new Member(identificationNumber: "1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")
         def m2 = new Member(identificationNumber: "1234567891234", firstname: "Noomz", lastname: "Siriwat", telNo: "111111111", gender: "MALE", address: "Opendream2")
 
         utilService = [ check_id_card: { id -> true } ] as UtilService
@@ -45,7 +45,7 @@ class ContractControllerTests {
 
     	Contract.metaClass.save = { null }
     	controller.create()
-    	assert response.redirectedUrl == '/member/doLoan/1?type=1'
+    	assert view == '/contract/sign'
     }
 
     void testCreateFailNoMember() {
@@ -62,5 +62,41 @@ class ContractControllerTests {
 
     	controller.create()
     	assert response.redirectedUrl == '/error'
+    }
+
+    void testSelectLoanType() {
+        params.id = '1'
+        controller.selectLoanType()
+
+        assert view == '/contract/selectLoanType'
+
+        // Non-existed member
+        params.id = '42'
+        controller.selectLoanType()
+
+        assert response.redirectedUrl == '/error'
+    }
+
+    void testSign() {
+        params.id = '1'
+        params.type = '1'
+
+        controller.sign()
+        assert view == '/contract/sign'
+
+        response.reset()
+
+        // Non-existsed member
+        params.id = '42'
+        controller.sign()
+        assert response.redirectedUrl == '/error'
+
+        response.reset()
+
+        // Non-existed loan type
+        params.id = '1'
+        params.type = '42'
+        controller.sign()
+        assert response.redirectedUrl == '/error'
     }
 }

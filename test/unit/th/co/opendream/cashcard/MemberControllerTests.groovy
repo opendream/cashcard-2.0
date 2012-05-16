@@ -15,7 +15,7 @@ import org.codehaus.groovy.grails.web.servlet.mvc.SynchronizerTokensHolder
  * See the API for {@link grails.test.mixin.support.GrailsUnitTestMixin} for usage instructions
  */
 @TestMixin(GrailsUnitTestMixin)
-@Mock([Member, LoanType])
+@Mock([Member, LoanType, Contract])
 class MemberControllerTests {
     def utilService
 
@@ -125,37 +125,5 @@ class MemberControllerTests {
         controller.update()
 
         assert response.redirectedUrl == '/member/list'
-    }
-
-    void testLoanList() {
-    	params.id = '1'
-    	controller.loan()
-
-    	assert view == '/member/loan'
-
-    	// Non-existed member
-    	params.id = '42'
-    	controller.loan()
-
-    	assert response.redirectedUrl == '/error'
-    }
-
-    void testDoLoan() {
-    	params.id = '1'
-    	params.type = 'common'
-
-    	controller.doLoan()
-    	assert view == '/member/doLoan'
-
-    	// Non-existsed member
-    	params.id = '42'
-    	controller.doLoan()
-    	assert response.redirectedUrl == '/error'
-
-    	// Non-existed loan type
-    	params.id = '1'
-    	params.type = 'nevertype'
-    	controller.doLoan()
-    	assert response.redirectedUrl == '/error'
     }
 }

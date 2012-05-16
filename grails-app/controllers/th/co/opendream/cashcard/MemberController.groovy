@@ -57,7 +57,11 @@ class MemberController {
             return
         }
 
-        render view: 'show', model: [memberInstance: memberInstance]
+        def c = Contract.createCriteria()
+        def contractList = c.list(sort: 'dateCreated', order: 'asc') {
+            eq('member', memberInstance)
+        }
+        render view: 'show', model: [memberInstance: memberInstance, contractList: contractList]
     }
 
     def edit() {
@@ -117,29 +121,6 @@ class MemberController {
         }
         else {
             render(view: 'verifyCard')
-        }
-    }
-
-    def loan() {
-        def member = Member.get(params.id)
-
-        if (member) {
-            def availableLoanType = LoanType.list()
-            render view: 'loan', model: [member: member, availableLoanType: availableLoanType]
-        }
-        else {
-            redirect uri: '/error'
-        }
-    }
-
-    def doLoan() {
-        def member = Member.get(params.id)
-
-        if (member) {
-            render view: 'doLoan', model: [member: member]
-        }
-        else {
-            redirect uri: '/error'
         }
     }
 }

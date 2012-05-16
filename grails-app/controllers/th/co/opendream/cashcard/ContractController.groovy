@@ -6,7 +6,7 @@ class ContractController {
 
     def create() {
     	def member = Member.get(params.memberId)
-    	def loanType = LoanType.get(params.loanType) 
+    	def loanType = LoanType.get(params.loanType)
 
     	if (member && loanType) {
             params.member = member
@@ -77,6 +77,20 @@ class ContractController {
         }
         else {
             redirect url: '/error'
+        }
+    }
+
+    def approve() {
+        render view: 'approve', contractInstance: new Contract(params)
+    }
+
+    def doApprove() {
+        def existsContract = Contract.get(params.id)
+        if  (existsContract.save()) {
+            redirect action: 'show', controller: 'member', id: existsContract.member.id
+        }
+        else {
+            render view: 'approve', model: [contract: existsContract]
         }
     }
 }

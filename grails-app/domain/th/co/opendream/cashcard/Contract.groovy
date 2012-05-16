@@ -11,6 +11,7 @@ class Contract {
 	String guarantor1
 	String guarantor2
 	Integer numberOfPeriod
+	Date approvalDate
 	Date dateCreated
     Date lastUpdated
 
@@ -18,5 +19,6 @@ class Contract {
 
     static constraints = {
     	code nullable: false, blank: false, unique: true
+    	approvalDate nullable: true, blank: true
     }
 }

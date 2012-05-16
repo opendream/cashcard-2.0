@@ -120,8 +120,15 @@ class ContractControllerTests {
         }
     }
     void testApprove() {
+        params.id = 1
+        def member = Member.get(params.id)
+        Contract.metaClass.static.get = { Serializable gid ->
+            [ id: gid, member: member ] as Contract
+        }
+
         controller.approve()
 
+        assert model.contractInstance.id == Contract.get(1).id
         assert view == '/contract/approve'
     }
 

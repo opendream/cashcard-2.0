@@ -2,7 +2,8 @@ package th.co.opendream.cashcard
 
 class ContractController {
 
-    def periodService
+    def periodService, utilService
+
 
     def index() { }
 
@@ -173,7 +174,7 @@ class ContractController {
 
         def transaction = new Transaction(amount: existsContract.loanAmount, sign: -1)
 
-        if (transaction.save() && existsContract.save()) {
+        if (utilService.isPayable(existsContract) && transaction.save() && existsContract.save()) {
             redirect controller: 'member', action: 'show', id: existsContract.member.id
         }
     }

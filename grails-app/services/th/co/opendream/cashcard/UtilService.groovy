@@ -23,4 +23,8 @@ class UtilService {
 			false
 		}
     }
+
+    def isPayable(Contract contract) {
+    	contract.approvalStatus
+    }
 }

@@ -81,7 +81,6 @@ class ContractController {
         def periodList = c.list(sort: 'no', order: 'asc') {
             eq('contract', contract)
         }
-        periodList = Period.findAll()
 
         if (contract) {
             render view: '/contract/show', model: [
@@ -115,14 +114,18 @@ class ContractController {
         existsContract.approvalDate = params.approvalDate
         existsContract.approvalStatus = true
         if  (existsContract.save()) {
-            def periodList = periodService.generatePeriod(contract.loanAmount, contract.numberOfPeriod)
+            def c = Period.createCriteria()
+            def periodList = c.list(sort: 'no', order: 'asc') {
+                eq('contract', existsContract)
+            }
+
             def lastDueDate = existsContract.approvalDate.plus(30)
             periodList.each { period ->
                 period.dueDate = lastDueDate
-                period.contract = contract
+                period.contract = existsContract
                 period.save()
 
-                lastDueDate.plus(30)
+                lastDueDate = lastDueDate.plus(30)
             }
 
             redirect action: 'show', controller: 'member', id: existsContract.member.id
@@ -145,7 +148,7 @@ class ContractController {
             redirect url: '/error'
         }
     }
-    
+
     def payloan() {
         def existsContract = Contract.get(params?.id)
 

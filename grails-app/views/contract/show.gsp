@@ -79,6 +79,9 @@
 				<tr>
 					<td>No.</td>
 					<td>Amount</td>
+					<g:if test="${contract.approvalStatus}">
+						<td>Due Date</td>
+					</g:if>
 				</tr>
 			</thead>
 
@@ -87,6 +90,9 @@
 					<tr>
 						<td>${period.no}</td>
 						<td>${period.amount}</td>
+						<g:if test="${contract.approvalStatus}">
+							<td><g:formatDate date="${period.dueDate}" format="EEEE dd MMMM yyyy" /></td>
+						</g:if>
 					</tr>
 				</g:each>
 			</tbody>

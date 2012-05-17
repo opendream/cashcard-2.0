@@ -33,7 +33,8 @@ class ContractTests {
             loanReceiveStatus: false,
             guarantor1: "Keng",
             guarantor2: "Neung",
-            numberOfPeriod: 3
+            numberOfPeriod: 3,
+            approvalDate: null
         )
     }
 
@@ -60,8 +61,8 @@ class ContractTests {
             'code'          , 'loanType'        , 'loanAmount' ,
             'interestRate'  , 'loanBalance'     , 'approvalStatus' ,
             'loanReceiveStatus', 'guarantor1'   , 'guarantor2' ,
-            'numberOfPeriod', 'member'          , 'dateCreated' ,
-            'lastUpdated'
+            'numberOfPeriod', 'member'          , 'approvalDate',
+            'dateCreated' , 'lastUpdated'
         ]
 
         def instanceProperties = Contract.metaClass.properties*.name
@@ -234,5 +235,9 @@ class ContractTests {
         contract[field] = 3
         assertTrue "${field} must pass all validations.",
             contract.validate([field])
+    }
+
+    void testNoValidatorInContract() {
+        generateValidContract().save()
     }
 }

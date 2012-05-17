@@ -68,8 +68,9 @@ class PeriodTests {
 
         def period = new Period(),
             field = 'dueDate'
-
-        verifyNotNull(period, field)
+            
+        assertTrue "${field} value = ${period[field]} must pass all validations.",
+            period.validate([field])
 
         period[field] = new Date()
         assertTrue "${field} value = ${period[field]} must pass all validations.",
@@ -82,7 +83,8 @@ class PeriodTests {
         def period = new Period(),
             field = 'status'
 
-        verifyNotNull(period, field)
+        assertTrue "${field} value = ${period[field]} must pass all validations.",
+            period.validate([field])
 
         period[field] = Period.Status.QUEUED
         assertTrue "${field} value = ${period[field]} must pass all validations.",

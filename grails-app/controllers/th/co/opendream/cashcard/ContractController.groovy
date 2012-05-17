@@ -2,6 +2,8 @@ package th.co.opendream.cashcard
 
 class ContractController {
 
+    def periodService
+
     def index() { }
 
     def create() {
@@ -16,6 +18,12 @@ class ContractController {
             contract.loanBalance = contract.loanAmount
 
     		if (contract.save()) {
+                def periodList = periodService.generatePeriod(contract.loanAmount, contract.numberOfPeriod)
+                periodList.each { period ->
+                    period.contract = contract
+                    period.save()
+                }
+
     			redirect action: 'show', controller: 'member', id: member.id
     		}
     		else {
@@ -69,10 +77,16 @@ class ContractController {
     def show() {
         def contract = Contract.get(params.id)
 
+        def c = Period.createCriteria()
+        def periodList = c.list(sort: 'no', order: 'asc') {
+            eq('contract', contract)
+        }
+
         if (contract) {
             render view: '/contract/show', model: [
                 contract: contract,
-                loanType: contract.loanType
+                loanType: contract.loanType,
+                periodList: periodList
             ]
         }
         else {
@@ -100,10 +114,38 @@ class ContractController {
         existsContract.approvalDate = params.approvalDate
         existsContract.approvalStatus = true
         if  (existsContract.save()) {
-            redirect action: 'show', controller: 'contract', id: existsContract.member.id
+            def c = Period.createCriteria()
+            def periodList = c.list(sort: 'no', order: 'asc') {
+                eq('contract', existsContract)
+            }
+
+            def lastDueDate = existsContract.approvalDate.plus(30)
+            periodList.each { period ->
+                period.dueDate = lastDueDate
+                period.contract = existsContract
+                period.save()
+
+                lastDueDate = lastDueDate.plus(30)
+            }
+
+            redirect action: 'show', controller: 'member', id: existsContract.member.id
         }
         else {
             render view: 'approve', model: [contract: existsContract]
+        }
+    }
+
+    def preparePeriod() {
+        def amount = params.amount as BigDecimal,
+            nop = params.nop as Integer
+
+        if (amount && nop) {
+            def periodList = periodService.generatePeriod(amount, nop)
+
+            render view: '/contract/preparePeriod', model: [periodList: periodList]
+        }
+        else {
+            redirect url: '/error'
         }
     }
 

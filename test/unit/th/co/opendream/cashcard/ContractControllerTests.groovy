@@ -10,7 +10,7 @@ import groovy.mock.interceptor.MockFor
  * See the API for {@link grails.test.mixin.web.ControllerUnitTestMixin} for usage instructions
  */
 @TestFor(ContractController)
-@Mock([Member, LoanType, Contract])
+@Mock([Member, LoanType, Contract, PeriodService])
 class ContractControllerTests {
 
 	def utilService
@@ -180,6 +180,28 @@ class ContractControllerTests {
         assert view == '/contract/approve'
     }
 
+    void testPreparePeriod() {
+        params.amount = '1000.00'
+        params.nop = '3'
+
+        def mock = mockFor(PeriodService)
+        mock.demand.generatePeriod {
+            [
+                [amount: 333, no: 1]
+            ]
+        }
+
+        controller.periodService = mock.createMock()
+        controller.preparePeriod()
+        assert view == '/contract/preparePeriod'
+
+        params.amount = '0'
+        params.nop = '0'
+
+        controller.preparePeriod()
+        assert response.redirectedUrl == '/error'
+    }
+
     void testdoApproveWithoutId() {
         controller.doApprove()
         assert response.redirectedUrl == '/error'
@@ -244,14 +266,4 @@ class ContractControllerTests {
         controller.doPayloan()
         assert response.redirectedUrl == "/member/show/${member.id}"
     }
-
-/*
-    void testDoPayloanWithDate() {
-        params.id = 1
-        controller.doPayloan()
-        assert response.redirectedUrl == "/contract/show/1"
-    }
-    */
-
-
 }

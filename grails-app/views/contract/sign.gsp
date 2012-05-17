@@ -90,8 +90,24 @@
 					<g:message code="default.button.cancel.label"></g:message>
 				</g:link>
 			</div>
+
+			<div id="preview-period" class="container">
+			</div>
 		</g:form>
 	</div>
 
+	<script>
+		jQuery(function ($) {
+			$('#numberOfPeriod, #loanAmount').change(function (e) {
+				var amount = $('#loanAmount'),
+					nop = $('#numberOfPeriod')
+				;
+
+				if (amount.val() && nop.val()) {
+					$('#preview-period').load("${createLink(action: 'preparePeriod')}", {'amount': amount.val(), 'nop': nop.val()});
+				}
+			});
+		});
+	</script>
 </body>
 </html>

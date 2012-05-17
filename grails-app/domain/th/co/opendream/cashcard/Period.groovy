@@ -15,5 +15,7 @@ class Period {
 	}
 
     static constraints = {
+    	dueDate nullable: true
+    	status nullable: true
     }
 }

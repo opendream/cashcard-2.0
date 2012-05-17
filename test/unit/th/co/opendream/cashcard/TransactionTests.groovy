@@ -50,5 +50,23 @@ class TransactionTests {
 
     }
 
+    void testValidateAmount() {
+        mockForConstraintsTests(Transaction)
+
+        def field = 'amount'
+        def transaction = new Transaction()
+
+        [100, 200, 1000, 10000].each {
+            transaction[field] = it
+            assertTrue transaction.validate([field])
+        }
+
+        [0, -100, -1000].each {
+            transaction[field] = it
+            assertFalse "MUST FALLSE", transaction.validate([field])
+        }
+
+    }
+
 
 }

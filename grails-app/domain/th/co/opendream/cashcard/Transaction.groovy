@@ -9,5 +9,6 @@ class Transaction {
 
     static constraints = {
     	sign inList: [-1, 1]
+    	amount min: 1.0
     }
 }

@@ -10,7 +10,7 @@ import groovy.mock.interceptor.MockFor
  * See the API for {@link grails.test.mixin.web.ControllerUnitTestMixin} for usage instructions
  */
 @TestFor(ContractController)
-@Mock([Member, LoanType, Contract, PeriodService])
+@Mock([Member, LoanType, Contract, PeriodService, Period, Transaction])
 class ContractControllerTests {
 
 	def utilService
@@ -22,7 +22,9 @@ class ContractControllerTests {
         def m1 = new Member(identificationNumber: "1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")
         def m2 = new Member(identificationNumber: "1119900100015", firstname: "Noomz", lastname: "Siriwat", telNo: "111111111", gender: "MALE", address: "Opendream2")
 
-        utilService = [ check_id_card: { id -> true } ] as UtilService
+        utilService = [ check_id_card: { id -> true }, isPayable: { Contract c -> true } ] as UtilService
+
+        controller.utilService = utilService
 
         m1.utilService = utilService
         m2.utilService = utilService
@@ -32,6 +34,21 @@ class ContractControllerTests {
     }
 
     void testCreate() {
+        controller.periodService = [
+            generatePeriod: { a, period ->
+                [
+                    [amount: 333, no: 1, contract: null] as Period,
+                    [amount: 333, no: 2, contract: null] as Period
+                ]
+            }
+        ] as PeriodService
+
+
+        Period.metaClass.save = {
+            delegate.id = 1;
+            delegate
+        }
+
 		params.memberId = '1'
 		params.loanType = '1'
 
@@ -159,14 +176,14 @@ class ContractControllerTests {
         params.id = 1
         generateContractMethods(params.id).call()
         controller.doApprove()
-        assert response.redirectedUrl == "/contract/show/1"
+        assert response.redirectedUrl == "/member/show/1"
 
         response.reset()
 
         params.id = 2
         generateContractMethods(params.id).call()
         controller.doApprove()
-        assert response.redirectedUrl == "/contract/show/2"
+        assert response.redirectedUrl == "/member/show/2"
     }
 
     void testDoApproveIsNotOk() {

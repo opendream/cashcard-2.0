@@ -129,7 +129,9 @@ class ContractController {
         existsContract.payloanDate = params.payloanDate
         existsContract.loanReceiveStatus = true
 
-        if (existsContract.save()) {
+        def transaction = new Transaction(amount: existsContract.loanAmount, sign: -1)
+
+        if (transaction.save() && existsContract.save()) {
             redirect controller: 'member', action: 'show', id: existsContract.member.id
         }
     }

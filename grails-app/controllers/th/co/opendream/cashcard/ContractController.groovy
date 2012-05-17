@@ -98,11 +98,39 @@ class ContractController {
         }
 
         existsContract.approvalDate = params.approvalDate
+        existsContract.approvalStatus = true
         if  (existsContract.save()) {
-            redirect action: 'show', controller: 'member', id: existsContract.member.id
+            redirect action: 'show', controller: 'contract', id: existsContract.member.id
         }
         else {
             render view: 'approve', model: [contract: existsContract]
+        }
+    }
+
+    def payloan() {
+        def existsContract = Contract.get(params?.id)
+
+        if (!existsContract) {
+            redirect uri: '/error'
+            return
+        }
+
+       render view: 'payloan', model: [contractInstance: existsContract]
+    }
+
+    def doPayloan() {
+        def existsContract = Contract.get(params?.id)
+
+        if (!existsContract || params.payloanDate =='') {
+            redirect uri: '/error'
+            return
+        }
+
+        existsContract.payloanDate = params.payloanDate
+        existsContract.loanReceiveStatus = true
+
+        if (existsContract.save()) {
+            redirect controller: 'member', action: 'show', id: existsContract.member.id
         }
     }
 }

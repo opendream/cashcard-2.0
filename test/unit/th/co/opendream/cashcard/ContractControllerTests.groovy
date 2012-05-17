@@ -119,6 +119,7 @@ class ContractControllerTests {
             assert response.redirectedUrl == '/error'
         }
     }
+
     void testApprove() {
         params.id = 1
         def member = Member.get(params.id)
@@ -158,17 +159,17 @@ class ContractControllerTests {
         params.id = 1
         generateContractMethods(params.id).call()
         controller.doApprove()
-        assert response.redirectedUrl == "/member/show/1"
+        assert response.redirectedUrl == "/contract/show/1"
 
         response.reset()
 
         params.id = 2
         generateContractMethods(params.id).call()
         controller.doApprove()
-        assert response.redirectedUrl == "/member/show/2"
+        assert response.redirectedUrl == "/contract/show/2"
     }
 
-    void testApproveIsNotOk() {
+    void testDoApproveIsNotOk() {
         Contract.metaClass.save = { -> null }
         Contract.metaClass.static.get = { Serializable gid ->
             [ id: gid, member: Member.get(gid) ] as Contract
@@ -188,4 +189,69 @@ class ContractControllerTests {
         controller.approve()
         assert response.redirectedUrl == '/error'
     }
+
+    void testPayLoan() {
+        params.id = 1
+        def member = Member.get(params.id)
+        Contract.metaClass.static.get = { Serializable gid ->
+            [ id: gid, member: member,  loanAmount: 300] as Contract
+        }
+
+        controller.payloan()
+
+        assert model.contractInstance.loanAmount == 300
+        assert model.contractInstance.id == Contract.get(1).id
+        assert view == '/contract/payloan'
+    }
+
+
+    void testPayLoanWithoutId() {
+        controller.payloan()
+        assert response.redirectedUrl == '/error'
+    }
+
+    void testDoPayloanWithoutDateOrId() {
+        params.id = 1
+        params.payloanDate = ''
+        controller.doPayloan()
+        assert response.redirectedUrl == '/error'
+
+        response.reset()
+
+        params.id = null
+        controller.doPayloan()
+        assert response.redirectedUrl == '/error'
+    }
+
+
+    void testDoPayloanOK() {
+        params.id = 1
+        params.payloanDate = new Date()
+
+
+        def member = Member.get(params.id)
+        Contract.metaClass.static.get = { Serializable gid ->
+            [ id: gid, member: member,  loanAmount: 300, payloanDate: null] as Contract
+        }
+
+        Contract.metaClass.save = { ->
+            delegate.member = member
+            delegate.id = 1
+            delegate.payloanDate = new Date()
+            delegate
+        }
+
+        controller.doPayloan()
+        assert response.redirectedUrl == "/member/show/${member.id}"
+    }
+
+/*
+    void testDoPayloanWithDate() {
+        params.id = 1
+        controller.doPayloan()
+        assert response.redirectedUrl == "/contract/show/1"
+    }
+    */
+
+
 }

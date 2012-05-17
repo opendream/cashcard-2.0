@@ -97,12 +97,23 @@ class ContractController {
 
     def approve() {
         def contract = Contract.get(params.id)
+
+        if (!contract) {
+            redirect uri: '/error'
+        }
         render view: 'approve', model: [contractInstance: contract]
     }
 
     def doApprove() {
-        def existsContract = Contract.get(params.id)
+        def existsContract = Contract.get(params?.id)
+
+        if (!existsContract) {
+            redirect uri: '/error'
+            return
+        }
+
         existsContract.approvalDate = params.approvalDate
+        existsContract.approvalStatus = true
         if  (existsContract.save()) {
             def periodList = periodService.generatePeriod(contract.loanAmount, contract.numberOfPeriod)
             def lastDueDate = existsContract.approvalDate.plus(30)
@@ -132,6 +143,33 @@ class ContractController {
         }
         else {
             redirect url: '/error'
+        }
+    }
+    
+    def payloan() {
+        def existsContract = Contract.get(params?.id)
+
+        if (!existsContract) {
+            redirect uri: '/error'
+            return
+        }
+
+       render view: 'payloan', model: [contractInstance: existsContract]
+    }
+
+    def doPayloan() {
+        def existsContract = Contract.get(params?.id)
+
+        if (!existsContract || params.payloanDate =='') {
+            redirect uri: '/error'
+            return
+        }
+
+        existsContract.payloanDate = params.payloanDate
+        existsContract.loanReceiveStatus = true
+
+        if (existsContract.save()) {
+            redirect controller: 'member', action: 'show', id: existsContract.member.id
         }
     }
 }

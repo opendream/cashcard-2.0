@@ -95,6 +95,12 @@
                                     <g:link controller="contract" action="show" id="${contract.id}">
                                         <span class="label label-info"><g:message code="contract.list.view.label" /></span>
                                     </g:link>
+                                    <g:link controller="contract" action="approve" id="${contract.id}">
+                                        <span class="label label-info"><g:message code="contract.list.approve.label" /></span>
+                                    </g:link>
+                                    <g:link controller="contract" action="payloan" id="${contract.id}">
+                                        <span class="label label-info"><g:message code="contract.list.payloan.label" /></span>
+                                    </g:link>
                                 </td>
                             </tr>
                         </g:each>

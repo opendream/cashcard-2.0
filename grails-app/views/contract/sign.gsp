@@ -23,6 +23,15 @@
 			<g:hiddenField name="memberId" value="${member.id}" />
 			<g:hiddenField name="loanType" value="${loanType.id}" />
 
+			<div class="control-group">
+				<label class="control-label">
+					<g:message code="contract.loaning.form.loanType.label" />
+				</label>
+				<div class="controls">
+					${loanType.name}
+				</div>
+			</div>
+
 			<div class="control-group ${hasErrors(bean:contract,field:'code', 'error')}">
 				<label class="control-label" for="code">
 					<g:message code="contract.loaning.form.code.label" />

@@ -15,4 +15,13 @@ class UtilServiceTests {
     	assertTrue service.check_id_card("1159900100015")
     	assertFalse service.check_id_card("1159900100016")
     }
+
+    void testIsPayable() {
+    	def contract
+    	contract = [id: 1, approvalStatus: false] as Contract
+    	assertFalse service.isPayable(contract)
+
+    	contract = [id: 1, approvalStatus: true] as Contract
+    	assertTrue service.isPayable(contract)
+    }
 }

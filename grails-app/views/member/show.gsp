@@ -69,6 +69,45 @@
                     </tr>
                 </table>
 
+                <h3><g:message code="contract.list" /></h3>
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="id"><g:message code="contract.list.id" /></th>
+                            <th class="string"><g:message code="contract.list.type" /></th>
+                            <th class="number"><g:message code="contract.list.loanAmount" /></th>
+                            <th class="number"><g:message code="contract.list.loanBalance" /></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <g:each var="contract" in="${contractList}">
+                            <tr>
+                                <td class="id">${contract.code}</td>
+                                <td class="string">${contract.loanType.name}</td>
+                                <td class="number">
+                                    <g:formatNumber type="number" number="${contract.loanAmount}" maxFractionDigits="2" minFractionDigits="2" />
+                                <td class="number">
+                                    <g:formatNumber type="number" number="${contract.loanBalance}" maxFractionDigits="2" minFractionDigits="2" />
+                                </td>
+                                <td>
+                                    <g:link controller="contract" action="show" id="${contract.id}">
+                                        <span class="label label-info"><g:message code="contract.list.view.label" /></span>
+                                    </g:link>
+                                    <g:link controller="contract" action="approve" id="${contract.id}">
+                                        <span class="label label-info"><g:message code="contract.list.approve.label" /></span>
+                                    </g:link>
+                                    <g:link controller="contract" action="payloan" id="${contract.id}">
+                                        <span class="label label-info"><g:message code="contract.list.payloan.label" /></span>
+                                    </g:link>
+                                </td>
+                            </tr>
+                        </g:each>
+                    </tbody>
+                </table>
+
+
                 <div class="form-actions">
                     <g:link class="btn" action="edit" id="${memberInstance.id}">แก้ไขข้อมูลสมาชิก</g:link>
                 </div>

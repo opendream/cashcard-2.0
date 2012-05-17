@@ -57,7 +57,11 @@ class MemberController {
             return
         }
 
-        [memberInstance: memberInstance]
+        def c = Contract.createCriteria()
+        def contractList = c.list(sort: 'dateCreated', order: 'asc') {
+            eq('member', memberInstance)
+        }
+        render view: 'show', model: [memberInstance: memberInstance, contractList: contractList]
     }
 
     def edit() {
@@ -119,5 +123,4 @@ class MemberController {
             render(view: 'verifyCard')
         }
     }
-
 }

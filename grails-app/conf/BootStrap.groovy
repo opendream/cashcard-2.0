@@ -1,4 +1,5 @@
 import th.co.opendream.cashcard.Member
+<<<<<<< HEAD
 import th.co.opendream.cashcard.RequestMap
 import th.co.opendream.cashcard.Role
 import th.co.opendream.cashcard.UsersRole
@@ -9,6 +10,9 @@ import static java.util.Calendar.*
 import grails.util.Environment
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 
+import th.co.opendream.cashcard.LoanType
+import th.co.opendream.cashcard.Contract
+
 class BootStrap {
 
     def init = { servletContext ->
@@ -17,6 +21,7 @@ class BootStrap {
 
     	m1.save()
     	m2.save()
+
         def user = new Users(username:'admin', password:'password',
                                 , enabled:true, accountExpired:false, accountLocked:false, passwordExpired:false).save()
 
@@ -29,6 +34,9 @@ class BootStrap {
         /*
         */
         createRequestMaps();
+
+    	generateLoanType()
+        generateContract(m1, LoanType.get(1))
     }
     def destroy = {
 
@@ -53,5 +61,31 @@ class BootStrap {
         new RequestMap(url: '/interestRate/**', configAttribute: 'ROLE_USER,ROLE_COUNTER').save()
         new RequestMap(url: '/report/**', configAttribute: 'ROLE_USER,ROLE_COUNTER').save()
         new RequestMap(url: '/console/**', configAttribute: 'ROLE_ADMIN').save()
+    }
+
+    def generateLoanType() {
+    	new LoanType(name: "เงินกู้สามัญ").save()
+    	new LoanType(name: "เงินกู้เพื่อการศึกษา").save()
+    	new LoanType(name: "เงินกู้ซื้อยานพาหนะ").save()
+    	new LoanType(name: "เงินกู้ซื้อทอง").save()
+    	new LoanType(name: "เงินกู้ซื้เครื่องใช้ไฟฟ้า").save()
+    	new LoanType(name: "เงินกู้โดยอสังหาริมทรัพย์").save()
+    	new LoanType(name: "เงินกู้โดยใช้ทรัพย์สินจำนอง").save()
+    }
+
+    def generateContract(member, loanType) {
+        new Contract(
+            code: "ก.55-1000-20",
+            member: member,
+            loanType: loanType,
+            loanAmount: 2000.00,
+            interestRate: 2.00,
+            loanBalance: 2000.00,
+            approvalStatus: false,
+            loanReceiveStatus: false,
+            guarantor1: "Keng",
+            guarantor2: "Neung",
+            numberOfPeriod: 3
+        ).save()
     }
 }

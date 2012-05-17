@@ -1,5 +1,13 @@
 <div class="subnav">
     <ul class="nav nav-pills">
-        <li><a href="${createLink(controller:'member', action:'show', params:[id:memberInstance.id])}">ข้อมูล</a></li>
+        <li>
+        	<g:link controller="member" action="show" params="[id:memberInstance.id]">
+        		<g:message code="toolbar.member.info" />
+        	</g:link>
+        <li>
+        	<g:link controller="contract" action="selectLoanType" params="[id:memberInstance.id]">
+        		<g:message code="toolbar.member.loaning" />
+        	</g:link>
+        </li>
 	</ul>
 </div>

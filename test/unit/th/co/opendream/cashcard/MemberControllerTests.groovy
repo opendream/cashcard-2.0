@@ -15,7 +15,7 @@ import org.codehaus.groovy.grails.web.servlet.mvc.SynchronizerTokensHolder
  * See the API for {@link grails.test.mixin.support.GrailsUnitTestMixin} for usage instructions
  */
 @TestMixin(GrailsUnitTestMixin)
-@Mock([Member])
+@Mock([Member, LoanType, Contract])
 class MemberControllerTests {
     def utilService
 
@@ -70,6 +70,13 @@ class MemberControllerTests {
         assert response.redirectedUrl == '/member/show/1'
     }
 
+    void testShow() {
+    	params.id = '1'
+
+    	controller.show()
+    	assert view == '/member/show'
+    }
+
     void testShowMemberWithoutId() {
         controller.show()
         assert response.redirectedUrl == '/member/list'
@@ -119,5 +126,4 @@ class MemberControllerTests {
 
         assert response.redirectedUrl == '/member/list'
     }
-
 }

@@ -27,10 +27,20 @@
 					<dd><g:formatNumber number="${contract.interestRate}" format="0.00" /></dd>
 
 					<dt><g:message code="contract.show.guarantor1" /></dt>
-					<dd>${contract.guarantor1}</dd>
+					<dd>
+						<g:if test="${contract.guarantor1}">
+							${contract.guarantor1}
+						</g:if>
+						<g:else>-</g:else>
+					</dd>
 
 					<dt><g:message code="contract.show.guarantor2" /></dt>
-					<dd>${contract.guarantor2}</dd>
+					<dd>
+						<g:if test="${contract.guarantor2}">
+							${contract.guarantor2}
+						</g:if>
+						<g:else>-</g:else>
+					</dd>
 
 					<dt><g:message code="contract.show.signedDate" /></dt>
 					<dd><g:formatDate date="${contract.dateCreated}" format="EEEE dd MMMM yyyy" /></dd>
@@ -66,11 +76,19 @@
 		<h2><g:message code="contract.show.period.header" /></h2>
 		<table class="table table-condensed table-striped">
 			<thead>
-
+				<tr>
+					<td>No.</td>
+					<td>Amount</td>
+				</tr>
 			</thead>
 
 			<tbody>
-
+				<g:each var="period" in="${periodList}">
+					<tr>
+						<td>${period.no}</td>
+						<td>${period.amount}</td>
+					</tr>
+				</g:each>
 			</tbody>
 		</table>
 	</section>

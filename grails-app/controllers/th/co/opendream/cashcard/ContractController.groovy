@@ -82,11 +82,21 @@ class ContractController {
 
     def approve() {
         def contract = Contract.get(params.id)
+
+        if (!contract) {
+            redirect uri: '/error'
+        }
         render view: 'approve', model: [contractInstance: contract]
     }
 
     def doApprove() {
-        def existsContract = Contract.get(params.id)
+        def existsContract = Contract.get(params?.id)
+
+        if (!existsContract) {
+            redirect uri: '/error'
+            return
+        }
+
         existsContract.approvalDate = params.approvalDate
         if  (existsContract.save()) {
             redirect action: 'show', controller: 'member', id: existsContract.member.id

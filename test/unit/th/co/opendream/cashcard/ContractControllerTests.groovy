@@ -178,4 +178,14 @@ class ContractControllerTests {
         assert model != null
         assert view == '/contract/approve'
     }
+
+    void testdoApproveWithoutId() {
+        controller.doApprove()
+        assert response.redirectedUrl == '/error'
+    }
+
+    void testApproveWithoutId() {
+        controller.approve()
+        assert response.redirectedUrl == '/error'
+    }
 }

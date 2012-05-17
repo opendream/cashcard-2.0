@@ -133,7 +133,7 @@ class ContractControllerTests {
     }
 
     void testApproveOk() {
-        def generateContractSaveForMemberId = { id ->
+        def generateContractMethods= { id ->
             { ->
                 GroovySystem.getMetaClassRegistry().removeMetaClass(Contract)
                 // FROM
@@ -156,14 +156,14 @@ class ContractControllerTests {
         }
 
         params.id = 1
-        generateContractSaveForMemberId(params.id).call()
+        generateContractMethods(params.id).call()
         controller.doApprove()
         assert response.redirectedUrl == "/member/show/1"
 
         response.reset()
 
         params.id = 2
-        generateContractSaveForMemberId(params.id).call()
+        generateContractMethods(params.id).call()
         controller.doApprove()
         assert response.redirectedUrl == "/member/show/2"
     }

@@ -20,7 +20,7 @@ class ContractControllerTests {
     	def commonLoan = new LoanType(name: "Common").save()
 
         def m1 = new Member(identificationNumber: "1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")
-        def m2 = new Member(identificationNumber: "1234567891234", firstname: "Noomz", lastname: "Siriwat", telNo: "111111111", gender: "MALE", address: "Opendream2")
+        def m2 = new Member(identificationNumber: "1119900100015", firstname: "Noomz", lastname: "Siriwat", telNo: "111111111", gender: "MALE", address: "Opendream2")
 
         utilService = [ check_id_card: { id -> true } ] as UtilService
 
@@ -118,5 +118,64 @@ class ContractControllerTests {
             controller.show()
             assert response.redirectedUrl == '/error'
         }
+    }
+    void testApprove() {
+        params.id = 1
+        def member = Member.get(params.id)
+        Contract.metaClass.static.get = { Serializable gid ->
+            [ id: gid, member: member ] as Contract
+        }
+
+        controller.approve()
+
+        assert model.contractInstance.id == Contract.get(1).id
+        assert view == '/contract/approve'
+    }
+
+    void testApproveOk() {
+        def generateContractMethods= { id ->
+            { ->
+                GroovySystem.getMetaClassRegistry().removeMetaClass(Contract)
+                // FROM
+                //   http://blogs.bytecode.com.au/glen/2008/03/12/mockfor-march-unit-testing-grails-controllers.html
+                //
+                //def remove = GroovySystem.metaClassRegistry.&removeMetaClass
+                //remove Contract
+                def member = Member.get(id)
+                Contract.metaClass.save = { ->
+                    delegate.member = member
+                    delegate.id = 1
+                    delegate.approvalDate = new Date()
+                    delegate
+                }
+
+                Contract.metaClass.static.get = { Serializable gid ->
+                    [ id: gid, member: member ] as Contract
+                }
+            }
+        }
+
+        params.id = 1
+        generateContractMethods(params.id).call()
+        controller.doApprove()
+        assert response.redirectedUrl == "/member/show/1"
+
+        response.reset()
+
+        params.id = 2
+        generateContractMethods(params.id).call()
+        controller.doApprove()
+        assert response.redirectedUrl == "/member/show/2"
+    }
+
+    void testApproveIsNotOk() {
+        Contract.metaClass.save = { -> null }
+        Contract.metaClass.static.get = { Serializable gid ->
+            [ id: gid, member: Member.get(gid) ] as Contract
+        }
+        params.id = 1
+        controller.doApprove()
+        assert model != null
+        assert view == '/contract/approve'
     }
 }

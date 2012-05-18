@@ -1,5 +1,4 @@
 import th.co.opendream.cashcard.Member
-<<<<<<< HEAD
 import th.co.opendream.cashcard.RequestMap
 import th.co.opendream.cashcard.Role
 import th.co.opendream.cashcard.UsersRole
@@ -74,6 +73,7 @@ class BootStrap {
     }
 
     def generateContract(member, loanType) {
+        /*
         new Contract(
             code: "ก.55-1000-20",
             member: member,
@@ -87,5 +87,6 @@ class BootStrap {
             guarantor2: "Neung",
             numberOfPeriod: 3
         ).save()
+        */
     }
 }

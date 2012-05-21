@@ -1,5 +1,7 @@
 package th.co.opendream.cashcard
 
+import groovy.time.TimeCategory
+
 class ContractController {
 
     def periodService, utilService
@@ -120,13 +122,15 @@ class ContractController {
                 eq('contract', existsContract)
             }
 
-            def lastDueDate = existsContract.approvalDate.plus(30)
-            periodList.each { period ->
-                period.dueDate = lastDueDate
-                period.contract = existsContract
-                period.save()
+            use(TimeCategory) {
+                def lastDueDate = existsContract.approvalDate + 1.month
+                periodList.each { period ->
+                    period.dueDate = lastDueDate
+                    period.contract = existsContract
+                    period.save()
 
-                lastDueDate = lastDueDate.plus(30)
+                    lastDueDate += 1.month
+                }
             }
 
             redirect action: 'show', controller: 'member', id: existsContract.member.id

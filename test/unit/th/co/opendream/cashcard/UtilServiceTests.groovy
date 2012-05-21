@@ -21,6 +21,9 @@ class UtilServiceTests {
     	contract = [id: 1, approvalStatus: false] as Contract
     	assertFalse service.isPayable(contract)
 
+        contract = [id: 1, approvalStatus: true, loanReceiveStatus: true] as Contract
+        assertFalse service.isPayable(contract)
+
     	contract = [id: 1, approvalStatus: true] as Contract
     	assertTrue service.isPayable(contract)
     }

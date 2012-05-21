@@ -67,5 +67,20 @@ class PeriodServiceTests {
         ])
 
         assert service.getCurrentPeriod(contract) == Period.get(2)
+
+        def p1 = Period.get(1)
+        p1.dueDate = null
+        p1.validate()
+        p1.save()
+
+        def p2 = Period.get(2)
+        p2.dueDate = null
+        p2.save()
+
+        def p3 = Period.get(3)
+        p3.dueDate = null
+        p3.save()
+
+        assert service.getCurrentPeriod(contract) == null
     }
 }

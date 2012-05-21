@@ -34,7 +34,7 @@
 					</div>
 					<div class="form-actions">
 						<button class="btn btn-primary" type="submit"><i class="icon-ok icon-white"></i> ${message(code: 'default.button.pay.label', default: 'Pay')}</button>
-						<g:link action="list"><g:message code="default.button.cancel.label"></g:message></g:link>
+						<g:link controller="member" action="show" id="${contractInstance.member.id}"><g:message code="default.button.cancel.label"></g:message></g:link>
 					</div>
 			</g:form>
 		</div>

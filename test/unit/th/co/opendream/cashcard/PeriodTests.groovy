@@ -9,18 +9,14 @@ import org.junit.*
  * See the API for {@link grails.test.mixin.domain.DomainClassUnitTestMixin} for usage instructions
  */
 @TestFor(Period)
-class PeriodTests {
+class PeriodTests extends DomainTestTemplate  {
 
-    void testProperties() {
-        def requiredProperties = [
-            'contract', 'amount', 'no', 'dueDate', 'status', 'payoffStatus'
-        ]
+    def requiredProperties() {
+        ['contract', 'amount', 'no', 'dueDate', 'status', 'payoffStatus']
+    }
 
-        def instanceProperties = Period.metaClass.properties*.name
-
-        def missing_properties = requiredProperties - instanceProperties
-        assert 0 == missing_properties.size(),
-            "Domain class is missing some required properties => ${missing_properties}"
+    def domainClass() {
+        Period.class
     }
 
     void testValidateContract() {

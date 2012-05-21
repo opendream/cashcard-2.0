@@ -8,6 +8,7 @@ class ReceiveTransaction extends Transaction {
 	BigDecimal interestPaid
 	BigDecimal fee
 	BigDecimal fine
+	Boolean isShareCapital
 
     static constraints = {
     }

@@ -14,7 +14,7 @@ class ReceiveTransactionTests extends DomainTestTemplate {
     def requiredProperties() {
         ['amount',          'balanceForward',        'balancePaid',
          'interestRate',    'interestPaid',          'fee',
-         'period',          'fine'
+         'period',          'fine',                  'isShareCapital'
         ]
     }
 
@@ -42,5 +42,17 @@ class ReceiveTransactionTests extends DomainTestTemplate {
 
     void testFinanceField() {
     	verifyFinanceNumber(ReceiveTransaction, ['balanceForward', 'balancePaid', 'interestRate', 'interestPaid', 'fee', 'fine'])
+    }
+
+    void testIsShareCapital() {
+        mockForConstraintsTests(ReceiveTransaction)
+
+        def instance = new ReceiveTransaction(),
+            field = 'isShareCapital'
+
+        verifyNotNull(instance, field)
+
+        instance[field] = [id: 1]
+        assertTrue instance.validate([field])
     }
 }

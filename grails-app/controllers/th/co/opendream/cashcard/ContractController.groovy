@@ -182,4 +182,22 @@ class ContractController {
             redirect controller: 'member', action: 'show', id: existsContract.member.id
         }
     }
+
+    def payoff() {
+        def period = Period.get(params.id)
+
+        if (period) {
+            def contract = period.contract
+            def receiveTx = new ReceiveTransaction()
+            if (contract && contract.approvalStatus && contract.loanReceiveStatus) {
+                render view: 'payoff', model: [period: period, receiveTx: receiveTx]
+            }
+            else {
+                redirect url: '/error'
+            }
+        }
+        else {
+            redirect url: '/error'  
+        }
+    }
 }

@@ -283,4 +283,37 @@ class ContractControllerTests {
         controller.doPayloan()
         assert response.redirectedUrl == "/member/show/${member.id}"
     }
+
+    void testPayoff() {
+        def contract = [id: 1, approvalStatus: true, loanReceiveStatus: true]
+        Period.metaClass.static.get = { Serializable id ->
+            id == '1' ? [id: id, contract: contract] : null
+        }
+
+        params.id = '1'
+        controller.payoff()
+        assert view == '/contract/payoff'
+
+        contract.approvalStatus = false
+        controller.payoff()
+        assert response.redirectUrl == '/error'
+
+        response.reset()
+
+        contract.approvalStatus = true
+        contract.loanReceiveStatus = false
+        controller.payoff()
+        assert response.redirectUrl == '/error'
+
+        response.reset()
+
+        params.id = '42'
+        controller.payoff()
+        assert response.redirectUrl == '/error'
+    }
+
+    void testDoPayoff() {
+
+    }
+
 }

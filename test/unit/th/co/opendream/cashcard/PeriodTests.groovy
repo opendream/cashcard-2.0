@@ -13,7 +13,7 @@ class PeriodTests {
 
     void testProperties() {
         def requiredProperties = [
-            'contract', 'amount', 'no', 'dueDate', 'status'
+            'contract', 'amount', 'no', 'dueDate', 'status', 'payoffStatus'
         ]
 
         def instanceProperties = Period.metaClass.properties*.name
@@ -83,10 +83,26 @@ class PeriodTests {
         def period = new Period(),
             field = 'status'
 
+        assert period[field] == false
         assertTrue "${field} value = ${period[field]} must pass all validations.",
             period.validate([field])
 
-        period[field] = Period.Status.QUEUED
+        period[field] = true
+        assertTrue "${field} value = ${period[field]} must pass all validations.",
+            period.validate([field])
+    }
+
+    void testValidatePayoffStatus() {
+        mockForConstraintsTests(Period)
+
+        def period = new Period(),
+            field = 'payoffStatus'
+
+        assert period[field] == false
+        assertTrue "${field} value = ${period[field]} must pass all validations.",
+            period.validate([field])
+
+        period[field] = true
         assertTrue "${field} value = ${period[field]} must pass all validations.",
             period.validate([field])
     }

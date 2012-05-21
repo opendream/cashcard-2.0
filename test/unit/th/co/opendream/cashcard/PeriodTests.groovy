@@ -125,7 +125,8 @@ class PeriodTests extends DomainTestTemplate  {
             amount: 200.00,
             no: 1,
             dueDate: new Date().plus(10),
-            status: Period.Status.QUEUED
+            status: true,
+            payoffStatus: false
         )
     }
 

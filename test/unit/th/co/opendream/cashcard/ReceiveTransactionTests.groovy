@@ -14,7 +14,7 @@ class ReceiveTransactionTests extends DomainTestTemplate {
     def requiredProperties() {
         ['amount',          'balanceForward',        'balancePaid',
          'interestRate',    'interestPaid',          'fee',
-         'period',
+         'period',          'fine'
         ]
     }
 
@@ -29,17 +29,18 @@ class ReceiveTransactionTests extends DomainTestTemplate {
     }
 
     void testPeriod() {
-    	mockForContraintsTests(ReceiveTransaction)
+    	mockForConstraintsTests(ReceiveTransaction)
 
-    	def instance = new ReceiveTransaction()
+    	def instance = new ReceiveTransaction(),
+            field = 'period'
 
-    	verifyNotNull(instance, 'period')
+    	verifyNotNull(instance, field)
 
     	instance[field] = [id: 1]
     	assertTrue instance.validate([field])
     }
 
     void testFinanceField() {
-    	verifyFinanceNumber(ReceiveTransaction, ['balanceForward', 'balancePaid', 'interestRate', 'interestPaid', 'fee'])
+    	verifyFinanceNumber(ReceiveTransaction, ['balanceForward', 'balancePaid', 'interestRate', 'interestPaid', 'fee', 'fine'])
     }
 }

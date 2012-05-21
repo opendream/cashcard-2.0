@@ -93,14 +93,26 @@
                                 </td>
                                 <td>
                                     <g:link controller="contract" action="show" id="${contract.id}">
-                                        <span class="label label-info"><g:message code="contract.list.view.label" /></span>
+                                        <span class="btn btn-info"><g:message code="contract.list.view.label" /></span>
                                     </g:link>
-                                    <g:link controller="contract" action="approve" id="${contract.id}">
-                                        <span class="label label-info"><g:message code="contract.list.approve.label" /></span>
-                                    </g:link>
-                                    <g:link controller="contract" action="payloan" id="${contract.id}">
-                                        <span class="label label-info"><g:message code="contract.list.payloan.label" /></span>
-                                    </g:link>
+
+                                    <g:if test="${!contract.approvalStatus}">
+                                        <g:link controller="contract" action="approve" id="${contract.id}">
+                                            <span class="btn btn-success"><g:message code="contract.list.approve.label" /></span>
+                                        </g:link>
+                                    </g:if>
+
+                                    <g:if test="${contract.isPayable}">
+                                        <g:link controller="contract" action="payloan" id="${contract.id}">
+                                            <span class="btn btn-warning"><g:message code="contract.list.payloan.label" /></span>
+                                        </g:link>
+                                    </g:if>
+
+                                    <g:if test="${contract.currentPeriod}">
+                                        <g:link controller="contract" action="payoff" id="${contract.currentPeriod?.id}">
+                                            <span class="btn btn-danger"><g:message code="contract.list.payoff.label" /></span>
+                                        </g:link>
+                                    </g:if>
                                 </td>
                             </tr>
                         </g:each>

@@ -4,6 +4,8 @@ import org.springframework.dao.DataIntegrityViolationException
 
 class MemberController {
 
+    def utilService, periodService
+
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
     def index() {
@@ -60,6 +62,11 @@ class MemberController {
         def c = Contract.createCriteria()
         def contractList = c.list(sort: 'dateCreated', order: 'asc') {
             eq('member', memberInstance)
+        }
+
+        contractList.each {
+            it.metaClass.isPayable = utilService.isPayable(it)
+            it.metaClass.currentPeriod = periodService.getCurrentPeriod(it)
         }
         render view: 'show', model: [memberInstance: memberInstance, contractList: contractList]
     }

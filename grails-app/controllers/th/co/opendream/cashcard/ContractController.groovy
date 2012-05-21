@@ -24,6 +24,8 @@ class ContractController {
                 def periodList = periodService.generatePeriod(contract.loanAmount, contract.numberOfPeriod)
                 periodList.each { period ->
                     period.contract = contract
+                    period.status = false
+                    period.payoffStatus = false
                     period.save()
                 }
 
@@ -127,6 +129,8 @@ class ContractController {
                 periodList.each { period ->
                     period.dueDate = lastDueDate
                     period.contract = existsContract
+                    period.status = true
+                    period.payoffStatus = false
                     period.save()
 
                     lastDueDate += 1.month
@@ -168,7 +172,7 @@ class ContractController {
     def doPayloan() {
         def existsContract = Contract.get(params?.id)
 
-        if (!existsContract || params.payloanDate =='') {
+        if (!existsContract || params.payloanDate =='' || !utilService.isPayable(existsContract)) {
             redirect uri: '/error'
             return
         }
@@ -178,7 +182,7 @@ class ContractController {
 
         def transaction = new Transaction(amount: existsContract.loanAmount, sign: -1)
 
-        if (utilService.isPayable(existsContract) && transaction.save() && existsContract.save()) {
+        if (transaction.save() && existsContract.save()) {
             redirect controller: 'member', action: 'show', id: existsContract.member.id
         }
     }

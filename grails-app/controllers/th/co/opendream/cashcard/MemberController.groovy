@@ -19,7 +19,7 @@ class MemberController {
         def c = Member.createCriteria()
         def memberList = c.list(offset: params.offset, max: params.max) {
             if (params.identificationNumber) {
-                eq('identificationNumber', params.identificationNumber)
+                ilike('identificationNumber', "%${params.identificationNumber}%")
             }
             if (params.firstname) {
                 ilike('firstname', '%' + params.firstname + '%')

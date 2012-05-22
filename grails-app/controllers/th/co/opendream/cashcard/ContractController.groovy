@@ -19,9 +19,10 @@ class ContractController {
 
     		def contract = new Contract(params)
             contract.loanBalance = contract.loanAmount
+            contract.interestRate = 24.00
 
     		if (contract.save()) {
-                def periodList = periodService.generatePeriod(contract.loanAmount, contract.numberOfPeriod)
+                def periodList = periodService.generatePeriod(contract.loanAmount + (contract.loanAmount * (0.24 / 12) * contract.numberOfPeriod), contract.numberOfPeriod)
                 periodList.each { period ->
                     period.contract = contract
                     period.status = false
@@ -198,6 +199,27 @@ class ContractController {
             }
             else {
                 redirect url: '/error'
+            }
+        }
+        else {
+            redirect url: '/error'  
+        }
+    }
+
+    def doPayoff() {
+        def period = Period.get(params.id)
+
+        def amount = (params.amount ? params.amount : '0.00') as BigDecimal
+        def fine = (params.fine ? params.fine : '0.00') as BigDecimal
+        def isShareCapital = (params.isShareCapital ? params.isShareCapital : false)
+
+        if (period) {
+            try {
+                periodService.periodPayoff(period, amount, fine, isShareCapital, new Date())
+                redirect url: "/member/show/${period.contract.member.id}"
+            }
+            catch (e) {
+               render view: '/contract/payoff', params: [id: period.id], model: [contract: period.contract, period: period, amount: amount, fine: fine, isShareCapital: isShareCapital]
             }
         }
         else {

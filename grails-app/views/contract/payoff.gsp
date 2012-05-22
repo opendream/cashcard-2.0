@@ -16,6 +16,8 @@
 
 		<div class="container" >
 			<g:form action="doPayoff" class="form-horizontal">
+				<g:hiddenField name="id" value="${period.id}" />
+
 				<div class="control-group">
 					<label class="control-label">
 						<g:message code="contract.payoff.form.dueDate.label" />
@@ -49,7 +51,7 @@
 					</label>
 					<div class="controls">
 						<label class="checkbox">
-							<g:field type="checkbox" id="isShareCapital" name="isShareCapital" pattern="\\d*(\\.\\d\\d)?" value="${formatNumber(number: receiveTx.isShareCapital, format: '0.00')}" />
+							<g:field type="checkbox" id="isShareCapital" name="isShareCapital" value="${receiveTx.isShareCapital}" />
 							<g:message code="contract.payoff.form.isShareCapital.checkbox.label" />
 						</label>
 					</div>

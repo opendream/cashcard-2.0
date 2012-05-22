@@ -313,7 +313,13 @@ class ContractControllerTests {
     }
 
     void testDoPayoff() {
+        //params.id = '1'
+        //params.amount = '300.00'
+        //params.fine = ''
+        //params.isShareCapital = 'true'
 
+        //controller.doPayoff()
+        //assert response.redirectUrl == '/member/show/1'
     }
 
 }

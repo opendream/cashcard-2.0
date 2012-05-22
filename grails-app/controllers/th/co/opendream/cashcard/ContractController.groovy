@@ -15,14 +15,13 @@ class ContractController {
             params.loanType = loanType
 
     		def contract = new Contract(params)
-            contract.loanBalance = contract.loanAmount
+            contract.loanBalance = contract.loanAmount as BigDecimal
             contract.interestRate = 24.00
-            contract.numberOfPeriod = params.numberOfPeriod
 
     		if (contract.save()) {
-                def numberOfPeriod = contract.numberOfPeriod
-                def a = contract.loanAmount + (contract.loanAmount * (0.24 / 12) * numberOfPeriod)
-                def periodList = periodService.generatePeriod(a, numberOfPeriod)
+                def numberOfPeriod = (params.numberOfPeriod ? params.numberOfPeriod : 0) as Integer
+                def totalDebt = contract.loanAmount + (contract.loanAmount * (contract.interestRate / 100 / 12) * numberOfPeriod)
+                def periodList = periodService.generatePeriod(totalDebt, numberOfPeriod)
                 periodList.each { period ->
                     period.contract = contract
                     period.status = false

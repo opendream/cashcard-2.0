@@ -12,7 +12,7 @@ class BootStrap {
     	m2.save()
 
     	generateLoanType()
-        generateContract(m1, LoanType.get(1))
+        //generateContract(m1, LoanType.get(1))
     }
     def destroy = {
     }

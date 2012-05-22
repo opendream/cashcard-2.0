@@ -12,7 +12,9 @@ import org.junit.*
 class PeriodTests extends DomainTestTemplate  {
 
     def requiredProperties() {
-        ['contract', 'amount', 'no', 'dueDate', 'status', 'payoffStatus']
+        ['contract', 'amount', 'no', 'dueDate', 'status', 'payoffStatus',
+         'payoffDate'
+        ]
     }
 
     def domainClass() {
@@ -64,6 +66,20 @@ class PeriodTests extends DomainTestTemplate  {
 
         def period = new Period(),
             field = 'dueDate'
+            
+        assertTrue "${field} value = ${period[field]} must pass all validations.",
+            period.validate([field])
+
+        period[field] = new Date()
+        assertTrue "${field} value = ${period[field]} must pass all validations.",
+            period.validate([field])
+    }
+
+    void testValidatePayoffDate() {
+        mockForConstraintsTests(Period)
+
+        def period = new Period(),
+            field = 'payoffDate'
             
         assertTrue "${field} value = ${period[field]} must pass all validations.",
             period.validate([field])

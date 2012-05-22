@@ -20,9 +20,12 @@ class ContractController {
     		def contract = new Contract(params)
             contract.loanBalance = contract.loanAmount
             contract.interestRate = 24.00
+            contract.numberOfPeriod = params.numberOfPeriod
 
     		if (contract.save()) {
-                def periodList = periodService.generatePeriod(contract.loanAmount + (contract.loanAmount * (0.24 / 12) * contract.numberOfPeriod), contract.numberOfPeriod)
+                def numberOfPeriod = contract.numberOfPeriod
+                def a = contract.loanAmount + (contract.loanAmount * (0.24 / 12) * numberOfPeriod)
+                def periodList = periodService.generatePeriod(a, numberOfPeriod)
                 periodList.each { period ->
                     period.contract = contract
                     period.status = false
@@ -202,7 +205,7 @@ class ContractController {
             }
         }
         else {
-            redirect url: '/error'  
+            redirect url: '/error'
         }
     }
 
@@ -223,7 +226,7 @@ class ContractController {
             }
         }
         else {
-            redirect url: '/error'  
+            redirect url: '/error'
         }
     }
 }

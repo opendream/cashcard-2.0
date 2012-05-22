@@ -51,6 +51,7 @@ class ContractControllerTests {
 
 		params.memberId = '1'
 		params.loanType = '1'
+        params.numberOfPeriod = '3'
 
 		Contract.metaClass.save = { delegate.id = 1; delegate }
 		controller.create()

@@ -11,7 +11,7 @@ import groovy.time.TimeCategory
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
 @TestFor(PeriodService)
-@Mock([Member, Contract, Period, LoanType])
+@Mock([Member, Contract, Period, LoanType, ReceiveTransaction])
 class PeriodServiceTests {
 
     void setUpPeriod() {
@@ -222,5 +222,44 @@ class PeriodServiceTests {
         assert result.actualInterest == 26.329651
         assert result.effectedInterest == 19.747240
         assert result.fee == 6.582411
+    }
+
+    void testPeriodPayoff() {
+        setUpPeriod()
+
+        def contract = Contract.get(1)
+        contract.approvalStatus = true
+        contract.approvalDate = new Date().parse("yyyy-MM-dd", "2012-03-01")
+        contract.loanReceiveStatus = true
+        contract.payloanDate = contract.approvalDate
+        contract.save()
+
+        def p1 = Period.get(1)
+        p1.dueDate = new Date().parse("yyyy-MM-dd", "2012-04-01")
+        p1.save()
+
+        service.metaClass.calculateInterestFormulaOne = { p, d ->
+            [actualInterest: 40.655737, effectedInterest: 30.491805, fee: 10.163932]
+        }
+
+        service.periodPayoff(p1, 706.00, 0.00, false, p1.dueDate)
+        assert ReceiveTransaction.list().size() == 1
+
+        p1 = Period.get(1)
+        assert p1.payoffStatus == true
+        assert p1.payoffDate == p1.dueDate
+
+        def receiveTx = ReceiveTransaction.get(1)
+        assert receiveTx.amount == 706.00
+        assert receiveTx.balanceForward == 2000.00
+        assert receiveTx.balancePaid == 665.344263
+        assert receiveTx.interestRate == 24.00
+        assert receiveTx.interestPaid == 30.491805
+        assert receiveTx.fee == 10.163932
+        assert receiveTx.fine == 0.00
+        assert receiveTx.isShareCapital == false
+
+        contract = Contract.get(1)
+        assert contract.loanBalance == 1334.655737
     }
 }

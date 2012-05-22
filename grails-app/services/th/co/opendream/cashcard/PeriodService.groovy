@@ -67,6 +67,7 @@ class PeriodService {
     }
 
     def periodPayoff(period, amount, fine, isShareCapital, date) {
+        def actualPaymentAmount = amount
         def periodInterest = calculateInterestFormulaOne(period, date)
 
         def receiveTx = new ReceiveTransaction()
@@ -82,6 +83,8 @@ class PeriodService {
             receiveTx.balancePaid = amount
         }
 
+        receiveTx.amount = actualPaymentAmount
+        receiveTx.sign = 1
         receiveTx.period = period
         receiveTx.balanceForward = period.contract.loanBalance
         receiveTx.interestRate = period.contract.interestRate

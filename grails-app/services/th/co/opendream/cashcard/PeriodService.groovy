@@ -26,7 +26,7 @@ class PeriodService {
 
     def periodPayoff(period, amount, fine, isShareCapital, date) {
         def actualPaymentAmount = amount
-        def periodInterest = processorService(period, date)
+        def periodInterest = processorService.process(period, date)
 
         def receiveTx = new ReceiveTransaction()
 

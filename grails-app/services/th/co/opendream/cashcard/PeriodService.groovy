@@ -1,6 +1,7 @@
 package th.co.opendream.cashcard
 
 class PeriodService {
+    def processorService
 
     def generatePeriod(amount, numberOfPeriod) {
         amount = amount as BigDecimal
@@ -23,52 +24,9 @@ class PeriodService {
         }[0]
     }
 
-    def calculateInterestFormulaOne(period, date) {
-        date = date ? date : new Date()
-
-        def contract = period.contract
-
-        def cal = new GregorianCalendar()
-        def isLeap = cal.isLeapYear(date.year + 1900)
-        def yearDivider = isLeap ? 366 : 365
-
-        def lastPeriod = period
-        if (period.no != 1) {
-            def c = Period.createCriteria()
-            lastPeriod = c.get {
-                eq('contract', contract)
-                eq('no', period.no - 1)
-            }
-        }
-
-        def dayFromLastPeriod = 0
-        if (period.no == 1) {
-            dayFromLastPeriod = date - contract.approvalDate
-        }
-        else {
-            dayFromLastPeriod = date - lastPeriod.payoffDate
-        }
-
-        def actualInterest = contract.loanBalance * (contract.interestRate / 100 / yearDivider) * dayFromLastPeriod
-        def effectedInterest = contract.loanBalance * (0.18 / yearDivider) * dayFromLastPeriod
-        def fee = 0.00
-
-        actualInterest = actualInterest.setScale(6, BigDecimal.ROUND_HALF_UP)
-        effectedInterest = effectedInterest.setScale(6, BigDecimal.ROUND_HALF_UP)
-        if (effectedInterest < actualInterest) {
-            fee = actualInterest - effectedInterest
-        }
-
-        [
-            actualInterest: actualInterest,
-            effectedInterest: effectedInterest,
-            fee: fee
-        ]
-    }
-
     def periodPayoff(period, amount, fine, isShareCapital, date) {
         def actualPaymentAmount = amount
-        def periodInterest = calculateInterestFormulaOne(period, date)
+        def periodInterest = processorService.process(period, date)
 
         def receiveTx = new ReceiveTransaction()
 

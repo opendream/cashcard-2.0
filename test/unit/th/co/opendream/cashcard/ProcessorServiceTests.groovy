@@ -100,7 +100,7 @@ class ProcessorServiceTests {
         contract
     }
 
-    void testCalculateFormulaOneLeapYear() {
+    void testCalculateEffectiveMethodLeapYear() {
         /*
          *********************************************************************
          * Loan Amount : 2000.00, Interest Rate : 24% /year

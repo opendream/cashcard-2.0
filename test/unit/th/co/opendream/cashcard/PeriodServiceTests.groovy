@@ -83,7 +83,7 @@ class PeriodServiceTests {
              status: true, payoffStatus: false
             ],
             [contract: contract, amount: 706.00, no: 2,
-             dueDate: Date.parse("yyyy-MM-dd", "2012-05-01"), 
+             dueDate: Date.parse("yyyy-MM-dd", "2012-05-01"),
              status: true, payoffStatus: false
             ],
             [contract: contract, amount: 708.00, no: 3,
@@ -128,7 +128,7 @@ class PeriodServiceTests {
              status: true, payoffStatus: false
             ],
             [contract: contract, amount: 206.00, no: 2,
-             dueDate: Date.parse("yyyy-MM-dd", "2012-05-01"), 
+             dueDate: Date.parse("yyyy-MM-dd", "2012-05-01"),
              status: true, payoffStatus: false
             ],
             [contract: contract, amount: 206.00, no: 3,
@@ -140,7 +140,7 @@ class PeriodServiceTests {
              status: true, payoffStatus: false
             ],
             [contract: contract, amount: 206.00, no: 5,
-             dueDate: Date.parse("yyyy-MM-dd", "2012-08-01"), 
+             dueDate: Date.parse("yyyy-MM-dd", "2012-08-01"),
              status: true, payoffStatus: false
             ],
             [contract: contract, amount: 206.00, no: 6,
@@ -152,7 +152,7 @@ class PeriodServiceTests {
              status: true, payoffStatus: false
             ],
             [contract: contract, amount: 206.00, no: 8,
-             dueDate: Date.parse("yyyy-MM-dd", "2012-11-01"), 
+             dueDate: Date.parse("yyyy-MM-dd", "2012-11-01"),
              status: true, payoffStatus: false
             ],
             [contract: contract, amount: 206.00, no: 9,
@@ -164,7 +164,7 @@ class PeriodServiceTests {
              status: true, payoffStatus: false
             ],
             [contract: contract, amount: 206.00, no: 11,
-             dueDate: Date.parse("yyyy-MM-dd", "2012-02-01"), 
+             dueDate: Date.parse("yyyy-MM-dd", "2012-02-01"),
              status: true, payoffStatus: false
             ],
             [contract: contract, amount: 214.00, no: 12,
@@ -177,7 +177,7 @@ class PeriodServiceTests {
     }
 
     void testGeneratePeriod() {
-        
+
         def periodList = service.generatePeriod(1000.00, 3)
 
         assert periodList[0].amount == 333
@@ -310,7 +310,7 @@ class PeriodServiceTests {
         def contract = setUpMockForPeriodPayoff_12Months()
         def period
 
-        service.metaClass.calculateInterestFormulaOne = { p, d ->
+        service.processorService = [ process: { p, d ->
             switch (p.id) {
                 case 1:
                     [actualInterest: 40.655737, effectedInterest: 30.491805, fee: 10.163932]
@@ -352,7 +352,7 @@ class PeriodServiceTests {
                 default:
                     null
             }
-        }
+        } ] as PeriodService
 
         def expect = [
             [30.491805, 10.163932,  165.344263, 1834.655737,    0],
@@ -399,32 +399,4 @@ class PeriodServiceTests {
         /*********************** /END Verify money ****************************/
     }
 
-    void testCalculateFormulaOne_withZeroBalance() {
-        setUpPeriod()
-
-        def contract = Contract.get(1)
-        contract.loanBalance = 0
-        contract.save()
-
-        def lastPeriod = Period.get(3)
-        lastPeriod.payoffStatus = true
-        lastPeriod.payoffDate = Date.parse("yyyy-MM-dd", "2012-01-01")
-        lastPeriod.save()
-
-        def period = new Period(
-            amount: 1000.00,
-            dueDate: Date.parse("yyyy-MM-dd", "2013-01-01"),
-            no: 4,
-            status: true,
-            payoffStatus: false,
-            payoffDate: Date.parse("yyyy-MM-dd", "2013-01-01"),
-            contract: contract
-        )
-        period.save()
-
-        def result = service.calculateInterestFormulaOne(period, period.dueDate)
-        assert result.actualInterest == 0.00
-        assert result.effectedInterest == 0.00
-        assert result.fee == 0.00
-    }
 }

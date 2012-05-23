@@ -232,4 +232,33 @@ class ProcessorServiceTests {
         assert result.effectedInterest == 19.747240
         assert result.fee == 6.582411
     }
+
+    void testCalculateEffectiveMethodZeroBalance() {
+        setUpPeriod()
+
+        def contract = Contract.get(1)
+        contract.loanBalance = 0
+        contract.save()
+
+        def lastPeriod = Period.get(3)
+        lastPeriod.payoffStatus = true
+        lastPeriod.payoffDate = Date.parse("yyyy-MM-dd", "2012-01-01")
+        lastPeriod.save()
+
+        def period = new Period(
+            amount: 1000.00,
+            dueDate: Date.parse("yyyy-MM-dd", "2013-01-01"),
+            no: 4,
+            status: true,
+            payoffStatus: false,
+            payoffDate: Date.parse("yyyy-MM-dd", "2013-01-01"),
+            contract: contract
+        )
+        period.save()
+
+        def result = service.process(period, period.dueDate)
+        assert result.actualInterest == 0.00
+        assert result.effectedInterest == 0.00
+        assert result.fee == 0.00
+    }
 }

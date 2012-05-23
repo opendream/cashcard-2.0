@@ -11,14 +11,12 @@ import org.junit.*
 @TestFor(LoanType)
 class LoanTypeTests {
 
-    def generateValidLoanType(name) {
-        new LoanType(
-            name: name
-        )
+    def generateValidLoanType(name, processor) {
+        new LoanType(name: name, processor: processor)
     }
 
     void testProperties() {
-        def requiredProperties = ['name'],
+        def requiredProperties = ['name', 'processor'],
             instanceProperties = LoanType.metaClass.properties*.name
 
         def missing_properties = requiredProperties - instanceProperties
@@ -28,6 +26,7 @@ class LoanTypeTests {
 
     void testValidateName() {
         mockForConstraintsTests(LoanType)
+        def processorName = 'Effective'
 
         def loanType = new LoanType(),
             field = 'name'
@@ -41,8 +40,9 @@ class LoanTypeTests {
         assertEquals "Name must fail blank validation.",
             "blank", loanType.errors[field]
 
-        def existingLoanType = generateValidLoanType("Existing Loan").save()
+        def existingLoanType = generateValidLoanType("Existing Loan", processorName).save()
         loanType.name = "Existing Loan"
+        loanType.processor = processorName
         loanType.validate([field])
         assertEquals "Name must fail unique validation.",
             "unique", loanType.errors[field]

@@ -95,6 +95,87 @@ class PeriodServiceTests {
         contract
     }
 
+    def setUpMockForPeriodPayoff_12Months() {
+        def loanType = new LoanType(name: 'Common')
+        loanType.save()
+
+        def member = new Member(identificationNumber:"1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")
+        member.utilService = [
+            check_id_card: { id -> true }
+        ]
+        member.save()
+
+        def contract = new Contract(
+            code: "ก.55-1000-10",
+            member: member,
+            loanType: loanType,
+            loanAmount: 2000.00,
+            interestRate: 24.00,
+            loanBalance: 2000.00,
+            approvalStatus: true,
+            approvalDate: new Date().parse("yyyy-MM-dd", "2012-03-01"),
+            loanReceiveStatus: true,
+            payloanDate: new Date().parse("yyyy-MM-dd", "2012-03-01"),
+            guarantor1: "Keng",
+            guarantor2: "Neung",
+            numberOfPeriod: 12
+        )
+        contract.save()
+
+        mockDomain(Period, [
+            [contract: contract, amount: 206.00, no: 1,
+             dueDate: Date.parse("yyyy-MM-dd", "2012-04-01"),
+             status: true, payoffStatus: false
+            ],
+            [contract: contract, amount: 206.00, no: 2,
+             dueDate: Date.parse("yyyy-MM-dd", "2012-05-01"), 
+             status: true, payoffStatus: false
+            ],
+            [contract: contract, amount: 206.00, no: 3,
+             dueDate: Date.parse("yyyy-MM-dd", "2012-06-01"),
+             status: true, payoffStatus: false
+            ],
+            [contract: contract, amount: 206.00, no: 4,
+             dueDate: Date.parse("yyyy-MM-dd", "2012-07-01"),
+             status: true, payoffStatus: false
+            ],
+            [contract: contract, amount: 206.00, no: 5,
+             dueDate: Date.parse("yyyy-MM-dd", "2012-08-01"), 
+             status: true, payoffStatus: false
+            ],
+            [contract: contract, amount: 206.00, no: 6,
+             dueDate: Date.parse("yyyy-MM-dd", "2012-09-01"),
+             status: true, payoffStatus: false
+            ],
+            [contract: contract, amount: 206.00, no: 7,
+             dueDate: Date.parse("yyyy-MM-dd", "2012-10-01"),
+             status: true, payoffStatus: false
+            ],
+            [contract: contract, amount: 206.00, no: 8,
+             dueDate: Date.parse("yyyy-MM-dd", "2012-11-01"), 
+             status: true, payoffStatus: false
+            ],
+            [contract: contract, amount: 206.00, no: 9,
+             dueDate: Date.parse("yyyy-MM-dd", "2012-12-01"),
+             status: true, payoffStatus: false
+            ],
+            [contract: contract, amount: 206.00, no: 10,
+             dueDate: Date.parse("yyyy-MM-dd", "2012-01-01"),
+             status: true, payoffStatus: false
+            ],
+            [contract: contract, amount: 206.00, no: 11,
+             dueDate: Date.parse("yyyy-MM-dd", "2012-02-01"), 
+             status: true, payoffStatus: false
+            ],
+            [contract: contract, amount: 214.00, no: 12,
+             dueDate: Date.parse("yyyy-MM-dd", "2012-03-01"),
+             status: true, payoffStatus: false
+            ]
+        ])
+
+        contract
+    }
+
     void testGeneratePeriod() {
         
         def periodList = service.generatePeriod(1000.00, 3)
@@ -271,7 +352,6 @@ class PeriodServiceTests {
 
     void testPeriodPayoff() {
         def contract = setUpMockForPeriodPayoff()
-        println Period.list()
         def p1 = Period.get(1)
         def p2 = Period.get(2)
         def p3 = Period.get(3)
@@ -345,7 +425,7 @@ class PeriodServiceTests {
         receiveTx = ReceiveTransaction.get(3)
         assert receiveTx.amount == 708.00
         assert receiveTx.balanceForward == 654.911259
-        assert receiveTx.balancePaid == 694.687050
+        assert receiveTx.balancePaid == 654.911259
         assert receiveTx.interestRate == 24.00
         assert receiveTx.interestPaid == 9.984713
         assert receiveTx.fee == 3.328237
@@ -356,5 +436,127 @@ class PeriodServiceTests {
         contract = Contract.get(1)
         assert contract.loanBalance == 0.00
         /*********************** /END Verify money ****************************/
+    }
+
+    void testPeriodPayoff_12Months() {
+        def contract = setUpMockForPeriodPayoff_12Months()
+        def period
+
+        service.metaClass.calculateInterestFormulaOne = { p, d ->
+            switch (p.id) {
+                case 1:
+                    [actualInterest: 40.655737, effectedInterest: 30.491805, fee: 10.163932]
+                    break
+                case 2:
+                    [actualInterest: 36.091588, effectedInterest: 27.068692, fee: 9.022896]
+                    break
+                case 3:
+                    [actualInterest: 33.840765, effectedInterest: 25.380575, fee: 8.460190]
+                    break
+                case 4:
+                    [actualInterest: 29.362388, effectedInterest: 22.021792, fee: 7.340596]
+                    break
+                case 5:
+                    [actualInterest: 26.750469, effectedInterest: 20.062852, fee: 6.687617]
+                    break
+                case 6:
+                    [actualInterest: 23.106708, effectedInterest: 17.330032, fee: 5.776676]
+                    break
+                case 7:
+                    [actualInterest: 18.763429, effectedInterest: 14.072573, fee: 4.690856]
+                    break
+                case 8:
+                    [actualInterest: 15.582756, effectedInterest: 11.687068, fee: 3.895688]
+                    break
+                case 9:
+                    [actualInterest: 11.334174, effectedInterest: 8.500631, fee: 2.833543]
+                    break
+                case 10:
+                    [actualInterest: 7.754838, effectedInterest: 5.816129, fee: 1.938709]
+                    break
+                case 11:
+                    [actualInterest: 3.724937, effectedInterest: 2.793703, fee: 0.931234]
+                    break
+                case 12:
+                    [actualInterest: 0, effectedInterest: 0, fee: 0]
+                    break
+
+                default:
+                    null
+            }
+        }
+
+        def expect = [
+            [30.491805, 10.163932,  165.344263, 1834.655737,    0],
+            [27.068692, 9.022896,   169.908412, 1664.747325,    0],
+            [25.380575, 8.460190,   172.159235, 1492.588090,    0],
+            [22.021792, 7.340596,   176.637612, 1315.950478,    0],
+            [20.062852, 6.687617,   179.249531, 1136.700947,    0],
+            [17.330032, 5.776676,   182.893292, 953.807655,     0],
+            [14.072573, 4.690856,   187.236571, 766.571084,     0],
+            [11.687068, 3.895688,   190.417244, 576.153840,     0],
+            [8.500631,  2.833543,   194.665826, 381.488014,     0],
+            [5.816129,  1.938709,   198.245162, 183.242852,     0],
+            [2.793703,  0.931234,   183.242852, 0,              19.032211],
+            [0,         0,          0,          0,              214]
+        ]
+
+        /************************** Verify money ******************************/
+        (1..12).each {
+            print "period: ${it}"
+            period = Period.get(it)
+            service.periodPayoff(period, period.amount, 0.00, false, period.dueDate)
+            assert ReceiveTransaction.list().size() == period.id
+
+            period = Period.get(period.id) // Reload data
+            assert period.payoffStatus == true
+            assert period.payoffDate == period.dueDate
+
+            def receiveTx = ReceiveTransaction.get(period.id)
+            def index = (period.id - 1) as Integer
+            assert receiveTx.amount == period.amount
+            assert receiveTx.balanceForward == (index ? expect[index - 1][3] : 2000.00)
+            assert receiveTx.balancePaid == expect[index][2]
+            assert receiveTx.interestRate == 24.00
+            assert receiveTx.interestPaid == expect[index][0]
+            assert receiveTx.fee == expect[index][1]
+            assert receiveTx.fine == 0.00
+            assert receiveTx.differential == expect[index][4]
+            assert receiveTx.isShareCapital == false
+
+            contract = Contract.get(1)
+            assert contract.loanBalance == expect[index][3]
+            println " ==> pass"
+        }
+        /*********************** /END Verify money ****************************/
+    }
+
+    void testCalculateFormulaOne_withZeroBalance() {
+        setUpPeriod()
+
+        def contract = Contract.get(1)
+        contract.loanBalance = 0
+        contract.save()
+
+        def lastPeriod = Period.get(3)
+        lastPeriod.payoffStatus = true
+        lastPeriod.payoffDate = Date.parse("yyyy-MM-dd", "2012-01-01")
+        lastPeriod.save()
+
+        def period = new Period(
+            amount: 1000.00,
+            dueDate: Date.parse("yyyy-MM-dd", "2013-01-01"),
+            no: 4,
+            status: true,
+            payoffStatus: false,
+            payoffDate: Date.parse("yyyy-MM-dd", "2013-01-01"),
+            contract: contract
+        )
+        period.save()
+
+        def result = service.calculateInterestFormulaOne(period, period.dueDate)
+        assert result.actualInterest == 0.00
+        assert result.effectedInterest == 0.00
+        assert result.fee == 0.00
     }
 }

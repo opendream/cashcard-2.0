@@ -78,10 +78,6 @@ class PeriodService {
         else {
             throw new Exception("Amount not enough for this period.")
         }
-        
-        if (amount > 0.00) {
-            receiveTx.balancePaid = amount
-        }
 
         receiveTx.amount = actualPaymentAmount
         receiveTx.sign = 1
@@ -98,14 +94,19 @@ class PeriodService {
         period.save()
 
         def contract = period.contract
-        contract.loanBalance -= receiveTx.balancePaid
-        if (contract.loanBalance < 0.00) {
-            receiveTx.differential = contract.loanBalance.abs()
-            contract.loanBalance = 0.00
+        if (amount > 0.00) {
+            if (contract.loanBalance >= amount) {
+                receiveTx.balancePaid = amount
+                contract.loanBalance -= receiveTx.balancePaid
+                amount = 0.00
+            }
+            else {
+                amount -= contract.loanBalance
+                receiveTx.balancePaid = contract.loanBalance
+                contract.loanBalance = 0.00
+            }
         }
-        else {
-            receiveTx.differential = 0.00
-        }
+        receiveTx.differential = amount
         receiveTx.save()
         contract.save()
 

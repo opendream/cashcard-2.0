@@ -14,7 +14,8 @@ class ReceiveTransactionTests extends DomainTestTemplate {
     def requiredProperties() {
         ['amount',          'balanceForward',        'balancePaid',
          'interestRate',    'interestPaid',          'fee',
-         'period',          'fine',                  'isShareCapital'
+         'period',          'fine',                  'isShareCapital',
+         'differential'
         ]
     }
 
@@ -41,7 +42,7 @@ class ReceiveTransactionTests extends DomainTestTemplate {
     }
 
     void testFinanceField() {
-    	verifyFinanceNumber(ReceiveTransaction, ['balanceForward', 'balancePaid', 'interestRate', 'interestPaid', 'fee', 'fine'])
+    	verifyFinanceNumber(ReceiveTransaction, ['balanceForward', 'balancePaid', 'interestRate', 'interestPaid', 'fee', 'fine', 'differential'])
     }
 
     void testIsShareCapital() {

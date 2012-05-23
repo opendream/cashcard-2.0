@@ -92,7 +92,6 @@ class PeriodService {
         receiveTx.fee = periodInterest.fee
         receiveTx.fine = fine
         receiveTx.isShareCapital = isShareCapital
-        receiveTx.save()
 
         period.payoffDate = date
         period.payoffStatus = true
@@ -101,8 +100,13 @@ class PeriodService {
         def contract = period.contract
         contract.loanBalance -= receiveTx.balancePaid
         if (contract.loanBalance < 0.00) {
+            receiveTx.differential = contract.loanBalance.abs()
             contract.loanBalance = 0.00
         }
+        else {
+            receiveTx.differential = 0.00
+        }
+        receiveTx.save()
         contract.save()
 
         receiveTx

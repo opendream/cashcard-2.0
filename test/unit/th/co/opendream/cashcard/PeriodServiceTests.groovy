@@ -224,7 +224,7 @@ class PeriodServiceTests {
         def p2 = Period.get(2)
         def p3 = Period.get(3)
 
-        service.processorService = [ process: { p, d ->
+        service.interestProcessorService = [ process: { p, d ->
             if (p.id == 1) {
                 [actualInterest: 40.655737, effectedInterest: 30.491805, fee: 10.163932]
             }
@@ -234,7 +234,7 @@ class PeriodServiceTests {
             else if (p.id == 3) {
                 [actualInterest: 13.312950, effectedInterest: 9.984713, fee: 3.328237]
             }
-        } ] as ProcessorService
+        } ] as InterestProcessorService
 
         /************************** Verify money ******************************/
         service.periodPayoff(p1, 706.00, 0.00, false, p1.dueDate)
@@ -310,7 +310,7 @@ class PeriodServiceTests {
         def contract = setUpMockForPeriodPayoff_12Months()
         def period
 
-        service.processorService = [ process: { p, d ->
+        service.interestProcessorService = [ process: { p, d ->
             switch (p.id) {
                 case 1:
                     [actualInterest: 40.655737, effectedInterest: 30.491805, fee: 10.163932]

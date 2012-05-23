@@ -48,4 +48,15 @@ grails.project.dependency.resolution = {
 
         build ":tomcat:$grailsVersion"
     }
+
+}
+
+coverage {
+    exclusions = [
+        '**/User*',
+        '**/Role*',
+        '**/Login*',
+        '**/Logout*',
+    ]
+
 }

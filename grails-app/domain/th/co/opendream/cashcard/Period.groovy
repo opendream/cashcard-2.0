@@ -4,18 +4,15 @@ class Period {
 	BigDecimal amount = 0.000000
 	Integer no
 	Date dueDate
-	Status status
+	Boolean status = false
+	Boolean payoffStatus = false
+	Date payoffDate
 
 	static belongsTo = [contract: Contract]
-
-	enum Status {
-		PAID,
-		QUEUED,
-		CANCELLED,
-	}
 
     static constraints = {
     	dueDate nullable: true
     	status nullable: true
+    	payoffDate nullable: true
     }
 }

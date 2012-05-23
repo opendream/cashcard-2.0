@@ -17,7 +17,7 @@ class ContractControllerTests {
 
     @Before
     void setUp() {
-    	def commonLoan = new LoanType(name: "Common").save()
+    	def commonLoan = new LoanType(name: "Common", processor: "Hybrid").save()
 
         def m1 = new Member(identificationNumber: "1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")
         def m2 = new Member(identificationNumber: "1119900100015", firstname: "Noomz", lastname: "Siriwat", telNo: "111111111", gender: "MALE", address: "Opendream2")
@@ -51,6 +51,7 @@ class ContractControllerTests {
 
 		params.memberId = '1'
 		params.loanType = '1'
+        params.numberOfPeriod = '3'
 
 		Contract.metaClass.save = { delegate.id = 1; delegate }
 		controller.create()
@@ -283,4 +284,66 @@ class ContractControllerTests {
         controller.doPayloan()
         assert response.redirectedUrl == "/member/show/${member.id}"
     }
+
+    void testPayoff() {
+        def contract = [id: 1, approvalStatus: true, loanReceiveStatus: true]
+        Period.metaClass.static.get = { Serializable id ->
+            id == '1' ? [id: id, contract: contract] : null
+        }
+
+        params.id = '1'
+        controller.payoff()
+        assert view == '/contract/payoff'
+
+        contract.approvalStatus = false
+        controller.payoff()
+        assert response.redirectUrl == '/error'
+
+        response.reset()
+
+        contract.approvalStatus = true
+        contract.loanReceiveStatus = false
+        controller.payoff()
+        assert response.redirectUrl == '/error'
+
+        response.reset()
+
+        params.id = '42'
+        controller.payoff()
+        assert response.redirectUrl == '/error'
+    }
+
+    void testDoPayoff() {
+        params.id = '1'
+        params.amount = '300.00'
+        params.fine = ''
+        params.isShareCapital = ''
+
+        controller.periodService = [
+            periodPayoff: { period, amount, fine, isShareCapital, date -> true }
+        ] as PeriodService
+
+        Period.metaClass.static.get = { Serializable pid ->
+            def contract = new Contract(member: Member.get(1))
+            [ id: pid, contract: contract] as Period
+        }
+
+        controller.doPayoff()
+        assert response.redirectUrl == '/member/show/1'
+
+        controller.periodService = [
+            periodPayoff: { -> throw new Exception ('Just throw') }
+        ] as PeriodService
+
+        response.reset()
+        controller.doPayoff()
+        assert view =='/contract/payoff'
+
+        response.reset()
+        GroovySystem.metaClassRegistry.removeMetaClass(Contract)
+        Period.metaClass.static.get = { Serializable pid -> [] }
+
+        response.redirectedUrl == '/error'
+    }
+
 }

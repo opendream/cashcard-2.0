@@ -9,18 +9,16 @@ import org.junit.*
  * See the API for {@link grails.test.mixin.domain.DomainClassUnitTestMixin} for usage instructions
  */
 @TestFor(Period)
-class PeriodTests {
+class PeriodTests extends DomainTestTemplate  {
 
-    void testProperties() {
-        def requiredProperties = [
-            'contract', 'amount', 'no', 'dueDate', 'status'
+    def requiredProperties() {
+        ['contract', 'amount', 'no', 'dueDate', 'status', 'payoffStatus',
+         'payoffDate'
         ]
+    }
 
-        def instanceProperties = Period.metaClass.properties*.name
-
-        def missing_properties = requiredProperties - instanceProperties
-        assert 0 == missing_properties.size(),
-            "Domain class is missing some required properties => ${missing_properties}"
+    def domainClass() {
+        Period.class
     }
 
     void testValidateContract() {
@@ -77,16 +75,46 @@ class PeriodTests {
             period.validate([field])
     }
 
+    void testValidatePayoffDate() {
+        mockForConstraintsTests(Period)
+
+        def period = new Period(),
+            field = 'payoffDate'
+            
+        assertTrue "${field} value = ${period[field]} must pass all validations.",
+            period.validate([field])
+
+        period[field] = new Date()
+        assertTrue "${field} value = ${period[field]} must pass all validations.",
+            period.validate([field])
+    }
+
     void testValidateStatus() {
         mockForConstraintsTests(Period)
 
         def period = new Period(),
             field = 'status'
 
+        assert period[field] == false
         assertTrue "${field} value = ${period[field]} must pass all validations.",
             period.validate([field])
 
-        period[field] = Period.Status.QUEUED
+        period[field] = true
+        assertTrue "${field} value = ${period[field]} must pass all validations.",
+            period.validate([field])
+    }
+
+    void testValidatePayoffStatus() {
+        mockForConstraintsTests(Period)
+
+        def period = new Period(),
+            field = 'payoffStatus'
+
+        assert period[field] == false
+        assertTrue "${field} value = ${period[field]} must pass all validations.",
+            period.validate([field])
+
+        period[field] = true
         assertTrue "${field} value = ${period[field]} must pass all validations.",
             period.validate([field])
     }
@@ -113,7 +141,8 @@ class PeriodTests {
             amount: 200.00,
             no: 1,
             dueDate: new Date().plus(10),
-            status: Period.Status.QUEUED
+            status: true,
+            payoffStatus: false
         )
     }
 

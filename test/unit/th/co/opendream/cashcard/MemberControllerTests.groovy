@@ -35,6 +35,11 @@ class MemberControllerTests {
         assert Member.count() == 2
     }
 
+    void testIndex() {
+        controller.index()
+        response.redirectedUrl == 'member/list'
+    }
+
     def populateValidParams(params) {
         params.identificationNumber = '1159900100015'
         params.firstname = 'Nat'
@@ -48,6 +53,14 @@ class MemberControllerTests {
 
         assert model.memberInstance != null
         assert view == '/member/create'
+    }
+
+    void testCreate() {
+        params.firstname = "Nat"
+        params.lastname = "Weerawan"
+        def model = controller.create()
+        assert model.memberInstance.firstname == "Nat"
+        assert model.memberInstance.lastname == "Weerawan"
     }
 
     void testSaveValidMember() {

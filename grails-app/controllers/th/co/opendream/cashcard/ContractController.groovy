@@ -1,11 +1,10 @@
 package th.co.opendream.cashcard
 
+import groovy.time.TimeCategory
+
 class ContractController {
 
     def periodService, utilService
-
-
-    def index() { }
 
     def create() {
     	def member = Member.get(params.memberId)
@@ -16,12 +15,17 @@ class ContractController {
             params.loanType = loanType
 
     		def contract = new Contract(params)
-            contract.loanBalance = contract.loanAmount
+            contract.loanBalance = contract.loanAmount as BigDecimal
+            contract.interestRate = 24.00
 
     		if (contract.save()) {
-                def periodList = periodService.generatePeriod(contract.loanAmount, contract.numberOfPeriod)
+                def numberOfPeriod = (params.numberOfPeriod ? params.numberOfPeriod : 0) as Integer
+                def totalDebt = contract.loanAmount + (contract.loanAmount * (contract.interestRate / 100 / 12) * numberOfPeriod)
+                def periodList = periodService.generatePeriod(totalDebt, numberOfPeriod)
                 periodList.each { period ->
                     period.contract = contract
+                    period.status = false
+                    period.payoffStatus = false
                     period.save()
                 }
 
@@ -120,13 +124,17 @@ class ContractController {
                 eq('contract', existsContract)
             }
 
-            def lastDueDate = existsContract.approvalDate.plus(30)
-            periodList.each { period ->
-                period.dueDate = lastDueDate
-                period.contract = existsContract
-                period.save()
+            use(TimeCategory) {
+                def lastDueDate = existsContract.approvalDate + 1.month
+                periodList.each { period ->
+                    period.dueDate = lastDueDate
+                    period.contract = existsContract
+                    period.status = true
+                    period.payoffStatus = false
+                    period.save()
 
-                lastDueDate = lastDueDate.plus(30)
+                    lastDueDate += 1.month
+                }
             }
 
             redirect action: 'show', controller: 'member', id: existsContract.member.id
@@ -164,7 +172,7 @@ class ContractController {
     def doPayloan() {
         def existsContract = Contract.get(params?.id)
 
-        if (!existsContract || params.payloanDate =='') {
+        if (!existsContract || params.payloanDate =='' || !utilService.isPayable(existsContract)) {
             redirect uri: '/error'
             return
         }
@@ -174,8 +182,47 @@ class ContractController {
 
         def transaction = new Transaction(amount: existsContract.loanAmount, sign: -1)
 
-        if (utilService.isPayable(existsContract) && transaction.save() && existsContract.save()) {
+        if (transaction.save() && existsContract.save()) {
             redirect controller: 'member', action: 'show', id: existsContract.member.id
+        }
+    }
+
+    def payoff() {
+        def period = Period.get(params.id)
+
+        if (period) {
+            def contract = period.contract
+            def receiveTx = new ReceiveTransaction()
+            if (contract && contract.approvalStatus && contract.loanReceiveStatus) {
+                render view: 'payoff', model: [period: period, receiveTx: receiveTx]
+            }
+            else {
+                redirect url: '/error'
+            }
+        }
+        else {
+            redirect url: '/error'
+        }
+    }
+
+    def doPayoff() {
+        def period = Period.get(params.id)
+
+        def amount = (params.amount ? params.amount : '0.00') as BigDecimal
+        def fine = (params.fine ? params.fine : '0.00') as BigDecimal
+        def isShareCapital = (params.isShareCapital ? params.isShareCapital : false)
+
+        if (period) {
+            try {
+                periodService.periodPayoff(period, amount, fine, isShareCapital, new Date())
+                redirect url: "/member/show/${period.contract.member.id}"
+            }
+            catch (e) {
+                render view: '/contract/payoff', model: [contract: period.contract, period: period, amount: amount, fine: fine, isShareCapital: isShareCapital]
+            }
+        }
+        else {
+            redirect url: '/error'
         }
     }
 }

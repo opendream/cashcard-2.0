@@ -1,7 +1,7 @@
 package th.co.opendream.cashcard
 
 class PeriodService {
-    def processorService
+    def interestProcessorService
 
     def generatePeriod(amount, numberOfPeriod) {
         amount = amount as BigDecimal
@@ -26,7 +26,7 @@ class PeriodService {
 
     def periodPayoff(period, amount, fine, isShareCapital, date) {
         def actualPaymentAmount = amount
-        def periodInterest = processorService.process(period, date)
+        def periodInterest = interestProcessorService.process(period, date)
 
         def receiveTx = new ReceiveTransaction()
 

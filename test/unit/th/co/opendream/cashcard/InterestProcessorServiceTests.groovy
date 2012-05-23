@@ -8,9 +8,9 @@ import org.junit.*
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
-@TestFor(ProcessorService)
+@TestFor(InterestProcessorService)
 @Mock([LoanType, Contract, Period, Member])
-class ProcessorServiceTests {
+class InterestProcessorServiceTests {
 
     @Before
     void setUp() {

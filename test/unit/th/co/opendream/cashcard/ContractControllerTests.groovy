@@ -17,7 +17,7 @@ class ContractControllerTests {
 
     @Before
     void setUp() {
-    	def commonLoan = new LoanType(name: "Common").save()
+    	def commonLoan = new LoanType(name: "Common", processor: "Hybrid").save()
 
         def m1 = new Member(identificationNumber: "1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")
         def m2 = new Member(identificationNumber: "1119900100015", firstname: "Noomz", lastname: "Siriwat", telNo: "111111111", gender: "MALE", address: "Opendream2")

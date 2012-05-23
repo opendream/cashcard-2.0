@@ -13,32 +13,32 @@
 		<div class="container">
 			<g:form action="list" class="form-horizontal">
 
-				<div class="control-group ${hasErrors(bean: memberInstance, field: 'identificationNumber', 'error')}">
+				<div class="control-group">
 		          <label for="id-number" class="control-label">${message(code: 'member.label.identificationNumber', default: 'Identification Number')}</label>
 		          <div class="controls">
-		            <input id="id-number" name="identificationNumber" type="text" placeholder="${message(code: 'member.placeholder.identificationNumber', default: 'Identification Number')}" value="${memberInstance?.identificationNumber}">
+		            <input id="id-number" name="identificationNumber" type="text" placeholder="${message(code: 'member.placeholder.identificationNumber', default: 'Identification Number')}" value="${params?.identificationNumber}">
 		            <span class="help-block"><g:message code="id_card_help" /></span>
 		          </div>
 		        </div>
 
-		        <div class="control-group ${hasErrors(bean: memberInstance, field: 'firstname', 'error')}">
+		        <div class="control-group">
 		          <label for="first-name" class="control-label">${message(code: 'member.label.firstName', default: 'First Name')}</label>
 		          <div class="controls">
-		            <input id="first-name" name="firstname" type="text" placeholder="${message(code: 'member.label.firstName', default: 'First Name')}" value="${memberInstance?.firstname}">
+		            <input id="first-name" name="firstname" type="text" placeholder="${message(code: 'member.label.firstName', default: 'First Name')}" value="${params?.firstname}">
 		          </div>
 		        </div>
 
-		        <div class="control-group  ${hasErrors(bean: memberInstance, field: 'lastname', 'error')}">
+		        <div class="control-group">
 		          <label class="control-label" for="last-name">${message(code: 'member.label.lastName', default: 'Last Name')}</label>
 		          <div class="controls">
-		            <input id="last-name" name="lastname" type="text" placeholder="${message(code: 'member.label.lastName', default: 'Last Name')}" value="${memberInstance?.lastname}">
+		            <input id="last-name" name="lastname" type="text" placeholder="${message(code: 'member.label.lastName', default: 'Last Name')}" value="${params?.lastname}">
 		          </div>
 		        </div>
 
-		        <div class="control-group ${hasErrors(bean: memberInstance, field: 'telNo', 'error')}">
+		        <div class="control-group">
 		          <label class="control-label" for="tel">${message(code: 'member.label.telNo', default: 'Tel No.')}</label>
 		          <div class="controls">
-		            <input id="tel" name="telNo" type="text" placeholder="${message(code: 'member.label.telNo', default: 'Tel.')}" value="${memberInstance?.telNo}">
+		            <input id="tel" name="telNo" type="text" placeholder="${message(code: 'member.label.telNo', default: 'Tel.')}" value="${params?.telNo}">
 		            <span class="help-block"><g:message code="id_card_help" /></span>
 		          </div>
 		        </div>

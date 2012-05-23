@@ -314,13 +314,36 @@ class ContractControllerTests {
     }
 
     void testDoPayoff() {
-        //params.id = '1'
-        //params.amount = '300.00'
-        //params.fine = ''
-        //params.isShareCapital = 'true'
+        params.id = '1'
+        params.amount = '300.00'
+        params.fine = ''
+        params.isShareCapital = ''
 
-        //controller.doPayoff()
-        //assert response.redirectUrl == '/member/show/1'
+        controller.periodService = [
+            periodPayoff: { period, amount, fine, isShareCapital, date -> true }
+        ] as PeriodService
+
+        Period.metaClass.static.get = { Serializable pid ->
+            def contract = new Contract(member: Member.get(1))
+            [ id: pid, contract: contract] as Period
+        }
+
+        controller.doPayoff()
+        assert response.redirectUrl == '/member/show/1'
+
+        controller.periodService = [
+            periodPayoff: { -> throw new Exception ('Just throw') }
+        ] as PeriodService
+
+        response.reset()
+        controller.doPayoff()
+        assert view =='/contract/payoff'
+
+        response.reset()
+        GroovySystem.metaClassRegistry.removeMetaClass(Contract)
+        Period.metaClass.static.get = { Serializable pid -> [] }
+
+        response.redirectedUrl == '/error'
     }
 
 }

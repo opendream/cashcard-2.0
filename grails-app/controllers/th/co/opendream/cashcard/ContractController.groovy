@@ -6,9 +6,6 @@ class ContractController {
 
     def periodService, utilService
 
-
-    def index() { }
-
     def create() {
     	def member = Member.get(params.memberId)
     	def loanType = LoanType.get(params.loanType)
@@ -221,7 +218,7 @@ class ContractController {
                 redirect url: "/member/show/${period.contract.member.id}"
             }
             catch (e) {
-               render view: '/contract/payoff', params: [id: period.id], model: [contract: period.contract, period: period, amount: amount, fine: fine, isShareCapital: isShareCapital]
+                render view: '/contract/payoff', model: [contract: period.contract, period: period, amount: amount, fine: fine, isShareCapital: isShareCapital]
             }
         }
         else {

@@ -18,13 +18,13 @@ class BootStrap {
     }
 
     def generateLoanType() {
-    	new LoanType(processor: "Effective", name: "เงินกู้สามัญ").save()
-    	new LoanType(processor: "Effective", name: "เงินกู้เพื่อการศึกษา").save()
-    	new LoanType(processor: "Effective", name: "เงินกู้ซื้อยานพาหนะ").save()
-    	new LoanType(processor: "Effective", name: "เงินกู้ซื้อทอง").save()
-    	new LoanType(processor: "Effective", name: "เงินกู้ซื้เครื่องใช้ไฟฟ้า").save()
-    	new LoanType(processor: "Effective", name: "เงินกู้โดยอสังหาริมทรัพย์").save()
-    	new LoanType(processor: "Effective", name: "เงินกู้โดยใช้ทรัพย์สินจำนอง").save()
+    	new LoanType(name: "เงินกู้สามัญ", processor: "Effective").save()
+    	new LoanType(name: "เงินกู้เพื่อการศึกษา", processor: "Effective").save()
+    	new LoanType(name: "เงินกู้ซื้อยานพาหนะ", processor: "Effective").save()
+    	new LoanType(name: "เงินกู้ซื้อทอง", processor: "Effective").save()
+    	new LoanType(name: "เงินกู้ซื้เครื่องใช้ไฟฟ้า", processor: "Effective").save()
+    	new LoanType(name: "เงินกู้โดยอสังหาริมทรัพย์", processor: "Effective").save()
+    	new LoanType(name: "เงินกู้โดยใช้ทรัพย์สินจำนอง", processor: "Effective").save()
     }
 
     def generateContract(member, loanType) {

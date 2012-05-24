@@ -206,11 +206,10 @@ class ContractController {
     }
 
     def doPayoff() {
-        def period = Period.get(params.id)
-
-        def amount = (params.amount ? params.amount : '0.00') as BigDecimal
-        def fine = (params.fine ? params.fine : '0.00') as BigDecimal
-        def isShareCapital = (params.isShareCapital ? params.isShareCapital : false)
+        def period         = Period.get(params.id)
+        def amount         = params.amount         ?: '0.00' as BigDecimal
+        def fine           = params.fine           ?: '0.00' as BigDecimal
+        def isShareCapital = params.isShareCapital ?: false
 
         if (period) {
             try {

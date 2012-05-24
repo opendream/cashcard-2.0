@@ -56,7 +56,7 @@ class InterestProcessorServiceTests {
     }
 
     void setUpPeriodFlat() {
-        def loanType = new LoanType(name: 'Common', processor: 'Effective')
+        def loanType = new LoanType(name: 'Common', processor: 'Flat')
         loanType.save()
 
         def member = new Member(identificationNumber:"1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")

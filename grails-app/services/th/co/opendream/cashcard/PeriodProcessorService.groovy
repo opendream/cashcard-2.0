@@ -54,4 +54,59 @@ class PeriodProcessorService {
 
         receiveTx
     }
+
+    def flat(Period period, amount, fine, isShareCapital, date) {
+        def periodInterest = interestProcessorService.process(period, date),
+            contract = period.contract,
+            receiveTx = new ReceiveTransaction()
+
+        def outstanding = amount,
+            balancePaid = 0.00,
+            interestPaid = 0.00,
+            loanBalance = 0.00,
+            advancedInterestBalance = contract.advancedInterestBalance
+
+        advancedInterestBalance -= periodInterest.actualInterest
+
+        if (outstanding > contract.loanBalance) {
+            outstanding -= contract.loanBalance
+            balancePaid = contract.loanBalance
+            loanBalance = 0.00
+        }
+        else {
+            balancePaid = outstanding
+            outstanding = 0.00
+            loanBalance = contract.loanBalance - balancePaid
+        }
+
+        receiveTx.amount = amount
+        receiveTx.sign = 1
+        receiveTx.period = period
+        receiveTx.balanceForward = contract.loanBalance
+        receiveTx.balancePaid = balancePaid
+        receiveTx.interestRate = contract.interestRate
+        receiveTx.interestPaid = periodInterest.effectedInterest
+        receiveTx.fee = periodInterest.fee
+        receiveTx.fine = fine
+        receiveTx.isShareCapital = isShareCapital
+
+        // check if is the last period by checking loanBalance == 0.00
+        if (loanBalance == 0.00) {
+            receiveTx.differential = outstanding + advancedInterestBalance
+        }
+        else {
+            receiveTx.differential = outstanding
+        }
+        receiveTx.save()
+
+        period.payoffDate = date
+        period.payoffStatus = true
+        period.save()
+
+        contract.loanBalance -= balancePaid
+        contract.advancedInterestBalance = advancedInterestBalance
+        contract.save()
+
+        receiveTx
+    }
 }

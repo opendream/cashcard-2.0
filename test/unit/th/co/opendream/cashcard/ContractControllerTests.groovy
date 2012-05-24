@@ -13,11 +13,11 @@ import groovy.mock.interceptor.MockFor
 @Mock([Member, LoanType, Contract, PeriodService, Period, Transaction])
 class ContractControllerTests {
 
-	def utilService
+    def utilService
 
     @Before
     void setUp() {
-    	def commonLoan = new LoanType(name: "Common", processor: "Hybrid").save()
+        def commonLoan = new LoanType(name: "Common", processor: "Hybrid").save()
 
         def m1 = new Member(identificationNumber: "1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")
         def m2 = new Member(identificationNumber: "1119900100015", firstname: "Noomz", lastname: "Siriwat", telNo: "111111111", gender: "MALE", address: "Opendream2")
@@ -49,38 +49,38 @@ class ContractControllerTests {
             delegate
         }
 
-		params.memberId = '1'
-		params.loanType = '1'
+        params.memberId = '1'
+        params.loanType = '1'
         params.numberOfPeriod = '3'
 
-		Contract.metaClass.save = { delegate.id = 1; delegate }
-		controller.create()
-		assert response.redirectedUrl == "/member/show/1"
+        Contract.metaClass.save = { delegate.id = 1; delegate }
+        controller.create()
+        assert response.redirectedUrl == "/member/show/1"
     }
 
     void testCreateFail() {
-    	params.memberId = '1'
-    	params.loanType = '1'
+        params.memberId = '1'
+        params.loanType = '1'
 
-    	Contract.metaClass.save = { null }
-    	controller.create()
-    	assert view == '/contract/sign'
+        Contract.metaClass.save = { null }
+        controller.create()
+        assert view == '/contract/sign'
     }
 
     void testCreateFailNoMember() {
-    	params.memberId = '42'
-    	params.loanType = '1'
+        params.memberId = '42'
+        params.loanType = '1'
 
-    	controller.create()
-    	assert response.redirectedUrl == '/error'
+        controller.create()
+        assert response.redirectedUrl == '/error'
     }
 
     void testCreateFailNoLoanType() {
-    	params.memberId = '1'
-    	params.loanType = '42'
+        params.memberId = '1'
+        params.loanType = '42'
 
-    	controller.create()
-    	assert response.redirectedUrl == '/error'
+        controller.create()
+        assert response.redirectedUrl == '/error'
     }
 
     void testSelectLoanType() {
@@ -338,12 +338,16 @@ class ContractControllerTests {
         response.reset()
         controller.doPayoff()
         assert view =='/contract/payoff'
+    }
 
-        response.reset()
-        GroovySystem.metaClassRegistry.removeMetaClass(Contract)
-        Period.metaClass.static.get = { Serializable pid -> [] }
+    void testDoErrorPayoff() {
+        Period.metaClass.static.get = { Serializable pid -> null }
+        params.id = 1
 
+        controller.doPayoff()
         response.redirectedUrl == '/error'
+
+
     }
 
 }

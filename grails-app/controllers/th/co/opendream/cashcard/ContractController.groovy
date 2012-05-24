@@ -7,18 +7,18 @@ class ContractController {
     def periodService, utilService
 
     def create() {
-    	def member = Member.get(params.memberId)
-    	def loanType = LoanType.get(params.loanType)
+        def member = Member.get(params.memberId)
+        def loanType = LoanType.get(params.loanType)
 
-    	if (member && loanType) {
+        if (member && loanType) {
             params.member = member
             params.loanType = loanType
 
-    		def contract = new Contract(params)
+            def contract = new Contract(params)
             contract.loanBalance = contract.loanAmount as BigDecimal
             contract.interestRate = 24.00
 
-    		if (contract.save()) {
+            if (contract.save()) {
                 def numberOfPeriod = (params.numberOfPeriod ? params.numberOfPeriod : 0) as Integer
                 def totalDebt = contract.loanAmount + (contract.loanAmount * (contract.interestRate / 100 / 12) * numberOfPeriod)
                 def periodList = periodService.generatePeriod(totalDebt, numberOfPeriod)
@@ -29,19 +29,19 @@ class ContractController {
                     period.save()
                 }
 
-    			redirect action: 'show', controller: 'member', id: member.id
-    		}
-    		else {
-    			render view: '/contract/sign', model: [
+                redirect action: 'show', controller: 'member', id: member.id
+            }
+            else {
+                render view: '/contract/sign', model: [
                     member: member,
                     loanType: loanType,
                     contract: contract
                 ]
-    		}
-    	}
-    	else {
-    		redirect url: '/error'
-    	}
+            }
+        }
+        else {
+            redirect url: '/error'
+        }
     }
 
     def selectLoanType() {
@@ -206,11 +206,10 @@ class ContractController {
     }
 
     def doPayoff() {
-        def period = Period.get(params.id)
-
-        def amount = (params.amount ? params.amount : '0.00') as BigDecimal
-        def fine = (params.fine ? params.fine : '0.00') as BigDecimal
-        def isShareCapital = (params.isShareCapital ? params.isShareCapital : false)
+        def period         = Period.get(params.id)
+        def amount         = params.amount         ?: '0.00' as BigDecimal
+        def fine           = params.fine           ?: '0.00' as BigDecimal
+        def isShareCapital = params.isShareCapital ?: false
 
         if (period) {
             try {

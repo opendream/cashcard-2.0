@@ -74,6 +74,16 @@ class MemberControllerTests {
         controller.list()
         assert Member.list().size() == model.memberList?.size()
         assert view == '/member/list'
+
+        response.reset()
+        params.identificationNumber = "11"
+        params.firstname = "Nat"
+        params.lastname = "Wee"
+        params.telNo = "11"
+        controller.list()
+
+        assert view == '/member/list'
+        assert model.memberList?.size() == 1
     }
 
     void testVerifyMemberWithValidCardId() {
@@ -81,6 +91,17 @@ class MemberControllerTests {
         controller.verifyCard()
 
         assert response.redirectedUrl == '/member/show/1'
+    }
+
+    void testVerifyMemberWithInvalidCardId() {
+        controller.verifyCard()
+        assert view == '/member/verifyCard'
+
+        response.reset()
+        params.cardId = '1159900100015'
+        Member.metaClass.'static'.findByIdentificationNumber = { s -> null }
+        controller.verifyCard()
+        assert view == '/member/verifyCard'
     }
 
     void testShow() {
@@ -111,6 +132,15 @@ class MemberControllerTests {
         assert model.memberInstance.errors.getFieldError('version')
     }
 
+    void testUpdateWithNoVersion() {
+        populateValidParams(params)
+        params.id = 1
+
+        controller.update()
+        response.redirectedUrl == 'member/show/1'
+
+    }
+
     void testEditInvalidMemberAndInvalidToken() {
         def token = SynchronizerTokensHolder.store(session)
         params[SynchronizerTokensHolder.TOKEN_KEY] = null
@@ -134,9 +164,20 @@ class MemberControllerTests {
         assert view == '/member/edit'
     }
 
+    void testEditButFailToSave() {
+        Member.metaClass.save = { o -> assert 4==3 }
+        controller.edit()
+        assert view == '/member/edit'
+    }
+
     void testUpdateInvalidMember() {
         controller.update()
 
         assert response.redirectedUrl == '/member/list'
+    }
+
+    void testToString() {
+        def m1 = Member.get(1)
+        assert m1.toString() == "${m1.firstname} ${m1.lastname}"
     }
 }

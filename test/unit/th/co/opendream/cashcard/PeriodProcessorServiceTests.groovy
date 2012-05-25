@@ -93,6 +93,38 @@ class PeriodProcessorServiceTests {
         contract
     }
 
+    def setUpMockForFlatPeriodPayoff(principle, interestRate, numberOfPeriod, keep, date) {
+        def loanType = new LoanType(name: 'Common', processor: 'Flat')
+        loanType.save()
+
+        def member = new Member(identificationNumber:"1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")
+        member.utilService = [
+            check_id_card: { id -> true }
+        ]
+        member.save()
+
+        def contract = new Contract(
+            code: "ก.55-1000-10",
+            member: member,
+            loanType: loanType,
+            loanAmount: principle,
+            interestRate: interestRate,
+            loanBalance: principle,
+            advancedInterestKeep: keep,
+            advancedInterestBalance: keep,
+            approvalStatus: true,
+            approvalDate: date,
+            loanReceiveStatus: true,
+            payloanDate: date,
+            guarantor1: "Keng",
+            guarantor2: "Neung",
+            numberOfPeriod: numberOfPeriod
+        )
+        contract.save()
+
+        contract
+    }
+
     def setUpMockForPeriodPayoff_12Months() {
         def loanType = new LoanType(name: 'Common', processor: 'Effective')
         loanType.save()
@@ -354,6 +386,134 @@ class PeriodProcessorServiceTests {
             println " ==> pass"
         }
         /*********************** /END Verify money ****************************/
+    }
+
+    void testFlatPeriodProcess() {
+        def getDate = { str -> Date.parse("yyyy-MM-dd", str) }
+
+        def sample_period = [
+            // no, amount, dueDate
+            [1,    2500, "2012-04-1"], [2,    2500, "2012-05-1"],
+            [3,    2500, "2012-06-1"], [4,    2500, "2012-07-1"],
+            [5,    2500, "2012-08-1"], [6,    2500, "2012-09-1"],
+            [7,    2500, "2012-10-1"], [8,    2500, "2012-11-1"],
+            [9,    2500, "2012-12-1"], [10,   2500, "2013-01-1"],
+            [11,   2500, "2013-02-1"], [12,   2500, "2013-03-1"],
+            [13,   2500, "2013-04-1"], [14,   2500, "2013-05-1"],
+            [15,   2500, "2013-06-1"], [16,   2500, "2013-07-1"],
+            [17,   2500, "2013-08-1"], [18,   2500, "2013-09-1"],
+            [19,   2500, "2013-10-1"], [20,   2500, "2013-11-1"],
+            [21,   2500, "2013-12-1"], [22,   2500, "2014-01-1"],
+            [23,   2500, "2014-02-1"], [24,   2500, "2014-03-1"]
+        ]
+
+        service.interestProcessorService = [ process: { p, d ->
+            def result = [
+                [609.836066,  609.836066,  0],
+                [565.57377,   565.57377,   0],
+                [559.016393,  559.016393,  0],
+                [516.393443,  516.393443,  0],
+                [508.196721,  508.196721,  0],
+                [482.786885,  482.786885,  0],
+                [442.622951,  442.622951,  0],
+                [431.967213,  431.967213,  0],
+                [393.442623,  393.442623,  0],
+                [381.147541,  381.147541,  0],
+                [355.737705,  355.737705,  0],
+                [298.360656,  298.360656,  0],
+                [304.918033,  304.918033,  0],
+                [270.491803,  270.491803,  0],
+                [254.098361,  254.098361,  0],
+                [221.311475,  221.311475,  0],
+                [203.278689,  203.278689,  0],
+                [177.868852,  177.868852,  0],
+                [147.540984,  147.540984,  0],
+                [127.04918,   127.04918,   0],
+                [98.360656,   98.360656,   0],
+                [76.229508,   76.229508,   0],
+                [50.819672,   50.819672,   0],
+                [22.95082,    22.95082,    0]
+            ][p.id - 1 as Integer]
+
+            [
+                actualInterest: result[0],
+                effectedInterest: result[1],
+                fee: result[2]
+            ]
+        } ]
+
+        def expect = [
+            [2500,   609.836066, 0,  2500,   57500,  13790.163934,   0],
+            [2500,   565.57377,  0,  2500,   55000,  13224.590164,   0],
+            [2500,   559.016393, 0,  2500,   52500,  12665.573771,   0],
+            [2500,   516.393443, 0,  2500,   50000,  12149.180328,   0],
+            [2500,   508.196721, 0,  2500,   47500,  11640.983607,   0],
+            [2500,   482.786885, 0,  2500,   45000,  11158.196722,   0],
+            [2500,   442.622951, 0,  2500,   42500,  10715.573771,   0],
+            [2500,   431.967213, 0,  2500,   40000,  10283.606558,   0],
+            [2500,   393.442623, 0,  2500,   37500,  9890.163935,    0],
+            [2500,   381.147541, 0,  2500,   35000,  9509.016394,    0],
+            [2500,   355.737705, 0,  2500,   32500,  9153.278689,    0],
+            [2500,   298.360656, 0,  2500,   30000,  8854.918033,    0],
+            [2500,   304.918033, 0,  2500,   27500,  8550,           0],
+            [2500,   270.491803, 0,  2500,   25000,  8279.508197,    0],
+            [2500,   254.098361, 0,  2500,   22500,  8025.409836,    0],
+            [2500,   221.311475, 0,  2500,   20000,  7804.098361,    0],
+            [2500,   203.278689, 0,  2500,   17500,  7600.819672,    0],
+            [2500,   177.868852, 0,  2500,   15000,  7422.95082,     0],
+            [2500,   147.540984, 0,  2500,   12500,  7275.409836,    0],
+            [2500,   127.04918,  0,  2500,   10000,  7148.360656,    0],
+            [2500,   98.360656,  0,  2500,   7500,   7050,           0],
+            [2500,   76.229508,  0,  2500,   5000,   6973.770492,    0],
+            [2500,   50.819672,  0,  2500,   2500,   6922.95082,     0],
+            [2500,   22.95082,   0,  2500,   0,      6900,           6900]
+        ]
+
+        def principle = 60000.00,
+            interest = 0.12,
+            interestlimit = 0.18,
+            numberOfPeriod = 24,
+            keep = 14400.00,
+            contract = setUpMockForFlatPeriodPayoff(principle, interest, numberOfPeriod, keep, getDate("2012-03-01"))
+
+        // prepare periods
+        def periodList = sample_period.collect {
+            def p = new Period(
+                contract: contract, no: it[0], amount: it[1],
+                dueDate: getDate(it[2]), status: true, payoffStatus: false
+            )
+            p.save()
+            return p
+        }
+
+        periodList.each { period ->
+            print "period: ${period.no}"
+
+            service.flat(period, period.amount, 0.00, false, period.dueDate)
+            assert ReceiveTransaction.list().size() == period.id
+
+            period = Period.get(period.id) // Reload data
+            assert period.payoffStatus == true
+            assert period.payoffDate == period.dueDate
+
+            def receiveTx = ReceiveTransaction.get(period.id)
+            def index = (period.id - 1) as Integer
+            assert receiveTx.amount == expect[index][0]
+            assert receiveTx.balanceForward == (index ? expect[index - 1][4] : principle)
+            assert receiveTx.balancePaid == expect[index][3]
+            assert receiveTx.interestRate == interest
+            assert receiveTx.interestPaid == expect[index][1]
+            assert receiveTx.fee == expect[index][2]
+            assert receiveTx.fine == 0.00
+            assert receiveTx.differential == expect[index][6]
+            assert receiveTx.isShareCapital == false
+
+            contract = Contract.get(1)
+            assert contract.loanBalance == expect[index][4]
+            assert contract.advancedInterestBalance == expect[index][5]
+
+            println " ===> pass"
+        }
     }
 
 }

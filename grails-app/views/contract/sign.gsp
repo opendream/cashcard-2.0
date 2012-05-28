@@ -113,7 +113,7 @@
 				;
 
 				if (amount.val() && nop.val()) {
-					$('#preview-period').load("${createLink(action: 'preparePeriod')}", {'amount': parseFloat(amount.val()) + (parseFloat(amount.val()) * (0.24 / 12) * parseFloat(nop.val())), 'nop': nop.val()});
+					$('#preview-period').load("${createLink(action: 'preparePeriod')}", {'amount': parseFloat(amount.val()) + (parseFloat(amount.val()) * ((${loanType.interestRate} / 100) / 12) * parseFloat(nop.val())), 'nop': nop.val()});
 				}
 			});
 		});

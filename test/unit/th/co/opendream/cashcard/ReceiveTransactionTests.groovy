@@ -15,7 +15,7 @@ class ReceiveTransactionTests extends DomainTestTemplate {
         ['amount',          'balanceForward',        'balancePaid',
          'interestRate',    'interestPaid',          'fee',
          'period',          'fine',                  'isShareCapital',
-         'differential'
+         'differential',    'paymentDate'
         ]
     }
 
@@ -54,6 +54,23 @@ class ReceiveTransactionTests extends DomainTestTemplate {
         verifyNotNull(instance, field)
 
         instance[field] = [id: 1]
+        assertTrue instance.validate([field])
+    }
+
+    void testValidatePaymentDate() {
+        mockForConstraintsTests(ReceiveTransaction)
+
+        def instance = new ReceiveTransaction(),
+            field = 'paymentDate'
+
+        // default value
+        assertTrue "${field} must have default value as today, get ${instance[field]} instead.",
+            instance[field].compareTo(new Date()) == 0
+
+        instance[field] = null
+        verifyNotNull(instance, field)
+
+        instance[field] = new Date()
         assertTrue instance.validate([field])
     }
 }

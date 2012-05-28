@@ -10,6 +10,7 @@ class ReceiveTransaction extends Transaction {
 	BigDecimal fine
 	BigDecimal differential
 	Boolean isShareCapital
+	Date paymentDate = new Date()
 
     static constraints = {
     }

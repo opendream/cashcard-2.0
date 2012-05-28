@@ -304,8 +304,8 @@ class ContractTests {
             field = 'signedDate'
 
         // default value
-        assertEquals "${field} must have default value as today",
-            contract[field], new Date()
+        assertTrue "${field} must have default value as today",
+            contract[field].compareTo(new Date()) == 0
 
         contract[field] = null
         verifyNotNull(contract, field)

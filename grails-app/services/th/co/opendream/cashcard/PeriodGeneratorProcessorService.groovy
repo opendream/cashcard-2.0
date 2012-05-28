@@ -2,7 +2,11 @@ package th.co.opendream.cashcard
 
 class PeriodGeneratorProcessorService {
 
-    def serviceMethod() {
+    def generate(LoanType loanType, amount, numberOfPeriod) {
+        def processorName = loanType.processor.toLowerCase()
+        this."$processorName"(amount as BigDecimal, numberOfPeriod, loanType.interestRate)
+    }
+
     def effective(amount, numberOfPeriod, intRatePerYear) {
         amount = amount + (intRatePerYear/12)
 
@@ -13,4 +17,5 @@ class PeriodGeneratorProcessorService {
             new Period(amount: amountPerPeriod + (id == numberOfPeriod - 1 ? remain : 0), no: id + 1)
         }
     }
+
 }

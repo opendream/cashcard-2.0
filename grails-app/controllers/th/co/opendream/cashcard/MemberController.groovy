@@ -122,7 +122,7 @@ class MemberController {
         if (memberInstance) {
             redirect(action: "show", id: memberInstance.id)
         }
-        else if (!cardId) {
+        else if (cardId != null && cardId != '') {
             flash.error = "ไม่พบสมาชิกที่มีหมายเลขบัตรประชาชน ${cardId}, ต้องการลงทะเบียนสมาชิกใหม่? โปรดไปที่ " + link(controller: "member", action: "create") { "ลงทะเบียน" }
             render(view: 'verifyCard')
         }

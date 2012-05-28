@@ -43,7 +43,7 @@
 					</dd>
 
 					<dt><g:message code="contract.show.signedDate" /></dt>
-					<dd><g:formatDate date="${contract.dateCreated}" format="EEEE dd MMMM yyyy" /></dd>
+					<dd><g:formatDate date="${contract.signedDate}" format="EEEE dd MMMM yyyy" /></dd>
 				</dl>
 			</div>
 

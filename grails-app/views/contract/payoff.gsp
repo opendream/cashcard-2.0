@@ -27,6 +27,15 @@
 					</div>
 				</div>
 
+				<div class="control-group">
+					<label class="control-label">
+						<g:message code="contract.payoff.form.paymentDate.label" />
+					</label>
+					<div class="controls">
+						<g:datePicker name="paymentDate" precision="day"  value="${receiveTx?.paymentDate}"  />
+					</div>
+				</div>
+
 				<div class="control-group ${hasErrors(bean:period,field:'amount', 'error')}">
 					<label class="control-label">
 						<g:message code="contract.payoff.form.amount.label" />

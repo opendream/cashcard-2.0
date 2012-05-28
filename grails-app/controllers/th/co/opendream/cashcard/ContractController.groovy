@@ -14,9 +14,13 @@ class ContractController {
             params.member = member
             params.loanType = loanType
 
+            def signedDate = params.signedDate ?: new Date()
+
             def contract = new Contract(params)
+            contract.signedDate = signedDate
+            contract.interestRate = loanType.interestRate
+            contract.maxInterestRate = loanType.maxInterestRate
             contract.loanBalance = contract.loanAmount as BigDecimal
-            contract.interestRate = 24.00
 
             if (contract.save()) {
                 def numberOfPeriod = (params.numberOfPeriod ? params.numberOfPeriod : 0) as Integer
@@ -68,6 +72,7 @@ class ContractController {
         contract.loanAmount = null
 
         if (member && loanType) {
+            contract.numberOfPeriod = loanType.numberOfPeriod
             render view: 'sign', model: [
                 member: member,
                 loanType: loanType,
@@ -194,6 +199,7 @@ class ContractController {
             def contract = period.contract
             def member = contract.member
             def receiveTx = new ReceiveTransaction()
+            receiveTx.paymentDate = new Date()
             if (contract && contract.approvalStatus && contract.loanReceiveStatus) {
                 render view: 'payoff', model: [member: member, period: period, receiveTx: receiveTx]
             }
@@ -211,6 +217,7 @@ class ContractController {
         def amount         = (params.amount         ?: '0.00') as BigDecimal
         def fine           = (params.fine           ?: '0.00') as BigDecimal
         def isShareCapital = params.isShareCapital ?: false
+        def paymentDate    = params.paymentDate ?: new Date()
 
         if (period) {
             def contract = period.contract,
@@ -218,11 +225,10 @@ class ContractController {
             receiveTx
 
             try {
-                receiveTx = periodProcessorService.process(period, amount, fine, isShareCapital, new Date())
+                receiveTx = periodProcessorService.process(period, amount, fine, isShareCapital, paymentDate)
                 redirect url: "/member/show/${period.contract.member.id}"
             }
             catch (e) {
-                println e
                 render view: '/contract/payoff', model: [receiveTx: receiveTx, member: member, contract: contract, period: period, amount: amount, fine: fine, isShareCapital: isShareCapital]
             }
         }

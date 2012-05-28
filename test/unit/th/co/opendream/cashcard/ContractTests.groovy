@@ -63,7 +63,8 @@ class ContractTests {
             'loanReceiveStatus', 'guarantor1'   , 'guarantor2' ,
             'numberOfPeriod', 'member'          , 'approvalDate',
             'dateCreated'   , 'lastUpdated'     , 'advancedInterestKeep',
-            'advancedInterestBalance'           , 'maxInterestRate'
+            'advancedInterestBalance'           , 'maxInterestRate',
+            'signedDate'
         ]
 
         def instanceProperties = Contract.metaClass.properties*.name
@@ -292,6 +293,24 @@ class ContractTests {
         verifyNotNull(contract, field)
 
         contract[field] = 12.000000
+        assertTrue "${field} must pass all validations.",
+            contract.validate([field])
+    }
+
+    void testValidateSignedDate() {
+        mockForConstraintsTests(Contract)
+
+        def contract = new Contract(),
+            field = 'signedDate'
+
+        // default value
+        assertEquals "${field} must have default value as today",
+            contract[field], new Date()
+
+        contract[field] = null
+        verifyNotNull(contract, field)
+
+        contract[field] = new Date()
         assertTrue "${field} must pass all validations.",
             contract.validate([field])
     }

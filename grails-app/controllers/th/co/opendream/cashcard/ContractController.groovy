@@ -22,9 +22,14 @@ class ContractController {
             contract.maxInterestRate = loanType.maxInterestRate
             contract.loanBalance = contract.loanAmount as BigDecimal
 
+            def numberOfPeriod = (params.numberOfPeriod ?: 0) as Integer
+            def totalDebt = contract.loanAmount + (contract.loanAmount * (contract.interestRate / 100 / 12) * numberOfPeriod)
+
+            if (loanType.mustKeepAdvancedInterest) {
+                contract.advancedInterestBalance = totalDebt
+            }
+
             if (contract.save()) {
-                def numberOfPeriod = (params.numberOfPeriod ?: 0) as Integer
-                def totalDebt = contract.loanAmount + (contract.loanAmount * (contract.interestRate / 100 / 12) * numberOfPeriod)
                 def periodList = periodGeneratorProcessorService.generate(loanType, totalDebt, numberOfPeriod)
                 periodList.each { period ->
                     period.contract = contract

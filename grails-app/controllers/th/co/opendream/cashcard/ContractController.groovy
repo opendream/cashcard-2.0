@@ -4,7 +4,7 @@ import groovy.time.TimeCategory
 
 class ContractController {
 
-    def periodService, utilService
+    def periodService, utilService, periodProcessorService
 
     def create() {
         def member = Member.get(params.memberId)
@@ -192,9 +192,10 @@ class ContractController {
 
         if (period) {
             def contract = period.contract
+            def member = contract.member
             def receiveTx = new ReceiveTransaction()
             if (contract && contract.approvalStatus && contract.loanReceiveStatus) {
-                render view: 'payoff', model: [period: period, receiveTx: receiveTx]
+                render view: 'payoff', model: [member: member, period: period, receiveTx: receiveTx]
             }
             else {
                 redirect url: '/error'
@@ -207,17 +208,22 @@ class ContractController {
 
     def doPayoff() {
         def period         = Period.get(params.id)
-        def amount         = params.amount         ?: '0.00' as BigDecimal
-        def fine           = params.fine           ?: '0.00' as BigDecimal
+        def amount         = (params.amount         ?: '0.00') as BigDecimal
+        def fine           = (params.fine           ?: '0.00') as BigDecimal
         def isShareCapital = params.isShareCapital ?: false
 
         if (period) {
+            def contract = period.contract,
+            member = contract.member,
+            receiveTx
+
             try {
-                periodService.periodPayoff(period, amount, fine, isShareCapital, new Date())
+                receiveTx = periodProcessorService.process(period, amount, fine, isShareCapital, new Date())
                 redirect url: "/member/show/${period.contract.member.id}"
             }
             catch (e) {
-                render view: '/contract/payoff', model: [contract: period.contract, period: period, amount: amount, fine: fine, isShareCapital: isShareCapital]
+                println e
+                render view: '/contract/payoff', model: [receiveTx: receiveTx, member: member, contract: contract, period: period, amount: amount, fine: fine, isShareCapital: isShareCapital]
             }
         }
         else {

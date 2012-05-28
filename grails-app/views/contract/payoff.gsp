@@ -7,7 +7,7 @@
 	<body>
 		<div class="container">
 			<header class="page-header">
-				<g:link controller="member" action="show" id="${period.contract.member.id}">
+				<g:link controller="member" action="show" id="${member.id}">
 					<em><i class="icon-arrow-left"></i><g:message code="back.to.member" args="[period.contract.member]" /></em>
 				</g:link>
 				<h1><g:message code="contract.payoff.title" args="[period.contract.code, period.no]" /></h1>
@@ -41,7 +41,7 @@
 						<g:message code="contract.payoff.form.fine.label" />
 					</label>
 					<div class="controls">
-						<g:field type="text" id="fine" name="fine" pattern="\\d*(\\.\\d\\d)?" value="${formatNumber(number: receiveTx.fine, format: '0.00')}" />
+						<g:field type="text" id="fine" name="fine" pattern="\\d*(\\.\\d\\d)?" value="${formatNumber(number: receiveTx?.fine, format: '0.00')}" />
 					</div>
 				</div>
 
@@ -51,7 +51,7 @@
 					</label>
 					<div class="controls">
 						<label class="checkbox">
-							<g:field type="checkbox" id="isShareCapital" name="isShareCapital" value="${receiveTx.isShareCapital}" />
+							<g:field type="checkbox" id="isShareCapital" name="isShareCapital" value="${receiveTx?.isShareCapital}" />
 							<g:message code="contract.payoff.form.isShareCapital.checkbox.label" />
 						</label>
 					</div>

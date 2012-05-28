@@ -2,6 +2,7 @@ package th.co.opendream.cashcard
 
 class Period {
     BigDecimal amount = 0.000000
+    BigDecimal cooperativeInterest = 0.000000
     Integer no
     Date dueDate
     Boolean status = false

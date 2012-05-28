@@ -12,8 +12,11 @@ import org.junit.*
 @Mock([Member, Contract, Period, LoanType, ReceiveTransaction])
 class PeriodProcessorServiceTests {
 
-    void setUpPeriod() {
-        def loanType = new LoanType(name: 'Common', processor: 'Effective')
+    /***********************************
+     * Effective
+     **********************************/
+    void setUpPeriod(type='Effective') {
+        def loanType = new LoanType(name: 'Common', processor: type)
         loanType.save()
 
         def member = new Member(identificationNumber:"1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")
@@ -28,6 +31,7 @@ class PeriodProcessorServiceTests {
             member: member,
             loanType: loanType,
             loanAmount: 2000.00,
+            cooperativeShare: 0.75,
             interestRate: 24.00,
             loanBalance: 2000.00,
             approvalStatus: false,
@@ -48,8 +52,8 @@ class PeriodProcessorServiceTests {
         ])
     }
 
-    def setUpMockForPeriodPayoff() {
-        def loanType = new LoanType(name: 'Common', processor: 'Effective')
+    def setUpMockForPeriodPayoff(type='Effective') {
+        def loanType = new LoanType(name: 'Common', processor: type)
         loanType.save()
 
         def member = new Member(identificationNumber:"1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")
@@ -62,6 +66,7 @@ class PeriodProcessorServiceTests {
             code: "ก.55-1000-10",
             member: member,
             loanType: loanType,
+            cooperativeShare: 0.75,
             loanAmount: 2000.00,
             interestRate: 24.00,
             loanBalance: 2000.00,
@@ -93,6 +98,10 @@ class PeriodProcessorServiceTests {
         contract
     }
 
+    /***********************************
+     * Flat
+     **********************************/
+
     def setUpMockForFlatPeriodPayoff(principle, interestRate, numberOfPeriod, keep, date) {
         def loanType = new LoanType(name: 'Common', processor: 'Flat')
         loanType.save()
@@ -107,6 +116,7 @@ class PeriodProcessorServiceTests {
             code: "ก.55-1000-10",
             member: member,
             loanType: loanType,
+            cooperativeShare: 0.75,
             loanAmount: principle,
             interestRate: interestRate,
             loanBalance: principle,
@@ -125,8 +135,11 @@ class PeriodProcessorServiceTests {
         contract
     }
 
-    def setUpMockForPeriodPayoff_12Months() {
-        def loanType = new LoanType(name: 'Common', processor: 'Effective')
+    /***********************************
+     * Effective
+     **********************************/
+    def setUpMockForPeriodPayoff_12Months(type='Effective') {
+        def loanType = new LoanType(name: 'Common', processor: type)
         loanType.save()
 
         def member = new Member(identificationNumber:"1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")
@@ -139,6 +152,7 @@ class PeriodProcessorServiceTests {
             code: "ก.55-1000-10",
             member: member,
             loanType: loanType,
+            cooperativeShare: 0.75,
             loanAmount: 2000.00,
             interestRate: 24.00,
             loanBalance: 2000.00,
@@ -206,9 +220,8 @@ class PeriodProcessorServiceTests {
         contract
     }
 
-
     void testProcessPeriodPayoff() {
-        def contract = setUpMockForPeriodPayoff()
+        def contract = setUpMockForPeriodPayoff('Effective')
         def p1 = Period.get(1)
         def p2 = Period.get(2)
         def p3 = Period.get(3)
@@ -388,6 +401,239 @@ class PeriodProcessorServiceTests {
         /*********************** /END Verify money ****************************/
     }
 
+    /**********************************
+     * Commision
+     *********************************/
+
+    void testCommissionProcessPeriodPayoff() {
+        def contract = setUpMockForPeriodPayoff('Commission')
+        def p1 = Period.get(1)
+        def p2 = Period.get(2)
+        def p3 = Period.get(3)
+
+        service.interestProcessorService = [ process: { p, d ->
+            if (p.id == 1) {
+                [actualInterest: 40.655737, effectedInterest: 30.491805, fee: 10.163932, cooperativeInterest: p.contract.cooperativeShare * 30.491805]
+            }
+            else if (p.id == 2) {
+                [actualInterest: 26.255522, effectedInterest: 19.691643, fee: 6.563879, cooperativeInterest: p.contract.cooperativeShare * 19.691643]
+            }
+            else if (p.id == 3) {
+                [actualInterest: 13.312950, effectedInterest: 9.984713, fee: 3.328237, cooperativeInterest: p.contract.cooperativeShare * 9.984713]
+            }
+        } ] as InterestProcessorService
+
+        /************************** Verify money ******************************/
+        service.process(p1, 706.00, 0.00, false, p1.dueDate)
+        assert ReceiveTransaction.list().size() == 1
+
+        p1 = Period.get(1) // Reload data
+        assert p1.payoffStatus == true
+        assert p1.payoffDate == p1.dueDate
+        //assert p1.cooperativeInterest != 0.000000
+
+
+        def receiveTx = ReceiveTransaction.get(1)
+        assert receiveTx.amount == 706.00
+        assert receiveTx.balanceForward == 2000.00
+        assert receiveTx.balancePaid == 665.344263
+        assert receiveTx.interestRate == 24.00
+        assert receiveTx.interestPaid == 30.491805
+        assert receiveTx.fee == 10.163932
+        assert receiveTx.fine == 0.00
+        assert receiveTx.differential == 0.00
+        assert receiveTx.isShareCapital == false
+
+        contract = Contract.get(1)
+        assert contract.loanBalance == 1334.655737
+        /*********************** /END Verify money ****************************/
+
+        /************************** Verify money ******************************/
+        service.process(p2, 706.00, 0.00, false, p2.dueDate)
+        assert ReceiveTransaction.list().size() == 2
+
+        p2 = Period.get(2) // Reload data
+        assert p2.payoffStatus == true
+        assert p2.payoffDate == p2.dueDate
+        assert p2.cooperativeInterest != 0.000000
+
+
+        receiveTx = ReceiveTransaction.get(2)
+        assert receiveTx.amount == 706.00
+        assert receiveTx.balanceForward == 1334.655737
+        assert receiveTx.balancePaid == 679.744478
+        assert receiveTx.interestRate == 24.00
+        assert receiveTx.interestPaid == 19.691643
+        assert receiveTx.fee == 6.563879
+        assert receiveTx.fine == 0.00
+        assert receiveTx.differential == 0.00
+        assert receiveTx.isShareCapital == false
+        assert p2.cooperativeInterest != 0.000000
+
+
+        contract = Contract.get(1)
+        assert contract.loanBalance == 654.911259
+        /*********************** /END Verify money ****************************/
+
+        /************************** Verify money ******************************/
+        service.process(p3, 708.00, 0.00, false, p3.dueDate)
+        assert ReceiveTransaction.list().size() == 3
+
+        p3 = Period.get(3) // Reload data
+        assert p3.payoffStatus == true
+        assert p3.payoffDate == p3.dueDate
+
+        receiveTx = ReceiveTransaction.get(3)
+        assert receiveTx.amount == 708.00
+        assert receiveTx.balanceForward == 654.911259
+        assert receiveTx.balancePaid == 654.911259
+        assert receiveTx.interestRate == 24.00
+        assert receiveTx.interestPaid == 9.984713
+        assert receiveTx.fee == 3.328237
+        assert receiveTx.fine == 0.00
+        assert receiveTx.differential == 39.775791
+        assert receiveTx.isShareCapital == false
+        assert p3.cooperativeInterest != 0.000000
+
+        contract = Contract.get(1)
+        assert contract.loanBalance == 0.00
+        /*********************** /END Verify money ****************************/
+    }
+
+    void testCommissionProcessPeriodPayoff_12Months() {
+        def contract = setUpMockForPeriodPayoff_12Months('Commission')
+        def period
+
+        service.interestProcessorService = [ process: { p, d ->
+            switch (p.id) {
+                case 1:
+                    def mocked = [actualInterest: 40.655737, effectedInterest: 30.491805, fee: 10.163932]
+                    mocked.cooperativeInterest = mocked.effectedInterest * p.contract.cooperativeShare
+                    mocked
+                    break
+                case 2:
+                    def mocked = [actualInterest: 36.091588, effectedInterest: 27.068692, fee: 9.022896]
+                    mocked.cooperativeInterest = mocked.effectedInterest * p.contract.cooperativeShare
+                    mocked
+                    break
+                case 3:
+                    def mocked = [actualInterest: 33.840765, effectedInterest: 25.380575, fee: 8.460190]
+                    mocked.cooperativeInterest = mocked.effectedInterest * p.contract.cooperativeShare
+                    mocked
+                    break
+                case 4:
+                    def mocked = [actualInterest: 29.362388, effectedInterest: 22.021792, fee: 7.340596]
+                    mocked.cooperativeInterest = mocked.effectedInterest * p.contract.cooperativeShare
+                    mocked
+                    break
+                case 5:
+                    def mocked = [actualInterest: 26.750469, effectedInterest: 20.062852, fee: 6.687617]
+                    mocked.cooperativeInterest = mocked.effectedInterest * p.contract.cooperativeShare
+                    mocked
+                    break
+                case 6:
+                    def mocked = [actualInterest: 23.106708, effectedInterest: 17.330032, fee: 5.776676]
+                    mocked.cooperativeInterest = mocked.effectedInterest * p.contract.cooperativeShare
+                    mocked
+                    break
+                case 7:
+                    def mocked = [actualInterest: 18.763429, effectedInterest: 14.072573, fee: 4.690856]
+                    mocked.cooperativeInterest = mocked.effectedInterest * p.contract.cooperativeShare
+                    mocked
+                    break
+                case 8:
+                    def mocked = [actualInterest: 15.582756, effectedInterest: 11.687068, fee: 3.895688]
+                    mocked.cooperativeInterest = mocked.effectedInterest * p.contract.cooperativeShare
+                    mocked
+                    break
+                case 9:
+                    def mocked = [actualInterest: 11.334174, effectedInterest: 8.500631, fee: 2.833543]
+                    mocked.cooperativeInterest = mocked.effectedInterest * p.contract.cooperativeShare
+                    mocked
+                    break
+                case 10:
+                    def mocked = [actualInterest: 7.754838, effectedInterest: 5.816129, fee: 1.938709]
+                    mocked.cooperativeInterest = mocked.effectedInterest * p.contract.cooperativeShare
+                    mocked
+                    break
+                case 11:
+                    def mocked = [actualInterest: 3.724937, effectedInterest: 2.793703, fee: 0.931234]
+                    mocked.cooperativeInterest = mocked.effectedInterest * p.contract.cooperativeShare
+                    mocked
+                    break
+                case 12:
+                    def mocked = [actualInterest: 0, effectedInterest: 0, fee: 0]
+                    mocked.cooperativeInterest = mocked.effectedInterest * p.contract.cooperativeShare
+                    mocked
+                    break
+
+                default:
+                    null
+            }
+        } ] as PeriodService
+
+        def expect = [
+            /***************************************************************************
+            * ดอกเบี้ยตามกฎหมาย, ค่าธรรมเนียม, เหลือไปตัดเงินต้น, เงินต้นที่เหลือ, ส่วนต่าง
+            ****************************************************************************/
+
+            [30.491805, 10.163932,  165.344263, 1834.655737,    0],
+            [27.068692, 9.022896,   169.908412, 1664.747325,    0],
+            [25.380575, 8.460190,   172.159235, 1492.588090,    0],
+            [22.021792, 7.340596,   176.637612, 1315.950478,    0],
+            [20.062852, 6.687617,   179.249531, 1136.700947,    0],
+            [17.330032, 5.776676,   182.893292, 953.807655,     0],
+            [14.072573, 4.690856,   187.236571, 766.571084,     0],
+            [11.687068, 3.895688,   190.417244, 576.153840,     0],
+            [8.500631,  2.833543,   194.665826, 381.488014,     0],
+            [5.816129,  1.938709,   198.245162, 183.242852,     0],
+            [2.793703,  0.931234,   183.242852, 0,              19.032211],
+            [0,         0,          0,          0,              214]
+        ]
+
+
+        expect.metaClass.fillInterestCoop = { rate ->
+            delegate.each { it[5] = rate*it[0] }
+        }
+
+
+
+        /************************** Verify money ******************************/
+        (1..12).each {
+            print "period: ${it}"
+            period = Period.get(it)
+            expect.fillInterestCoop(period.contract.cooperativeShare)
+            service.process(period, period.amount, 0.00, false, period.dueDate)
+            assert ReceiveTransaction.list().size() == period.id
+
+            period = Period.get(period.id) // Reload data
+            assert period.payoffStatus == true
+            assert period.payoffDate == period.dueDate
+
+            def receiveTx = ReceiveTransaction.get(period.id)
+            def index = (period.id - 1) as Integer
+            assert receiveTx.amount == period.amount
+            assert receiveTx.balanceForward == (index ? expect[index - 1][3] : 2000.00)
+            assert receiveTx.balancePaid == expect[index][2]
+            assert receiveTx.interestRate == 24.00
+            assert receiveTx.interestPaid == expect[index][0]
+            assert receiveTx.fee == expect[index][1]
+            assert receiveTx.fine == 0.00
+            assert receiveTx.differential == expect[index][4]
+            assert receiveTx.isShareCapital == false
+
+            contract = Contract.get(1)
+            assert contract.loanBalance == expect[index][3]
+            println " ==> pass"
+        }
+        /*********************** /END Verify money ****************************/
+    }
+
+
+
+    /***********************************
+     * Flat
+     **********************************/
     void testFlatPeriodProcess() {
         def getDate = { str -> Date.parse("yyyy-MM-dd", str) }
 
@@ -515,5 +761,9 @@ class PeriodProcessorServiceTests {
             println " ===> pass"
         }
     }
+
+    /***********************************
+     * Commission
+     **********************************/
 
 }

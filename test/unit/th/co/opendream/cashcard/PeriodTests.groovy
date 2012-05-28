@@ -13,8 +13,7 @@ class PeriodTests extends DomainTestTemplate  {
 
     def requiredProperties() {
         ['contract', 'amount', 'no', 'dueDate', 'status', 'payoffStatus',
-         'payoffDate'
-        ]
+         'payoffDate', 'cooperativeInterest']
     }
 
     def domainClass() {
@@ -66,7 +65,7 @@ class PeriodTests extends DomainTestTemplate  {
 
         def period = new Period(),
             field = 'dueDate'
-            
+
         assertTrue "${field} value = ${period[field]} must pass all validations.",
             period.validate([field])
 
@@ -80,7 +79,7 @@ class PeriodTests extends DomainTestTemplate  {
 
         def period = new Period(),
             field = 'payoffDate'
-            
+
         assertTrue "${field} value = ${period[field]} must pass all validations.",
             period.validate([field])
 

@@ -14,7 +14,10 @@ class ContractController {
             params.member = member
             params.loanType = loanType
 
+            def signedDate = params.signedDate ?: new Date()
+
             def contract = new Contract(params)
+            contract.signedDate = signedDate
             contract.interestRate = loanType.interestRate
             contract.maxInterestRate = loanType.maxInterestRate
             contract.loanBalance = contract.loanAmount as BigDecimal

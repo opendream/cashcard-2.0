@@ -32,6 +32,15 @@
 				</div>
 			</div>
 
+			<div class="control-group">
+				<label class="control-label">
+					วันที่
+				</label>
+				<div class="controls">
+					<g:datePicker name="signedDate" precision="day"  value="${contract?.signedDate}"  />
+				</div>
+			</div>
+
 			<div class="control-group ${hasErrors(bean:contract,field:'code', 'error')}">
 				<label class="control-label" for="code">
 					<g:message code="contract.sign.form.code.label" />

@@ -15,6 +15,8 @@ class ContractController {
             params.loanType = loanType
 
             def contract = new Contract(params)
+            contract.interestRate = loanType.interestRate
+            contract.maxInterestRate = loanType.maxInterestRate
             contract.loanBalance = contract.loanAmount as BigDecimal
             contract.interestRate = 24.00
 
@@ -68,6 +70,7 @@ class ContractController {
         contract.loanAmount = null
 
         if (member && loanType) {
+            contract.numberOfPeriod = loanType.numberOfPeriod
             render view: 'sign', model: [
                 member: member,
                 loanType: loanType,

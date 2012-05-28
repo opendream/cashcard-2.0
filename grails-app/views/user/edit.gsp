@@ -1,4 +1,3 @@
-<%@ page import="th.co.opendream.cashcard.Company" %>
 <html>
 <%@ page import="org.codehaus.groovy.grails.plugins.PluginManagerHolder" %>
 
@@ -46,17 +45,7 @@ if (isOpenId) {
 			<s2ui:passwordFieldRow name='password' labelCode='user.password.label' bean="${user}"
                                 labelCodeDefault='Password' value="${user?.password}"/>
 
-            <!-- add company dropdown -->                    
-            <tr class="prop">
-	            <td valign="top" class="name">
-				<label for="company"><g:message code='Company', default='Company'/></label>
-				</td>
-				<td valign="top" class="value ${hasErrors(bean: bean, field: name, 'errors')}">
-	            <g:select name="companyId" from="${companyList}" value="${user?.company?.id}"
-	          optionKey="id" optionValue="name" />
-	          	</td>
-			</tr>
-			<!-- company dropdown --> 
+            
 
 			<s2ui:checkboxRow name='enabled' labelCode='user.enabled.label' bean="${user}"
                            labelCodeDefault='Enabled' value="${user?.enabled}"/>

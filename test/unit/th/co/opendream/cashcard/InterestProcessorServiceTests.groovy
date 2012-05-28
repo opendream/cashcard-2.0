@@ -194,9 +194,9 @@ class InterestProcessorServiceTests {
          * Test second period.
          */
         result = service.process(p2, p2.dueDate)
-        assert result.actualInterest == 26.255522
-        assert result.effectedInterest == 19.691643
-        assert result.fee == 6.563879
+        assert result.actualInterest == 26.255523
+        assert result.effectedInterest == 19.691642
+        assert result.fee == 6.563881
 
     }
 

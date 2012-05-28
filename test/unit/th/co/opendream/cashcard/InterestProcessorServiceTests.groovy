@@ -169,11 +169,11 @@ class InterestProcessorServiceTests {
          * Test first period.
          */
         def result = service.process(p1, p1.dueDate)
-        assert result.actualInterest == 40.655737
-        assert result.effectedInterest == 30.491805
-        assert result.fee == 10.163932
+        assert result.actualInterest == 40.655738
+        assert result.effectedInterest == 30.491803
+        assert result.fee == 10.163935
 
-        contract.loanBalance = 1334.655737
+        contract.loanBalance = 1334.655738
         contract.save()
 
         p1.payoffStatus = true
@@ -197,7 +197,6 @@ class InterestProcessorServiceTests {
         assert result.actualInterest == 26.255522
         assert result.effectedInterest == 19.691643
         assert result.fee == 6.563879
-
 
     }
 
@@ -237,9 +236,9 @@ class InterestProcessorServiceTests {
          * Test first period.
          */
         def result = service.process(p1, p1.dueDate)
-        assert result.actualInterest == 40.767120
-        assert result.effectedInterest == 30.575343
-        assert result.fee == 10.191777
+        assert result.actualInterest == 40.767123
+        assert result.effectedInterest == 30.575342
+        assert result.fee == 10.191781
 
         contract.loanBalance = 1334.767123
         contract.save()
@@ -262,9 +261,9 @@ class InterestProcessorServiceTests {
          * Test second period.
          */
         result = service.process(p2, p2.dueDate)
-        assert result.actualInterest == 26.329651
-        assert result.effectedInterest == 19.747240
-        assert result.fee == 6.582411
+        assert result.actualInterest == 26.329653
+        assert result.effectedInterest == 19.74724
+        assert result.fee == 6.582413
     }
 
     void testCalculateEffectiveMethodZeroBalance() {

@@ -2,7 +2,10 @@ package th.co.opendream.cashcard
 
 class PeriodGeneratorProcessorService {
 
-    def generate(LoanType loanType, amount, numberOfPeriod) {
+    def generate(loanType, amount, numberOfPeriod) {
+        if (loanType instanceof Integer) {
+           loanType = LoanType.get(loanType)
+        }
         def processorName = loanType.processor.toLowerCase()
         this."$processorName"(amount as BigDecimal, numberOfPeriod, loanType.interestRate)
     }

@@ -77,10 +77,12 @@
 		<table class="table table-condensed table-striped">
 			<thead>
 				<tr>
-					<td>No.</td>
-					<td>Amount</td>
+					<td><g:message code="contract.show.period.thead.no" /></td>
+					<td><g:message code="contract.show.period.thead.amount" /></td>
 					<g:if test="${contract.approvalStatus}">
-						<td>Due Date</td>
+						<td><g:message code="contract.show.period.thead.dueDate" /></td>
+						<td><g:message code="contract.show.period.thead.payoffStatus" /></td>
+						<td><g:message code="contract.show.period.thead.payoffDate" /></td>
 					</g:if>
 				</tr>
 			</thead>
@@ -92,6 +94,13 @@
 						<td>${period.amount}</td>
 						<g:if test="${contract.approvalStatus}">
 							<td><g:formatDate date="${period.dueDate}" format="EEEE dd MMMM yyyy" /></td>
+							<td>${period.payoffStatusText}</td>
+							<td>
+								<g:if test="${period.payoffStatus}">
+									<g:formatDate date="${period.payoffDate}" format="EEEE dd MMMM yyyy" />
+								</g:if>
+								<g:else>-</g:else>
+							</td>
 						</g:if>
 					</tr>
 				</g:each>

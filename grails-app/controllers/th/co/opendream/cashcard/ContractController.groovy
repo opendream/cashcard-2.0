@@ -92,6 +92,23 @@ class ContractController {
             eq('contract', contract)
         }
 
+        periodList = periodList.collect { period ->
+            def code
+            if (!period.payoffStatus && period.dueDate < new Date()) {
+                code = 'late'
+            }
+            else if (!period.payoffStatus) {
+                code = 'due'
+            }
+            else if (period.payoffStatus) {
+                code = 'paid'
+            }
+
+            period.metaClass.payoffStatusText = message(code: "contract.show.period.tbody.payoffStatus.${code}")
+
+            period
+        }
+
         if (contract) {
             render view: '/contract/show', model: [
                 contract: contract,

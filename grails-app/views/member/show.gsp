@@ -108,10 +108,12 @@
                                         </g:link>
                                     </g:if>
 
-                                    <g:if test="${contract.currentPeriod}">
-                                        <g:link controller="contract" action="payoff" id="${contract.currentPeriod?.id}">
-                                            <span class="btn btn-danger"><g:message code="contract.list.payoff.label" /></span>
-                                        </g:link>
+                                    <g:if test="${contract.loanReceiveStatus}">
+                                        <g:if test="${contract.currentPeriod}">
+                                            <g:link controller="contract" action="payoff" id="${contract.currentPeriod?.id}">
+                                                <span class="btn btn-danger"><g:message code="contract.list.payoff.label" /></span>
+                                            </g:link>
+                                        </g:if>
                                     </g:if>
                                 </td>
                             </tr>

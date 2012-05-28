@@ -9,19 +9,25 @@ import org.junit.*
  * See the API for {@link grails.test.mixin.domain.DomainClassUnitTestMixin} for usage instructions
  */
 @TestFor(LoanType)
-class LoanTypeTests {
+class LoanTypeTests extends DomainTestTemplate {
 
-    def generateValidLoanType(name, processor) {
-        new LoanType(name: name, processor: processor)
+    def requiredProperties() {
+        [
+            'name', 'processor', 'interestRate', 'maxInterestRate',
+            'mustKeepAdvancedInterest', 'numberOfPeriod'
+        ]
     }
 
-    void testProperties() {
-        def requiredProperties = ['name', 'processor'],
-            instanceProperties = LoanType.metaClass.properties*.name
+    def domainClass() {
+        LoanType.class
+    }
 
-        def missing_properties = requiredProperties - instanceProperties
-        assert 0 == missing_properties.size(),
-            "Domain class is missing some required properties => ${missing_properties}"
+    def generateValidLoanType(name, processor) {
+        new LoanType(
+            name: name, processor: processor, interestRate: 18.00,
+            maxInterestRate: 18.00, mustKeepAdvancedInterest: false,
+            numberOfPeriod: 3
+        )
     }
 
     void testValidateName() {
@@ -49,6 +55,34 @@ class LoanTypeTests {
 
         loanType.name = "Common Loan"
         assertTrue "Name ${loanType.name} must pass all validations.",
+            loanType.validate([field])
+    }
+
+    void testFinanceField() {
+        verifyFinanceNumber(LoanType, ['interestRate', 'maxInterestRate'])
+    }
+
+    void testValidateMustKeepAdvancedInterest() {
+        mockForConstraintsTests(LoanType)
+
+        def loanType = new LoanType(),
+            field = 'mustKeepAdvancedInterest'
+
+        loanType[field] = true 
+        assertTrue "Name ${loanType.name} must pass all validations.",
+            loanType.validate([field])
+    }
+
+    void testValidateNumberOfPeriod() {
+        mockForConstraintsTests(LoanType)
+
+        def loanType = new LoanType(),
+            field = 'numberOfPeriod'
+
+        verifyNotNull(loanType, field)
+
+        loanType[field] = 3
+        assertTrue "${field} must pass all validations.",
             loanType.validate([field])
     }
 }

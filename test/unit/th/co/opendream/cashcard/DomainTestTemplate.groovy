@@ -52,6 +52,7 @@ abstract class DomainTestTemplate {
         def _test = { fieldName ->
             def instance = clazz.newInstance()
 
+            instance[fieldName] = null
             verifyNotNull(instance, fieldName)
 
             instance[fieldName] = 1000.000000

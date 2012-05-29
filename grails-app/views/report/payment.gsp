@@ -7,7 +7,12 @@
 
 	<div class="container">
 		<header class="page-header">
-			<h1><g:message code="contract.sign.form.title" /></h1>
+			<h1><g:if test="${type == 'daily-payloan'}">
+					${message(code: 'main.menu.payloanReport', default: 'รายงานการจ่ายเงินกู้')}
+				</g:if>
+				<g:if test="${type == 'daily-payoff'}">
+					${message(code: 'main.menu.payoffReport', default: 'รายงานการชำระเงินกู้ของลูกหนี้')}
+				</g:if></h1>
 		</header>
 	</div>
 
@@ -18,29 +23,40 @@
 				<g:renderErrors bean="${contract}" as="list"></g:renderErrors>
 			</div><!-- /errors -->
 		</g:hasErrors>
-			<div class="control-group">
-				<label class="control-label">
-					วันที่
-				</label>
-				<div class="controls">
-					<g:jasperForm controller="report"
-				    action="doPaymentReport"
-				    id="1498"
-				    jasper="${type}" >
-				    from:
-					<g:datePicker name="fromDate" precision="day"  />
-					to:
-					<g:datePicker name="toDate" precision="day"   />
+			
 
-				    <g:jasperButton format="pdf" jasper="${type}" text="pdf" />
+				
+		<g:jasperForm controller="report"
+		    action="doPaymentReport"
+		    id="1498"
+		    jasper="${type}"
+		    class="form-horizontal" >
+
+		    <div class="control-group">
+			    <label class="control-label">ตั้งแต่วันที่:</label>
+			    <div class="controls">
+					<g:datePicker name="fromDate" precision="day"/>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label">ถึงวันที่:</label>
+				<div class="controls">
+					<g:datePicker name="toDate" precision="day"  />
+				</div>
+			</div>
+
+			<div class="form-actions">
+			   	<g:jasperButton format="pdf" jasper="${type}" class="btn btn-primary" text="สั่งพิมพ์" />
+			</div>
 
 				    
 
-				</g:jasperForm>
-				</div>
+		</g:jasperForm>
+				
 
 				
-			</div>
+			
 
 			
 		

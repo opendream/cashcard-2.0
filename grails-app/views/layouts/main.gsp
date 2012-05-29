@@ -52,16 +52,9 @@
         margin: -20px -20px 20px;
       }
 
-      /* Styles you shouldn't keep as they are for displaying this base example only */
-      .content .span10,
-      .content .span4 {
-        min-height: 500px;
-      }
-      /* Give a quick and non-cross-browser friendly divider */
-      .content .span4 {
-        margin-left: 0;
-        padding-left: 19px;
-        border-left: 1px solid #eee;
+      .pull-right .dropdown-menu:after {
+        left: auto;
+        right: 6px;
       }
 
       .topbar .btn {
@@ -82,72 +75,6 @@
 
       table.table thead tr th {
         text-align: center;
-      }
-
-      /* Subnav */
-      .subnav {
-        width: 100%;
-        height: 36px;
-        background-color: #eeeeee; /* Old browsers */
-        background-repeat: repeat-x; /* Repeat the gradient */
-        background-image: -moz-linear-gradient(top, #f5f5f5 0%, #eeeeee 100%); /* FF3.6+ */
-        background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f5f5f5), color-stop(100%,#eeeeee)); /* Chrome,Safari4+ */
-        background-image: -webkit-linear-gradient(top, #f5f5f5 0%,#eeeeee 100%); /* Chrome 10+,Safari 5.1+ */
-        background-image: -ms-linear-gradient(top, #f5f5f5 0%,#eeeeee 100%); /* IE10+ */
-        background-image: -o-linear-gradient(top, #f5f5f5 0%,#eeeeee 100%); /* Opera 11.10+ */
-        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5f5f5', endColorstr='#eeeeee',GradientType=0 ); /* IE6-9 */
-        background-image: linear-gradient(top, #f5f5f5 0%,#eeeeee 100%); /* W3C */
-        border: 1px solid #e5e5e5;
-        -webkit-border-radius: 4px;
-           -moz-border-radius: 4px;
-                border-radius: 4px;
-      }
-      .subnav {
-        margin-bottom: 20px;
-      }
-      .subnav .nav {
-        margin-bottom: 0;
-      }
-      .subnav .nav > li > a {
-        margin: 0;
-        padding-top:    11px;
-        padding-bottom: 11px;
-        border-left: 1px solid #f5f5f5;
-        border-right: 1px solid #e5e5e5;
-        -webkit-border-radius: 0;
-           -moz-border-radius: 0;
-                border-radius: 0;
-      }
-      .subnav .nav > .active > a,
-      .subnav .nav > .active > a:hover {
-        padding-left: 13px;
-        color: #777;
-        background-color: #e9e9e9;
-        border-right-color: #ddd;
-        border-left: 0;
-        -webkit-box-shadow: inset 0 3px 5px rgba(0,0,0,.05);
-           -moz-box-shadow: inset 0 3px 5px rgba(0,0,0,.05);
-                box-shadow: inset 0 3px 5px rgba(0,0,0,.05);
-      }
-      .subnav .nav > .active > a .caret,
-      .subnav .nav > .active > a:hover .caret {
-        border-top-color: #777;
-      }
-      .subnav .nav > li:first-child > a,
-      .subnav .nav > li:first-child > a:hover {
-        border-left: 0;
-        padding-left: 12px;
-        -webkit-border-radius: 4px 0 0 4px;
-           -moz-border-radius: 4px 0 0 4px;
-                border-radius: 4px 0 0 4px;
-      }
-      .subnav .nav > li:last-child > a {
-        border-right: 0;
-      }
-      .subnav .dropdown-menu {
-        -webkit-border-radius: 0 0 4px 4px;
-           -moz-border-radius: 0 0 4px 4px;
-                border-radius: 0 0 4px 4px;
       }
 
       select#startDate_year {
@@ -172,7 +99,7 @@
           <ul class="nav">
             <li class="#"><a href="${createLink(controller:'member', action:'verifyCard')}">${message(code: 'main.menu.home', default: 'Home')}</a></li>
             <li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">${message(code: 'main.menu.member', default: 'Member')}<b class="caret"></b></a>
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">${message(code: 'main.menu.member', default: 'Member')} <b class="caret"></b></a>
 							<ul class="dropdown-menu">
 								<li><a href="${createLink(controller:'member', action:'create')}">${message(code: 'main.menu.register', default: 'Register')}</a></li>
 								<li><a href="${createLink(controller:'member', action:'verifyCard')}">${message(code: 'main.menu.verifyCard', default: 'Verify Card')}</a></li>
@@ -191,26 +118,35 @@
                 <li><a href="${createLink(controller:'report', action:'settlement')}">${message(code: 'main.menu.dailyDiff', default: 'สรุป Net Settlement')}</a></li>
                 <li><a href="${createLink(controller:'report', action:'relate')}">${message(code: 'main.menu.dailyDiff', default: 'เงินข้ามสหกรณ์')}</a></li>
               </ul>
-            </li>
-            <li ><a><com:name/></a></li>
-            <li class="dropdown">
-              <sec:ifLoggedIn>
-              <a href='#' class="dropdown-toggle" data-toggle="dropdown"><sec:username/><b class="caret"></b></a>
+            </li>            
+          </ul>
+
+          <sec:ifLoggedIn>
+            <div class="btn-group pull-right">
+              
+              <a href='#' class="btn dropdown-toggle" data-toggle="dropdown">
+                <i class="icon-user"></i>
+                <sec:username/>
+                <span class="caret"></span>
+              </a>
+
               <ul class="dropdown-menu">
                 <li>
-                <g:link controller='logout'>${message(code:'cashcard.logout.label', default: 'Logout')}</g:link>
+                  <g:link controller='logout'>${message(code:'cashcard.logout.label', default: 'Logout')}</g:link>
                 </li>
               </ul>
-              </sec:ifLoggedIn>
-            </li>
-          </ul>
+              
+            </div>
+            </sec:ifLoggedIn>
         </div>
       </div>
     </div>
 
     <div class="container">
-	    <div class="content">
-				<g:layoutBody/>
+	    <div class="content row">
+        <div class="span10"><div class="row">
+				  <g:layoutBody/>
+        </div></div>
 				<g:javascript library="application"/>
 				<r:layoutResources />
 			</div>

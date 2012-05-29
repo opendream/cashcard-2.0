@@ -64,8 +64,7 @@ class ReceiveTransactionTests extends DomainTestTemplate {
             field = 'paymentDate'
 
         // default value
-        assertTrue "${field} must have default value as today, get ${instance[field]} instead.",
-            instance[field].compareTo(new Date()) == 0
+        assert instance[field].compareTo(new Date()) == 0
 
         instance[field] = null
         verifyNotNull(instance, field)

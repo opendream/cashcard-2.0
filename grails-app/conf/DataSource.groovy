@@ -26,7 +26,7 @@ environments {
     production {
         dataSource {
             dbCreate = "update"
-            url = "jdbc:h2:cashcard2Db;MVCC=TRUE"
+            url = "jdbc:h2:cashcard2DemoDb;MVCC=TRUE"
             pooled = true
             properties {
                maxActive = -1

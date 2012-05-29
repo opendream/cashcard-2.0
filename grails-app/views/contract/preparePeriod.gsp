@@ -1,8 +1,8 @@
 <table class="table table-condensed table-striped">
 	<thead>
 		<tr>
-			<td>No.</td>
-			<td>Amount</td>
+			<td>งวด</td>
+			<td>จำนวนเงินที่ต้องจ่าย</td>
 		</tr>
 	</thead>
 

@@ -6,23 +6,22 @@
         <title>${"${memberInstance.firstname} ${memberInstance.lastname}"}</title>
     </head>
     <body>
-        <div class="container">
-            <header class="page-header">
-                <h1>${"${memberInstance.firstname} ${memberInstance.lastname}"}</h1>
-            </header>
-        </div>
+        <header class="page-header">
+            <h1>${"${memberInstance.firstname} ${memberInstance.lastname}"}</h1>
+        </header>
 
         <div class="container">
+            <div class="row"><div class="span10">
                 <g:if test="${flash.message}">
                     <div class="message alert alert-success" role="status">${flash.message}</div>
                 </g:if>
                 <g:render template="toolbar" />
 
                 <h3>ข้อมูลสมาชิก</h3>
-                <table class="table table-striped table-bordered">
+                <table class="table table-striped table-bordered member-info">
                     <tr>
-                        <td><strong><g:message code="id_card_number" /></strong></div>
-                        <td>
+                        <td class='span2 identificationNumber'><strong><g:message code="id_card_number" /></strong></div>
+                        <td class='identificationNumber'>
                             ${memberInstance?.identificationNumber}
                         </td>
                     </tr>
@@ -70,7 +69,7 @@
                 </table>
 
                 <h3><g:message code="contract.list" /></h3>
-                <table class="table table-striped table-bordered">
+                <table id="member-contract-list" class="table table-striped table-bordered">
                     <thead>
                         <tr>
                             <th class="id"><g:message code="contract.list.id" /></th>
@@ -89,30 +88,53 @@
                                 <td class="number">
                                     <g:formatNumber type="number" number="${contract.loanAmount}" maxFractionDigits="2" minFractionDigits="2" />
                                 <td class="number">
-                                    <g:formatNumber type="number" number="${contract.loanBalance}" maxFractionDigits="2" minFractionDigits="2" />
+                                    <g:formatNumber type="number" number="${contract.totalDebt}" maxFractionDigits="2" minFractionDigits="2" />
                                 </td>
                                 <td>
-                                    <g:link controller="contract" action="show" id="${contract.id}">
-                                        <span class="btn btn-info"><g:message code="contract.list.view.label" /></span>
+                                    <g:link controller="contract" action="show" id="${contract.id}" class="btn btn-info" title="${message(code: 'contract.list.view.label.title')}">
+                                        <g:message code="contract.list.view.label" />
                                     </g:link>
 
                                     <g:if test="${!contract.approvalStatus}">
-                                        <g:link controller="contract" action="approve" id="${contract.id}">
-                                            <span class="btn btn-success"><g:message code="contract.list.approve.label" /></span>
+                                        <g:link controller="contract" action="approve" id="${contract.id}" class="btn btn-success">
+                                            <g:message code="contract.list.approve.label" />
                                         </g:link>
                                     </g:if>
+                                    <g:else>
+                                        <a href="#" class="btn disabled">
+                                            <g:message code="contract.show.approve.label" />
+                                        </a>
+                                    </g:else>
 
                                     <g:if test="${contract.isPayable}">
-                                        <g:link controller="contract" action="payloan" id="${contract.id}">
-                                            <span class="btn btn-warning"><g:message code="contract.list.payloan.label" /></span>
+                                        <g:link controller="contract" action="payloan" id="${contract.id}" class="btn btn-warning">
+                                            <g:message code="contract.list.payloan.label" />
                                         </g:link>
                                     </g:if>
+                                    <g:else>
+                                        <a href="#" class="btn disabled">
+                                            <g:message code="contract.show.payloan.label" />
+                                        </a>
+                                    </g:else>
 
                                     <g:if test="${contract.currentPeriod}">
-                                        <g:link controller="contract" action="payoff" id="${contract.currentPeriod?.id}">
-                                            <span class="btn btn-danger"><g:message code="contract.list.payoff.label" /></span>
-                                        </g:link>
+                                        <g:if test="${contract.loanReceiveStatus}">
+                                            <g:link controller="contract" action="payoff" id="${contract.currentPeriod?.id}" class="btn btn-danger">
+                                                <g:message code="contract.list.payoff.label" />
+                                            </g:link>
+                                        </g:if>
+                                        <g:else>
+                                            <a href="#" class="btn disabled">
+                                                <g:message code="contract.list.payoff.label" />
+                                            </a>
+                                        </g:else>
+
                                     </g:if>
+                                    <g:else>
+                                        <a href="#" class="btn disabled">
+                                            <g:message code="contract.list.payoff.label" />
+                                        </a>
+                                    </g:else>
                                 </td>
                             </tr>
                         </g:each>
@@ -121,10 +143,17 @@
 
 
                 <div class="form-actions">
-                    <g:link class="btn" action="edit" id="${memberInstance.id}">แก้ไขข้อมูลสมาชิก</g:link>
+                    <g:link class="btn" action="edit" id="${memberInstance.id}"><i class="icon-edit"></i> <g:message code="member.label.update" /></g:link>
                 </div>
+            </div></div>
 
-            </div>
+        </div>
 
-        </body>
+        <r:script>
+            !(function ($) {
+                $('.btn-info').tipsy({gravity: 's'});
+            })(jQuery);
+        </r:script>
+
+    </body>
 </html>

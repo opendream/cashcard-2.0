@@ -24,7 +24,7 @@ class UtilService {
 		}
     }
 
-    def isPayable(Contract contract) {
+    def isPayable(contract) {
     	contract.approvalStatus && !contract.loanReceiveStatus
     }
 }

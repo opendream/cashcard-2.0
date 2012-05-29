@@ -4,13 +4,11 @@
     <title>${message(code: 'member.list.title', default: 'List Members')}</title>
   </head>
   <body>
-		<div class="container">
-			<header class="page-header">
-				<h1>${message(code: 'member.list.title', default: 'List Members')}</h1>
-			</header>
-		</div>
+		<header class="page-header">
+			<h1>${message(code: 'member.list.title', default: 'List Members')}</h1>
+		</header>
 
-		<div class="container">
+		<div class="container"><div class="row"><div class="span10">
 			<g:form action="list" class="form-horizontal">
 
 				<div class="control-group">
@@ -47,13 +45,13 @@
 		          <button class="btn btn-primary" type="submit"><i class="icon-search icon-white"></i> ${message(code: 'Search')}</button>
 		        </div>
 			</g:form>
-		</div>
+		</div></div></div>
 
-	  <div class="container">
-			<table class="table table-striped table-bordered table-condensed">
+	  <div class="container"><div class="row"><div class="span10">
+			<table class="table table-striped table-bordered table-condensed member-list">
 				<thead>
 					<tr>
-						<th><g:message code="member.label.identificationNumber"></g:message></th>
+						<th class='identificationNumber span2'><g:message code="member.label.identificationNumber"></g:message></th>
 						<th><g:message code="member.label.name"></g:message></th>
 						<th><g:message code="member.label.telNo"></g:message></th>
 						<th><g:message code="member.label.gender"></g:message></th>
@@ -64,7 +62,7 @@
 				<tbody>
 					<g:each var="member" in ="${memberList}">
 						<tr>
-							<td><a href="${createLink(controller:'member', action:'show', params:[id: member.id])}">${member.identificationNumber}</a></td>
+							<td class='identificationNumber span2'><a href="${createLink(controller:'member', action:'show', params:[id: member.id])}">${member.identificationNumber}</a></td>
 							<td>${member.firstname} ${member.lastname}</td>
 							<td>${member.telNo}</td>
 							<td>${message(code: 'member.label.'+member?.gender.toString().toLowerCase(), default: member?.gender.toString())}</td>
@@ -78,7 +76,7 @@
 			<div class="pagination">
 				<cashcard:paginate controller="member" action="list" total="${memberCount}" />
 			</div>
-	  </div>
+	  </div></div></div>
 
 	</body>
 </html>

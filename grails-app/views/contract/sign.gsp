@@ -5,14 +5,12 @@
 </head>
 <body>
 
-	<div class="container">
-		<header class="page-header">
-			<h1><g:message code="contract.sign.form.title" /></h1>
-		</header>
-	</div>
+	<header class="page-header">
+		<h1><g:message code="contract.sign.form.title" /></h1>
+	</header>
 
-	<div class="container">
-		
+	<div class="container"><div class="row"><div class="span10">
+
 		<g:hasErrors bean="${contract}">
 			<div id="errors" class="alert alert-error">
 				<g:renderErrors bean="${contract}" as="list"></g:renderErrors>
@@ -77,7 +75,7 @@
 							<g:message code="contract.sign.form.guarantor2.label" />
 						</label>
 						<input type="text" id="guarantor1" name="guarantor2" value="${contract.guarantor2}" />
-					</div>					
+					</div>
 				</div>
 			</div>
 
@@ -94,7 +92,7 @@
 				<button class="btn btn-primary" type="submit">
 					<i class="icon-ok icon-white"></i> <g:message code="default.button.ok.label"></g:message>
 				</button>
-			  
+
 				<g:link action="show" controller="member" id="${member?.id}">
 					<g:message code="default.button.cancel.label"></g:message>
 				</g:link>
@@ -103,7 +101,7 @@
 			<div id="preview-period" class="container">
 			</div>
 		</g:form>
-	</div>
+	</div></div></div>
 
 	<script>
 		jQuery(function ($) {
@@ -111,9 +109,11 @@
 				var amount = $('#loanAmount'),
 					nop = $('#numberOfPeriod')
 				;
-
 				if (amount.val() && nop.val()) {
-					$('#preview-period').load("${createLink(action: 'preparePeriod')}", {'amount': parseFloat(amount.val()) + (parseFloat(amount.val()) * ((${loanType.interestRate} / 100) / 12) * parseFloat(nop.val())), 'nop': nop.val()});
+					$('#preview-period').load("${createLink(action: 'preparePeriod')}", { 'amount': parseFloat(amount.val()),
+						'nop': nop.val(),
+						'loanType': "${loanType.id}"
+					});
 				}
 			});
 		});

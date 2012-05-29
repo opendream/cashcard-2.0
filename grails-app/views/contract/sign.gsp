@@ -5,13 +5,11 @@
 </head>
 <body>
 
-	<div class="container">
-		<header class="page-header">
-			<h1><g:message code="contract.sign.form.title" /></h1>
-		</header>
-	</div>
+	<header class="page-header">
+		<h1><g:message code="contract.sign.form.title" /></h1>
+	</header>
 
-	<div class="container">
+	<div class="container"><div class="row"><div class="span10">
 
 		<g:hasErrors bean="${contract}">
 			<div id="errors" class="alert alert-error">
@@ -103,7 +101,7 @@
 			<div id="preview-period" class="container">
 			</div>
 		</g:form>
-	</div>
+	</div></div></div>
 
 	<script>
 		jQuery(function ($) {

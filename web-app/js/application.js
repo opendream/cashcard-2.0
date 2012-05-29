@@ -6,4 +6,10 @@ if (typeof jQuery !== 'undefined') {
 			$(this).fadeOut();
 		});
 	})(jQuery);
+
+	(function ($) {
+		$('a.disabled').click(function (e) {
+			e.preventDefault();
+		});
+	})(jQuery);
 }

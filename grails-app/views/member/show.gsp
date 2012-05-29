@@ -69,7 +69,7 @@
                 </table>
 
                 <h3><g:message code="contract.list" /></h3>
-                <table class="table table-striped table-bordered">
+                <table id="member-contract-list" class="table table-striped table-bordered">
                     <thead>
                         <tr>
                             <th class="id"><g:message code="contract.list.id" /></th>
@@ -118,9 +118,17 @@
                                     </g:else>
 
                                     <g:if test="${contract.currentPeriod}">
-                                        <g:link controller="contract" action="payoff" id="${contract.currentPeriod?.id}" class="btn btn-danger">
-                                            <g:message code="contract.list.payoff.label" />
-                                        </g:link>
+                                        <g:if test="${contract.loanReceiveStatus}">
+                                            <g:link controller="contract" action="payoff" id="${contract.currentPeriod?.id}" class="btn btn-danger">
+                                                <g:message code="contract.list.payoff.label" />
+                                            </g:link>
+                                        </g:if>
+                                        <g:else>
+                                            <a href="#" class="btn disabled">
+                                                <g:message code="contract.list.payoff.label" />
+                                            </a>
+                                        </g:else>
+
                                     </g:if>
                                     <g:else>
                                         <a href="#" class="btn disabled">

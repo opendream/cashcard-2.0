@@ -64,10 +64,24 @@ class MemberController {
             eq('member', memberInstance)
         }
 
-        contractList.each {
-            it.metaClass.isPayable = utilService.isPayable(it)
-            it.metaClass.currentPeriod = periodService.getCurrentPeriod(it)
+        contractList.each { contract ->
+            contract.metaClass.isPayable = utilService.isPayable(contract)
+            contract.metaClass.currentPeriod = periodService.getCurrentPeriod(contract)
+
+            def pc = Period.createCriteria()
+            def periodList = pc.list(sort: 'no', order: 'asc') {
+                eq('contract', contract)
+            }
+
+            def totalDebt = 0.00
+            periodList.each { p ->
+                if (!p.payoffStatus) {
+                    totalDebt += p.amount
+                }
+            }
+            contract.metaClass.totalDebt = totalDebt
         }
+
         render view: 'show', model: [memberInstance: memberInstance, contractList: contractList]
     }
 

@@ -9,7 +9,7 @@
 	<body>
 		<div class="container">
 			<header class="page-header">
-				<h1>APPROVE ID: ${contractInstance.id} Of ${contractInstance.member}</h1>
+				<h1>อนุมัติเงินกู้ของ ${contractInstance.member}</h1>
 			</header>
 		</div>
 
@@ -20,7 +20,7 @@
 						<g:datePicker name="approvalDate" precision="day"  value="${contractInstance?.approvalDate}"  />
 					</div>
 					<div class="form-actions">
-						<button class="btn btn-primary" type="submit"><i class="icon-ok icon-white"></i> ${message(code: 'default.button.create.label', default: 'Create')}</button>
+						<button class="btn btn-primary" type="submit"><i class="icon-ok icon-white"></i> ${message(code: 'default.button.approve.label', default: 'Approve')}</button>
 						<g:link action="list"><g:message code="default.button.cancel.label"></g:message></g:link>
 					</div>
 			</g:form>

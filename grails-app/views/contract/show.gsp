@@ -52,11 +52,16 @@
 					<tbody>
 						<tr>
 							<td><g:message code="contract.show.loanBalance" /></td>
-							<td><h2 class="pull-right"><g:formatNumber number="${contract.loanBalance}" format="0.00" /></h2></td>
+							<td><h2 class="pull-right">
+
+                                <g:formatNumber type="number" number="${contract.loanBalance}" maxFractionDigits="2" minFractionDigits="2" />
+
+							</h2></td>
 						</tr>
 						<tr>
 							<td><g:message code="contract.show.loanAmount" /></td>
-							<td><h3 class="pull-right"><g:formatNumber number="${contract.loanAmount}" format="0.00" /></h3></td>
+							<td><h3 class="pull-right">
+                                    <g:formatNumber type="number" number="${contract.loanAmount}" maxFractionDigits="2" minFractionDigits="2" />
 						</tr>
 						<tr>
 							<td><g:message code="contract.show.approvalStatus" /></td>
@@ -92,6 +97,7 @@
 		<table class="table table-condensed table-striped">
 			<thead>
 				<tr>
+
 					<td><g:message code="contract.show.period.thead.no" /></td>
 					<td><g:message code="contract.show.period.thead.amount" /></td>
 					<g:if test="${contract.approvalStatus}">
@@ -105,8 +111,9 @@
 			<tbody>
 				<g:each var="period" in="${periodList}">
 					<tr>
-						<td>${period.no}</td>
-						<td>${period.amount}</td>
+						<td class='span1'>${period.no}</td>
+						<td><g:formatNumber type="number" number="${period.amount}" maxFractionDigits="2" minFractionDigits="2" />
+</td>
 						<g:if test="${contract.approvalStatus}">
 							<td><g:formatDate date="${period.dueDate}" format="EEEE dd MMMM yyyy" /></td>
 							<td>${period.payoffStatusText}</td>

@@ -9,7 +9,7 @@
 	<body>
 		<div class="container">
 			<header class="page-header">
-				<h1>PAY LOAN: ${contractInstance.id} Of ${contractInstance.member}</h1>
+				<h1>จ่ายเงินกู้ให้ ${contractInstance.member}</h1>
 			</header>
 		</div>
 

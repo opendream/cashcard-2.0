@@ -57,7 +57,7 @@
 							<tr>
 								<td><g:message code="contract.show.totalDebt" /></td>
 								<td><h2 class="pull-right">
-                                	<g:formatNumber type="number" number="${contract.loanBalance}" maxFractionDigits="2" minFractionDigits="2" />
+                                	<g:formatNumber type="number" number="${totalDebt}" maxFractionDigits="2" minFractionDigits="2" />
 								</h2></td>
 							</tr>
 							<tr>

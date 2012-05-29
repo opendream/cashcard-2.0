@@ -19,10 +19,10 @@
                 <g:render template="toolbar" />
 
                 <h3>ข้อมูลสมาชิก</h3>
-                <table class="table table-striped table-bordered">
+                <table class="table table-striped table-bordered member-info">
                     <tr>
-                        <td><strong><g:message code="id_card_number" /></strong></div>
-                        <td>
+                        <td class='span2 identificationNumber'><strong><g:message code="id_card_number" /></strong></div>
+                        <td class='identificationNumber'>
                             ${memberInstance?.identificationNumber}
                         </td>
                     </tr>

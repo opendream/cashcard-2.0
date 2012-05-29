@@ -111,7 +111,7 @@
 			<tbody>
 				<g:each var="period" in="${periodList}">
 					<tr>
-						<td class='span1'>${period.no}</td>
+						<td class='span2'>${period.no}</td>
 						<td><g:formatNumber type="number" number="${period.amount}" maxFractionDigits="2" minFractionDigits="2" />
 </td>
 						<g:if test="${contract.approvalStatus}">

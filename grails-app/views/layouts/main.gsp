@@ -26,7 +26,7 @@
 	<body>
 		<div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
-        <div class="container">
+        <div class="container"><div class="row"><div class="span10 offset1">
           <a class="brand" href="${createLink(controller:'member', action:'verifyCard')}">
             <r:img uri="/images/credit-union-logo.png" />
             <g:message code="project.name" />
@@ -67,8 +67,8 @@
               </ul>
 
             </div>
-            </sec:ifLoggedIn>
-        </div>
+          </sec:ifLoggedIn>
+        </div></div></div>
       </div>
     </div>
 

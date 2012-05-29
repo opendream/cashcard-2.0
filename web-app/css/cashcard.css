@@ -115,3 +115,7 @@ table.member-list .identificationNumber {
 .navbar a.brand img {
   height: 38px;
 }
+
+.navbar .btn-group.pull-right {
+  margin-right: -20px;
+}

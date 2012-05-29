@@ -102,7 +102,7 @@
 	                        </a>
 	                    </g:else>
                         <g:if test="${contract.isPayable}">
-	                        <g:link controller="contract" action="approve" id="${contract.id}" class="btn btn-warning span1">
+	                        <g:link controller="contract" action="payloan" id="${contract.id}" class="btn btn-warning span1">
 	                        	<g:message code="contract.show.payloan.label" />
 	                        </g:link>
 	                    </g:if>
@@ -121,11 +121,24 @@
 		<h2>
 			<g:message code="contract.show.period.header" />
 			
-			<g:if test="${contract.currentPeriod}">
-				<g:link controller="contract" action="payoff" id="${contract.currentPeriod?.id}" class="btn btn-danger">
-	                <g:message code="contract.list.payoff.label" />
-	            </g:link>
-	        </g:if>
+	        <g:if test="${contract.currentPeriod}">
+                <g:if test="${contract.loanReceiveStatus}">
+                    <g:link controller="contract" action="payoff" id="${contract.currentPeriod?.id}" class="btn btn-danger">
+                        <g:message code="contract.list.payoff.label" />
+                    </g:link>
+                </g:if>
+                <g:else>
+                    <a href="#" class="btn disabled">
+                        <g:message code="contract.list.payoff.label" />
+                    </a>
+                </g:else>
+
+            </g:if>
+            <g:else>
+                <a href="#" class="btn disabled">
+                    <g:message code="contract.list.payoff.label" />
+                </a>
+            </g:else>
 		</h2>
 		<hr />
 		<table class="table table-condensed table-striped">

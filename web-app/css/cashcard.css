@@ -102,3 +102,7 @@ table.member-list .identificationNumber {
 .tipsy-inner {
   font-size: 180%;
 }
+
+#member-contract-list thead th {
+  vertical-align: middle;
+}

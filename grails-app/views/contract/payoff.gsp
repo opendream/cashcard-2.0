@@ -5,16 +5,14 @@
 		<title><g:message code="contract.payoff.title" args="[period.contract.code, period.no]" /></title>
 	</head>
 	<body>
-		<div class="container">
-			<header class="page-header">
-				<g:link controller="member" action="show" id="${member.id}">
-					<em><i class="icon-arrow-left"></i><g:message code="back.to.member" args="[period.contract.member]" /></em>
-				</g:link>
-				<h1><g:message code="contract.payoff.title" args="[period.contract.code, period.no]" /></h1>
-			</header>
-		</div>
+		<header class="page-header">
+			<g:link controller="member" action="show" id="${member.id}">
+				<em><i class="icon-arrow-left"></i><g:message code="back.to.member" args="[period.contract.member]" /></em>
+			</g:link>
+			<h1><g:message code="contract.payoff.title" args="[period.contract.code, period.no]" /></h1>
+		</header>
 
-		<div class="container" >
+		<div class="container" ><div class="row"><div class="span10">
 			<g:form action="doPayoff" class="form-horizontal">
 				<g:hiddenField name="id" value="${period.id}" />
 
@@ -76,6 +74,6 @@
 					</g:link>
 				</div>
 			</g:form>
-		</div>
+		</div></div></div>
 	</body>
 </html>

@@ -68,7 +68,7 @@
 									<div class="pull-right">
 										<g:formatBoolean boolean="${contract.approvalStatus}" true="${message(code: 'contract.approvalStatus.true')}" false="${message(code: 'contract.approvalStatus.false')}" />
 										<g:if test="${contract.approvalStatus}">
-											<g:formatDate date="${contract.approvalDate}" format="dd MMM yyyy" />
+											<br /><g:formatDate date="${contract.approvalDate}" format="dd MMM yyyy" />
 										</g:if>
 									</div>
 								</td>
@@ -79,20 +79,50 @@
 									<div class="pull-right">
 										<g:formatBoolean boolean="${contract.loanReceiveStatus}" true="${message(code: 'contract.loanReceiveStatus.true')}" false="${message(code: 'contract.loanReceiveStatus.false')}" />
 										<g:if test="${contract.loanReceiveStatus}">
-											<g:formatDate date="${contract.payloanDate}" format="dd MMM yyyy" />
+											<br /><g:formatDate date="${contract.payloanDate}" format="dd MMM yyyy" />
 										</g:if>
 									</div>
 								</td>
 							</tr>
 						</tbody>
 					</table>
+					<div class="form-actions">
+						<g:if test="${!contract.approvalStatus}">
+                            <g:link controller="contract" action="approve" id="${contract.id}" class="btn btn-success span1">
+                            	<g:message code="contract.show.approve.label" />
+                            </g:link>
+                        </g:if>
+                        <g:else>
+                        	<a href="#" class="btn span1 disabled">
+	                        	<g:message code="contract.show.approve.label" />
+	                        </a>
+	                    </g:else>
+                        <g:if test="${contract.isPayable}">
+	                        <g:link controller="contract" action="approve" id="${contract.id}" class="btn btn-warning span1">
+	                        	<g:message code="contract.show.payloan.label" />
+	                        </g:link>
+	                    </g:if>
+	                    <g:else>
+	                    	<a href="#" class="btn span1 disabled">
+	                        	<g:message code="contract.show.payloan.label" />
+	                        </a>
+	                    </g:else>
+                    </div>
 				</div>
 			</div>
 		</div>
 	</section>
 
 	<section id="period">
-		<h2><g:message code="contract.show.period.header" /></h2>
+		<h2>
+			<g:message code="contract.show.period.header" />
+			
+			<g:if test="${contract.currentPeriod}">
+				<g:link controller="contract" action="payoff" id="${contract.currentPeriod?.id}" class="btn btn-danger">
+	                <g:message code="contract.list.payoff.label" />
+	            </g:link>
+	        </g:if>
+		</h2>
 		<hr />
 		<table class="table table-condensed table-striped">
 			<thead>

@@ -112,6 +112,9 @@ class ContractController {
             period
         }
 
+        contract.metaClass.isPayable = utilService.isPayable(contract)
+        contract.metaClass.currentPeriod = periodService.getCurrentPeriod(contract)
+
         if (contract) {
             render view: '/contract/show', model: [
                 contract: contract,

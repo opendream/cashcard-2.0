@@ -57,6 +57,10 @@
         color: #999;
       }
 
+      .pull-right {
+        text-align: right;
+      }
+
       .pull-right .dropdown-menu:after {
         left: auto;
         right: 6px;

@@ -92,13 +92,16 @@ class ContractController {
             eq('contract', contract)
         }
 
+        def totalDebt = 0.00
         periodList = periodList.collect { period ->
             def code
             if (!period.payoffStatus && period.dueDate < new Date()) {
                 code = 'late'
+                totalDebt += period.amount
             }
             else if (!period.payoffStatus) {
                 code = 'due'
+                totalDebt += period.amount
             }
             else if (period.payoffStatus) {
                 code = 'paid'
@@ -113,7 +116,8 @@ class ContractController {
             render view: '/contract/show', model: [
                 contract: contract,
                 loanType: contract.loanType,
-                periodList: periodList
+                periodList: periodList,
+                totalDebt: totalDebt
             ]
         }
         else {

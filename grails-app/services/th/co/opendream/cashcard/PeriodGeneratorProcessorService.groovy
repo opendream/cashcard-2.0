@@ -11,7 +11,7 @@ class PeriodGeneratorProcessorService {
     }
 
     def effective(amount, numberOfPeriod, intRatePerYear) {
-        amount = amount + (intRatePerYear/12)
+        amount += (intRatePerYear/12) * numberOfPeriod
 
         def amountPerPeriod = (int)(amount / numberOfPeriod),
             remain = ((int)amount) % numberOfPeriod
@@ -22,7 +22,7 @@ class PeriodGeneratorProcessorService {
     }
 
     def commission(amount, numberOfPeriod, intRatePerYear) {
-        amount = amount + (intRatePerYear/12)
+        amount += (intRatePerYear/12) * numberOfPeriod
 
         def amountPerPeriod = (int)(amount / numberOfPeriod),
             remain = ((int)amount) % numberOfPeriod
@@ -34,7 +34,7 @@ class PeriodGeneratorProcessorService {
 
 
     def flat(amount, numberOfPeriod, intRatePerYear) {
-        amount = amount + (intRatePerYear/12)
+        amount += (intRatePerYear/12) * numberOfPeriod
 
         def amountPerPeriod = (int)(amount / numberOfPeriod),
             remain = ((int)amount) % numberOfPeriod

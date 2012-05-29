@@ -11,9 +11,9 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<title><g:layoutTitle default="Grails"/></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="SHORTCUT ICON" href="${resource(dir: 'images', file: 'favicon.ico')}" />
-		<link rel="apple-touch-icon" href="${resource(dir: 'images', file: 'apple-touch-icon.png')}">
-		<link rel="apple-touch-icon" sizes="114x114" href="${resource(dir: 'images', file: 'apple-touch-icon-retina.png')}">
+    <link rel="SHORTCUT ICON" href="${resource(dir: 'images', file: 'credit-union-logo-blue.png')}" />
+		<link rel="apple-touch-icon" href="${resource(dir: 'images', file: 'credit-union-logo.png')}">
+		<link rel="apple-touch-icon" sizes="114x114" href="${resource(dir: 'images', file: 'credit-union-logo.png')}">
 
     <link rel="stylesheet" href="${resource(dir: 'css', file: 'tipsy.css')}" />
     
@@ -27,7 +27,10 @@
 		<div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
-          <a class="brand" href="${createLink(controller:'member', action:'verifyCard')}"><g:message code="project.name"></g:message></a>
+          <a class="brand" href="${createLink(controller:'member', action:'verifyCard')}">
+            <r:img uri="/images/credit-union-logo.png" />
+            <g:message code="project.name" />
+          </a>
           <ul class="nav">
             <li class="#"><a href="${createLink(controller:'member', action:'verifyCard')}">${message(code: 'main.menu.home', default: 'Home')}</a></li>
             <li class="dropdown">

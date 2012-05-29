@@ -5,17 +5,16 @@
     <title>${message(code: 'member.create.title', default: 'Register Member')}</title>
   </head>
   <body>
-		<div class="container">
-			<header class="page-header">
-				<h1>${message(code: 'member.create.title', default: 'Register Member')}</h1>
-			</header>
-		</div>
+		<header class="page-header">
+			<h1>${message(code: 'member.create.title', default: 'Register Member')}</h1>
+		</header>
+
     <g:hasErrors bean="${memberInstance}">
       <div id="errors" class="alert alert-error">
           <g:renderErrors bean="${memberInstance}" as="list"></g:renderErrors>
       </div><!-- /errors -->
     </g:hasErrors>
-    <div class="container" >
+    <div class="container"><div class="row"><div class="span10">
       <g:form action="save" class="form-horizontal">
         <div class="control-group ${hasErrors(bean: memberInstance, field: 'identificationNumber', 'error')}">
           <label for="id-number" class="control-label">${message(code: 'member.label.identificationNumber', default: 'Identification Number')}</label>
@@ -70,7 +69,7 @@
           <button class="btn btn-primary" type="submit"><i class="icon-ok icon-white"></i> ${message(code: 'member.label.register', default: 'Register')}</button>
         </div>
       </g:form>
-    </div>
+    </div></div></div>
 
   </body>
 </html>

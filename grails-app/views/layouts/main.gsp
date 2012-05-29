@@ -29,11 +29,11 @@
         text-align: center; /* center align it with the container */
       }
       .container {
-        width: 820px; /* downsize our container to make the content feel a bit tighter and more cohesive. NOTE: this removes two full columns from the grid, meaning you only go to 14 columns and not 16. */
+        /*width: 820px; /* downsize our container to make the content feel a bit tighter and more cohesive. NOTE: this removes two full columns from the grid, meaning you only go to 14 columns and not 16. */
       }
 
       /* The white background content wrapper */
-      .container > .content {
+      .container > .content.row > div > .row {
         background-color: #fff;
         padding: 20px;
         margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
@@ -52,9 +52,31 @@
         margin: -20px -20px 20px;
       }
 
+      small {
+        font-size: 85%;
+        color: #999;
+      }
+
       .pull-right .dropdown-menu:after {
         left: auto;
         right: 6px;
+      }
+
+      #contract-basic-info {
+        font-size: 110%;
+      }
+
+      #contract-basic-info .dl-horizontal dt,
+      #contract-basic-info .dl-horizontal dd {
+        line-height: 24px;
+      }
+
+      #contract-basic-info .dl-horizontal dt {
+        width: 148px;
+      }
+
+      #contract-basic-info .dl-horizontal dd {
+        margin-left: 156px;
       }
 
       .topbar .btn {
@@ -144,7 +166,7 @@
 
     <div class="container">
 	    <div class="content row">
-        <div class="span10"><div class="row">
+        <div class="span10 offset1"><div class="row">
 				  <g:layoutBody/>
         </div></div>
 				<g:javascript library="application"/>

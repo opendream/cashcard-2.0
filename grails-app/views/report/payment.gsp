@@ -45,10 +45,11 @@
 					<g:datePicker name="toDate" precision="day"  />
 				</div>
 			</div>
-
-			<div class="form-actions">
-			   	<g:jasperButton format="pdf" jasper="${type}" class="btn btn-primary" text="สั่งพิมพ์" />
-			</div>
+			
+			
+			<g:jasperButton format="pdf" jasper="${type}" class="btn btn-primary" text="สั่งพิมพ์" />
+			   	
+			
 
 				    
 

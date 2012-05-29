@@ -31,9 +31,9 @@
 			    	<g:datePicker name="selectedDate" precision="day"   />
 			    </div>
 		    </div>
-			<div class="form-actions">    
+			   
 			    <g:jasperButton format="pdf" jasper="daily-overdue" class="btn btn-primary" text="สั่งพิมพ์" />		    
-			</div>    
+			
 		</g:jasperForm>
 
 				

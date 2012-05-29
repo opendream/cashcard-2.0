@@ -10,7 +10,7 @@ import groovy.mock.interceptor.MockFor
  * See the API for {@link grails.test.mixin.web.ControllerUnitTestMixin} for usage instructions
  */
 @TestFor(ContractController)
-@Mock([Member, LoanType, Contract, PeriodService, Period, Transaction])
+@Mock([Member, LoanType, Contract, PeriodService, Period, Transaction, UtilService])
 class ContractControllerTests {
 
     def utilService
@@ -18,7 +18,7 @@ class ContractControllerTests {
     @Before
     void setUp() {
         def commonLoan = new LoanType(
-            name: "Common", processor: "Hybrid", interestRate: 18.00,
+            name: "Common", processor: "Commission", interestRate: 18.00,
             maxInterestRate: 18.00, mustKeepAdvancedInterest: false,
             numberOfPeriod: 3
         ).save()
@@ -38,8 +38,8 @@ class ContractControllerTests {
     }
 
     void testCreate() {
-        controller.periodService = [
-            generatePeriod: { a, period ->
+        controller.periodGeneratorProcessorService = [
+            generate: { loanType, a, period ->
                 [
                     [amount: 333, no: 1, contract: null] as Period,
                     [amount: 333, no: 2, contract: null] as Period
@@ -126,8 +126,10 @@ class ContractControllerTests {
     void testShow() {
         params.id = '1'
 
+        controller.utilService = [isPayable: { contract -> return true }]
+
         def mock = new MockFor(Contract.class)
-        mock.demand.get() { [id: 1] }
+        mock.demand.get() { [id: 1] as Contract }
         mock.use {
             controller.show()
             assert view == '/contract/show'
@@ -206,14 +208,14 @@ class ContractControllerTests {
         params.amount = '1000.00'
         params.nop = '3'
 
-        def mock = mockFor(PeriodService)
-        mock.demand.generatePeriod {
+        def mock = mockFor(PeriodGeneratorProcessorService)
+        mock.demand.generate {
             [
                 [amount: 333, no: 1]
             ]
         }
 
-        controller.periodService = mock.createMock()
+        controller.periodGeneratorProcessorService = mock.createMock()
         controller.preparePeriod()
         assert view == '/contract/preparePeriod'
 

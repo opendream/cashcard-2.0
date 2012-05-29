@@ -50,10 +50,10 @@
 		</div>
 
 	  <div class="container">
-			<table class="table table-striped table-bordered table-condensed">
+			<table class="table table-striped table-bordered table-condensed member-list">
 				<thead>
 					<tr>
-						<th><g:message code="member.label.identificationNumber"></g:message></th>
+						<th class='identificationNumber span2'><g:message code="member.label.identificationNumber"></g:message></th>
 						<th><g:message code="member.label.name"></g:message></th>
 						<th><g:message code="member.label.telNo"></g:message></th>
 						<th><g:message code="member.label.gender"></g:message></th>
@@ -64,7 +64,7 @@
 				<tbody>
 					<g:each var="member" in ="${memberList}">
 						<tr>
-							<td><a href="${createLink(controller:'member', action:'show', params:[id: member.id])}">${member.identificationNumber}</a></td>
+							<td class='identificationNumber span2'><a href="${createLink(controller:'member', action:'show', params:[id: member.id])}">${member.identificationNumber}</a></td>
 							<td>${member.firstname} ${member.lastname}</td>
 							<td>${member.telNo}</td>
 							<td>${message(code: 'member.label.'+member?.gender.toString().toLowerCase(), default: member?.gender.toString())}</td>

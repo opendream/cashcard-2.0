@@ -95,6 +95,7 @@ class PeriodServiceTests {
         contract
     }
 
+/*
     void testGeneratePeriod() {
 
         def periodList = service.generatePeriod(1000.00, 3)
@@ -114,6 +115,7 @@ class PeriodServiceTests {
         assert periodList[5].amount == 170
         assert periodList.size() == 6
     }
+*/
 
     void testGetCurrentPeriod() {
         setUpPeriod()

@@ -115,6 +115,12 @@
           margin-bottom: 10px;
       }
 
+      table.member-list .identificationNumber {
+        text-align: center;
+      }
+
+
+
     </style>
 	</head>
 	<body>
@@ -132,7 +138,6 @@
 								<li><a href="${createLink(controller:'member', action:'list')}">${message(code: 'main.menu.listMember', default: 'List')}</a></li>
 							</ul>
             </li>
-            <li><a href="${createLink(controller:'interestRate', action:'list')}">${message(code: 'main.menu.interestRate', default: 'Interest Rate')}</a></li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">${message(code: 'main.menu.report', default: 'Report')}<b class="caret"></b></a>
               <ul class="dropdown-menu">
@@ -144,12 +149,12 @@
                 <li><a href="${createLink(controller:'report', action:'settlement')}">${message(code: 'main.menu.dailyDiff', default: 'สรุป Net Settlement')}</a></li>
                 <li><a href="${createLink(controller:'report', action:'relate')}">${message(code: 'main.menu.dailyDiff', default: 'เงินข้ามสหกรณ์')}</a></li>
               </ul>
-            </li>            
+            </li>
           </ul>
 
           <sec:ifLoggedIn>
             <div class="btn-group pull-right">
-              
+
               <a href='#' class="btn dropdown-toggle" data-toggle="dropdown">
                 <i class="icon-user"></i>
                 <sec:username/>
@@ -161,7 +166,7 @@
                   <g:link controller='logout'>${message(code:'cashcard.logout.label', default: 'Logout')}</g:link>
                 </li>
               </ul>
-              
+
             </div>
             </sec:ifLoggedIn>
         </div>

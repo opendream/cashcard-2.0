@@ -15,7 +15,7 @@ import th.co.opendream.cashcard.Contract
 class BootStrap {
 
     def init = { servletContext ->
-    	def m1 = new Member(identificationNumber:"1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")
+    	def m1 = new Member(identificationNumber:"1159900100015", firstname:"ณัฐ", lastname: "วีระวรรณ์", telNo: "0818526122", gender: "MALE", address: "Opendream")
     	def m2 = new Member(identificationNumber: "1234567891234", firstname: "Noomz", lastname: "Siriwat", telNo: "111111111", gender: "MALE", address: "Opendream2")
 
     	m1.save()
@@ -64,7 +64,7 @@ class BootStrap {
 
     def generateLoanType() {
     	new LoanType(
-            name: "เงินกู้สามัญ", processor: "Effective", interestRate: 12.00,
+            name: "เงินกู้สามัญ", processor: "Effective", interestRate: 24.00,
             maxInterestRate: 18.00, mustKeepAdvancedInterest: false,
             numberOfPeriod: 3
         ).save()

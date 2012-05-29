@@ -4,7 +4,7 @@ import groovy.time.TimeCategory
 
 class ContractController {
 
-    def periodService, utilService, periodProcessorService
+    def periodService, utilService, periodProcessorService, periodGeneratorProcessorService
 
     def create() {
         def member = Member.get(params.memberId)
@@ -22,10 +22,15 @@ class ContractController {
             contract.maxInterestRate = loanType.maxInterestRate
             contract.loanBalance = contract.loanAmount as BigDecimal
 
+            def numberOfPeriod = (params.numberOfPeriod ?: 0) as Integer
+            def totalDebt = contract.loanAmount + (contract.loanAmount * (contract.interestRate / 100 / 12) * numberOfPeriod)
+
+            if (loanType.mustKeepAdvancedInterest) {
+                contract.advancedInterestBalance = totalDebt
+            }
+
             if (contract.save()) {
-                def numberOfPeriod = (params.numberOfPeriod ? params.numberOfPeriod : 0) as Integer
-                def totalDebt = contract.loanAmount + (contract.loanAmount * (contract.interestRate / 100 / 12) * numberOfPeriod)
-                def periodList = periodService.generatePeriod(totalDebt, numberOfPeriod)
+                def periodList = periodGeneratorProcessorService.generate(loanType, totalDebt, numberOfPeriod)
                 periodList.each { period ->
                     period.contract = contract
                     period.status = false
@@ -87,35 +92,35 @@ class ContractController {
     def show() {
         def contract = Contract.get(params.id)
 
-        def c = Period.createCriteria()
-        def periodList = c.list(sort: 'no', order: 'asc') {
-            eq('contract', contract)
-        }
-
-        def totalDebt = 0.00
-        periodList = periodList.collect { period ->
-            def code
-            if (!period.payoffStatus && period.dueDate < new Date()) {
-                code = 'late'
-                totalDebt += period.amount
-            }
-            else if (!period.payoffStatus) {
-                code = 'due'
-                totalDebt += period.amount
-            }
-            else if (period.payoffStatus) {
-                code = 'paid'
-            }
-
-            period.metaClass.payoffStatusText = message(code: "contract.show.period.tbody.payoffStatus.${code}")
-
-            period
-        }
-
-        contract.metaClass.isPayable = utilService.isPayable(contract)
-        contract.metaClass.currentPeriod = periodService.getCurrentPeriod(contract)
-
         if (contract) {
+            def c = Period.createCriteria()
+            def periodList = c.list(sort: 'no', order: 'asc') {
+                eq('contract', contract)
+            }
+
+            def totalDebt = 0.00
+            periodList = periodList.collect { period ->
+                def code
+                if (!period.payoffStatus && period.dueDate < new Date()) {
+                    code = 'late'
+                    totalDebt += period.amount
+                }
+                else if (!period.payoffStatus) {
+                    code = 'due'
+                    totalDebt += period.amount
+                }
+                else if (period.payoffStatus) {
+                    code = 'paid'
+                }
+
+                period.metaClass.payoffStatusText = message(code: "contract.show.period.tbody.payoffStatus.${code}")
+
+                period
+            }
+            
+            contract.metaClass.isPayable = utilService.isPayable(contract)
+            contract.metaClass.currentPeriod = periodService.getCurrentPeriod(contract)
+
             render view: '/contract/show', model: [
                 contract: contract,
                 loanType: contract.loanType,
@@ -175,11 +180,11 @@ class ContractController {
 
     def preparePeriod() {
         def amount = params.amount as BigDecimal,
-            nop = params.nop as Integer
+            nop = params.nop as Integer,
+            loanType = params.loanType as Integer
 
         if (amount && nop) {
-            def periodList = periodService.generatePeriod(amount, nop)
-
+            def periodList = periodGeneratorProcessorService.generate(loanType, amount, nop)
             render view: '/contract/preparePeriod', model: [periodList: periodList]
         }
         else {

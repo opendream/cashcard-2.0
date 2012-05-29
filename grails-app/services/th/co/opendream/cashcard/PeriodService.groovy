@@ -3,6 +3,7 @@ package th.co.opendream.cashcard
 class PeriodService {
     def interestProcessorService
 
+/*
     def generatePeriod(amount, numberOfPeriod) {
         amount = amount as BigDecimal
 
@@ -13,6 +14,7 @@ class PeriodService {
             new Period(amount: amountPerPeriod + (it == numberOfPeriod - 1 ? remain : 0), no: it + 1)
         }
     }
+*/
 
     def getCurrentPeriod(contract) {
         def c = Period.createCriteria()

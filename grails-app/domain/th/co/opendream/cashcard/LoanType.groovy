@@ -11,6 +11,6 @@ class LoanType {
 
     static constraints = {
     	name nullable: false, blank: false, unique: true
-    	processor nullable: false, blank: false, inList: ["Effective", "Hybrid", "Flat"]
+    	processor nullable: false, blank: false, inList: ["Effective", "Commission", "Flat"]
     }
 }

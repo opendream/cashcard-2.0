@@ -98,6 +98,11 @@ class BootStrap {
             maxInterestRate: 18.00, mustKeepAdvancedInterest: false,
             numberOfPeriod: 24
         ).save()
+        new LoanType(
+            name: "เงินกู้ด่วน", processor: "Effective", interestRate: 18.00,
+            maxInterestRate: 18.00, mustKeepAdvancedInterest: false,
+            numberOfPeriod: 3
+        ).save()
     }
 
     def generateContract(member, loanType) {

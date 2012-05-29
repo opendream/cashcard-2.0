@@ -100,3 +100,5 @@ grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'th.co.opendre
 grails.plugins.springsecurity.authority.className = 'th.co.opendream.cashcard.Role'
 grails.plugins.springsecurity.requestMap.className = 'th.co.opendream.cashcard.RequestMap'
 grails.plugins.springsecurity.securityConfigType = 'Requestmap'
+
+jasper.dir.reports = '/reports'

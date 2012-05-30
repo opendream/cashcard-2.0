@@ -32,7 +32,7 @@
             <g:message code="project.name" />
           </a>
           <ul class="nav">
-            <li class="#"><a href="${createLink(controller:'member', action:'verifyCard')}">${message(code: 'main.menu.home', default: 'Home')}</a></li>
+            <li class="#"><a href="${createLink(url: '')}">${message(code: 'main.menu.home', default: 'Home')}</a></li>
             <li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">${message(code: 'main.menu.member', default: 'Member')} <b class="caret"></b></a>
 							<ul class="dropdown-menu">

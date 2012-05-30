@@ -16,13 +16,9 @@ class PeriodGeneratorProcessorService {
 
     def effective(amount, numberOfPeriod, intRatePerYear) {
         amount += calculateInterestInMonthUnit(amount, intRatePerYear, numberOfPeriod)
-        println amount
 
         def amountPerPeriod = (int)(amount / numberOfPeriod),
             remain = ((int)amount) % numberOfPeriod
-
-        println amountPerPeriod
-        println remain
 
         (0..<numberOfPeriod).collect { id ->
             new Period(amount: amountPerPeriod + (id == numberOfPeriod - 1 ? remain : 0), no: id + 1)

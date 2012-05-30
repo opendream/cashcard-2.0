@@ -7,13 +7,12 @@ import th.co.opendream.cashcard.Users
 import groovy.time.*
 import static java.util.Calendar.*
 import grails.util.Environment
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 
 import th.co.opendream.cashcard.LoanType
 import th.co.opendream.cashcard.Contract
 
 class BootStrap {
-
+    def grailsApplication
     def init = { servletContext ->
     	def m1 = new Member(identificationNumber:"1159900100015", firstname:"ณัฐ", lastname: "วีระวรรณ์", telNo: "0818526122", gender: "MALE", address: "Opendream")
     	def m2 = new Member(identificationNumber: "1234567891234", firstname: "Noomz", lastname: "Siriwat", telNo: "111111111", gender: "MALE", address: "Opendream2")
@@ -36,6 +35,13 @@ class BootStrap {
 
     	generateLoanType()
         //generateContract(m1, LoanType.get(1))
+
+        //asign roport realPath to system
+        
+        def reports= grailsApplication.config.jasper.dir.reports
+        def realPath =  servletContext.getRealPath(reports)
+        println "realPath $realPath"
+        grailsApplication.config.jasper.dir.reports = realPath 
     }
     def destroy = {
 

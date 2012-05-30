@@ -22,7 +22,7 @@ if (typeof jQuery !== 'undefined') {
 		// Subnav
 		$('.subnav li > a[href="' + pathname + '"], .subnav li > a[href="' + pathname + search + '"]').parent().addClass('active');
 
-		if (pathname === "/cashcard/login/auth") {
+		if (pathname.match(/\/login\/auth/)) {
 			$('body').attr('id', 'login-page');
 		}
 	})(jQuery);

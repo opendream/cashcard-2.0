@@ -106,3 +106,33 @@ table.member-list .identificationNumber {
 #member-contract-list thead th {
   vertical-align: middle;
 }
+
+.navbar a.brand {
+  padding: 0px;
+  margin-right: 40px;
+}
+
+.navbar a.brand img {
+  height: 38px;
+}
+
+.navbar .btn-group.pull-right {
+  margin-right: -20px;
+}
+
+li.dropdown.active {
+  background-color: #222;
+}
+
+form#login > fieldset {
+  margin: 0;
+  padding: 0;
+}
+
+body#login-page #row-wrapper {
+  background-image: url(../images/forest.jpg);
+}
+
+#big-logo-image {
+  border-radius: 4px 4px 4px 4px;
+}

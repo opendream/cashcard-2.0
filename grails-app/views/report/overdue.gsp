@@ -5,13 +5,11 @@
 </head>
 <body>
 
-	<div class="container">
-		<header class="page-header">
-			<h1>${message(code: 'main.menu.overduepaymentReport', default: 'รายงานหนี้ที่เกินวันกำหนดชำระจ่าย')}</h1>
-		</header>
-	</div>
+	<header class="page-header">
+		<h1>${message(code: 'main.menu.overduepaymentReport', default: 'รายงานหนี้ที่เกินวันกำหนดชำระจ่าย')}</h1>
+	</header>
 
-	<div class="container">
+	<div class="container"><div class="row"><div class="span10">
 		
 		<g:hasErrors bean="${contract}">
 			<div id="errors" class="alert alert-error">
@@ -44,11 +42,7 @@
 		</g:jasperForm>
 
 				
-	</div>
-
-			
-		
-	</div>
+	</div></div></div>
 
 	
 </body>

@@ -15,6 +15,10 @@ class UtilService {
 		sum = mulList[1..-1].sum()
 		step4 = 11-sum%11
 
+		// number in step 4 has 2 digits, then get only the first digit.
+		if (step4 > 9) {
+			step4 -= 10
+		}
 
 		if (step4 == check_digit) {
 			true

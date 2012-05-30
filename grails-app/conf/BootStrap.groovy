@@ -14,10 +14,10 @@ import th.co.opendream.cashcard.Contract
 class BootStrap {
     def grailsApplication
     def init = { servletContext ->
-        if (UsersRole.count() != 0) {
+        if (Users.count() != 0) {
             return
         }
-        
+
     	def m1 = new Member(identificationNumber:"1159900100015", firstname:"สมหญิง", lastname: "รักเรียน", telNo: "0818526122", gender: "MALE", address: "Opendream")
 
     	m1.save()

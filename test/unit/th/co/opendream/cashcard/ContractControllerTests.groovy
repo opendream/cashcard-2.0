@@ -5,6 +5,7 @@ package th.co.opendream.cashcard
 import grails.test.mixin.*
 import org.junit.*
 import groovy.mock.interceptor.MockFor
+import org.codehaus.groovy.grails.web.servlet.mvc.SynchronizerTokensHolder
 
 /**
  * See the API for {@link grails.test.mixin.web.ControllerUnitTestMixin} for usage instructions
@@ -334,6 +335,9 @@ class ContractControllerTests {
             [ id: pid, contract: contract] as Period
         }
 
+        def token = SynchronizerTokensHolder.store(session)
+        params[SynchronizerTokensHolder.TOKEN_URI] = '/member/show/1'
+        params[SynchronizerTokensHolder.TOKEN_KEY] = token.generateToken(params[SynchronizerTokensHolder.TOKEN_URI])
         controller.doPayoff()
         assert response.redirectUrl == '/member/show/1'
 
@@ -341,6 +345,9 @@ class ContractControllerTests {
             process: { -> throw new Exception ('Just throw') }
         ] as PeriodProcessorService
 
+        token = SynchronizerTokensHolder.store(session)
+        params[SynchronizerTokensHolder.TOKEN_URI] = '/member/show/1'
+        params[SynchronizerTokensHolder.TOKEN_KEY] = token.generateToken(params[SynchronizerTokensHolder.TOKEN_URI])
         response.reset()
         controller.doPayoff()
         assert view =='/contract/payoff'

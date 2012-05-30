@@ -242,27 +242,30 @@ class ContractController {
     }
 
     def doPayoff() {
-        def period         = Period.get(params.id)
-        def amount         = (params.amount         ?: '0.00') as BigDecimal
-        def fine           = (params.fine           ?: '0.00') as BigDecimal
-        def isShareCapital = params.isShareCapital ?: false
-        def paymentDate    = params.paymentDate ?: new Date()
+        withForm {
+            def period         = Period.get(params.id)
+            def amount         = (params.amount         ?: '0.00') as BigDecimal
+            def fine           = (params.fine           ?: '0.00') as BigDecimal
+            def isShareCapital = params.isShareCapital ?: false
+            def paymentDate    = params.paymentDate ?: new Date()
 
-        if (period) {
-            def contract = period.contract,
-            member = contract.member,
-            receiveTx
+            if (period) {
+                def contract = period.contract,
+                member = contract.member,
+                receiveTx
 
-            try {
-                receiveTx = periodProcessorService.process(period, amount, fine, isShareCapital, paymentDate)
-                redirect url: "/member/show/${period.contract.member.id}"
+                try {
+                    receiveTx = periodProcessorService.process(period, amount, fine, isShareCapital, paymentDate)
+                    redirect url: "/member/show/${period.contract.member.id}"
+                }
+                catch (e) {
+                    render view: '/contract/payoff', model: [receiveTx: receiveTx, member: member, contract: contract, period: period, amount: amount, fine: fine, isShareCapital: isShareCapital]
+                }
             }
-            catch (e) {
-                render view: '/contract/payoff', model: [receiveTx: receiveTx, member: member, contract: contract, period: period, amount: amount, fine: fine, isShareCapital: isShareCapital]
+            else {
+                redirect url: '/error'
             }
-        }
-        else {
-            redirect url: '/error'
         }
     }
+
 }

@@ -13,7 +13,7 @@
 		</header>
 
 		<div class="container" ><div class="row"><div class="span10">
-			<g:form action="doPayoff" class="form-horizontal">
+			<g:form action="doPayoff" class="form-horizontal" useToken="true">
 				<g:hiddenField name="id" value="${period.id}" />
 
 				<div class="control-group">

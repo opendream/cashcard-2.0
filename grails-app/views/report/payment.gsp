@@ -5,18 +5,16 @@
 </head>
 <body>
 
-	<div class="container">
-		<header class="page-header">
-			<h1><g:if test="${type == 'daily-payloan'}">
-					${message(code: 'main.menu.payloanReport', default: 'รายงานการจ่ายเงินกู้')}
-				</g:if>
-				<g:if test="${type == 'daily-payoff'}">
-					${message(code: 'main.menu.payoffReport', default: 'รายงานการชำระเงินกู้ของลูกหนี้')}
-				</g:if></h1>
-		</header>
-	</div>
+	<header class="page-header">
+		<h1><g:if test="${type == 'daily-payloan'}">
+				${message(code: 'main.menu.payloanReport', default: 'รายงานการจ่ายเงินกู้')}
+			</g:if>
+			<g:if test="${type == 'daily-payoff'}">
+				${message(code: 'main.menu.payoffReport', default: 'รายงานการชำระเงินกู้ของลูกหนี้')}
+			</g:if></h1>
+	</header>
 
-	<div class="container">
+	<div class="container"><div class="row"><div class="span10">
 		
 		<g:hasErrors bean="${contract}">
 			<div id="errors" class="alert alert-error">
@@ -62,7 +60,7 @@
 
 			
 		
-	</div>
+	</div></div></div>
 
 	
 </body>

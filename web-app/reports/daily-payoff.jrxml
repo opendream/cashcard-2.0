@@ -300,7 +300,7 @@ AND  transaction."payment_date" between to_date($P{fromDate}, 'yyyy-MM-dd') AND 
 	<pageFooter>
 		<band height="54" splitType="Stretch">
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="702" y="36" width="100" height="18"/>
+				<reportElement x="692" y="36" width="110" height="18"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="TH SarabunPSK" size="15"/>
 				</textElement>

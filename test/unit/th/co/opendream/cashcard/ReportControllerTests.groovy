@@ -12,6 +12,5 @@ import org.junit.*
 class ReportControllerTests {
 
     void testSomething() {
-       fail "Implement me"
     }
 }

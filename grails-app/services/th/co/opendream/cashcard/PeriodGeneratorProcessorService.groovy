@@ -10,11 +10,19 @@ class PeriodGeneratorProcessorService {
         this."$processorName"(amount as BigDecimal, numberOfPeriod, loanType.interestRate)
     }
 
+    def calculateInterestInMonthUnit(amount, interestRate, numberOfPeriod) {
+        ( interestRate / 12 / 100 ) * numberOfPeriod * amount
+    }
+
     def effective(amount, numberOfPeriod, intRatePerYear) {
-        amount += (intRatePerYear/12) * numberOfPeriod
+        amount += calculateInterestInMonthUnit(amount, intRatePerYear, numberOfPeriod)
+        println amount
 
         def amountPerPeriod = (int)(amount / numberOfPeriod),
             remain = ((int)amount) % numberOfPeriod
+
+        println amountPerPeriod
+        println remain
 
         (0..<numberOfPeriod).collect { id ->
             new Period(amount: amountPerPeriod + (id == numberOfPeriod - 1 ? remain : 0), no: id + 1)
@@ -22,7 +30,7 @@ class PeriodGeneratorProcessorService {
     }
 
     def commission(amount, numberOfPeriod, intRatePerYear) {
-        amount += (intRatePerYear/12) * numberOfPeriod
+        amount += calculateInterestInMonthUnit(amount, intRatePerYear, numberOfPeriod)
 
         def amountPerPeriod = (int)(amount / numberOfPeriod),
             remain = ((int)amount) % numberOfPeriod
@@ -34,8 +42,6 @@ class PeriodGeneratorProcessorService {
 
 
     def flat(amount, numberOfPeriod, intRatePerYear) {
-        amount += (intRatePerYear/12) * numberOfPeriod
-
         def amountPerPeriod = (int)(amount / numberOfPeriod),
             remain = ((int)amount) % numberOfPeriod
 
@@ -43,6 +49,5 @@ class PeriodGeneratorProcessorService {
             new Period(amount: amountPerPeriod + (id == numberOfPeriod - 1 ? remain : 0), no: id + 1)
         }
     }
-
 
 }

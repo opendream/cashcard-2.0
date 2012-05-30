@@ -55,4 +55,74 @@ class PeriodGeneratorProcessorServiceTests {
         generated = service.generate(loanType.id as Integer, amount, numberOfPeriod)
         assert (generated*.amount).equals(effected*.amount)
     }
+
+    void testGeneratePeriodEffective() {
+
+        def periodList = service.generate(1, 1000.00, 3)
+
+        assert periodList[0].amount == 353
+        assert periodList[1].amount == 353
+        assert periodList[2].amount == 354
+        assert periodList.size() == 3
+
+        periodList = service.generate(1, 1000.00, 6)
+
+        assert periodList[0].amount == 186
+        assert periodList[1].amount == 186
+        assert periodList[2].amount == 186
+        assert periodList[3].amount == 186
+        assert periodList[4].amount == 186
+        assert periodList[5].amount == 190
+        assert periodList.size() == 6
+    }
+
+    void testGeneratePeriodCommission() {
+        def loanType = LoanType.get(1)
+        loanType.processor = 'Commission'
+        loanType.save()
+
+        def periodList = service.generate(1, 1000.00, 3)
+
+        assert periodList[0].amount == 353
+        assert periodList[1].amount == 353
+        assert periodList[2].amount == 354
+        assert periodList.size() == 3
+
+        periodList = service.generate(1, 1000.00, 6)
+
+        assert periodList[0].amount == 186
+        assert periodList[1].amount == 186
+        assert periodList[2].amount == 186
+        assert periodList[3].amount == 186
+        assert periodList[4].amount == 186
+        assert periodList[5].amount == 190
+        assert periodList.size() == 6
+    }
+
+    void testGeneratePeriodFlat() {
+        def loanType = LoanType.get(1)
+        loanType.processor = 'Flat'
+        loanType.save()
+
+        def periodList = service.generate(1, 1000.00, 3)
+
+        assert periodList[0].amount == 333
+        assert periodList[1].amount == 333
+        assert periodList[2].amount == 334
+        assert periodList.size() == 3
+
+        periodList = service.generate(1, 1000.00, 6)
+
+        assert periodList[0].amount == 166
+        assert periodList[1].amount == 166
+        assert periodList[2].amount == 166
+        assert periodList[3].amount == 166
+        assert periodList[4].amount == 166
+        assert periodList[5].amount == 170
+        assert periodList.size() == 6
+    }
+
+    void testCalculateInterestInMonthUnit() {
+        assert 54 == service.calculateInterestInMonthUnit(1200.00, 18.00, 3)
+    }
 }

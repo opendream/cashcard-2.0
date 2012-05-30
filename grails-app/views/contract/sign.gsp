@@ -98,7 +98,7 @@
 				</g:link>
 			</div>
 
-			<div id="preview-period" class="container">
+			<div id="preview-period">
 			</div>
 		</g:form>
 	</div></div></div>

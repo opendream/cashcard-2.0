@@ -256,6 +256,7 @@ class PeriodProcessorServiceTests {
         assert receiveTx.fine == 0.00
         assert receiveTx.differential == 0.00
         assert receiveTx.isShareCapital == false
+        assert receiveTx.paymentDate == p1.dueDate
 
         contract = Contract.get(1)
         assert contract.loanBalance == 1334.655737
@@ -279,6 +280,7 @@ class PeriodProcessorServiceTests {
         assert receiveTx.fine == 0.00
         assert receiveTx.differential == 0.00
         assert receiveTx.isShareCapital == false
+        assert receiveTx.paymentDate == p2.dueDate
 
         contract = Contract.get(1)
         assert contract.loanBalance == 654.911259
@@ -302,6 +304,7 @@ class PeriodProcessorServiceTests {
         assert receiveTx.fine == 0.00
         assert receiveTx.differential == 39.775791
         assert receiveTx.isShareCapital == false
+        assert receiveTx.paymentDate == p3.dueDate
 
         contract = Contract.get(1)
         assert contract.loanBalance == 0.00
@@ -393,6 +396,7 @@ class PeriodProcessorServiceTests {
             assert receiveTx.fine == 0.00
             assert receiveTx.differential == expect[index][4]
             assert receiveTx.isShareCapital == false
+            assert receiveTx.paymentDate == period.dueDate
 
             contract = Contract.get(1)
             assert contract.loanBalance == expect[index][3]
@@ -443,6 +447,7 @@ class PeriodProcessorServiceTests {
         assert receiveTx.fine == 0.00
         assert receiveTx.differential == 0.00
         assert receiveTx.isShareCapital == false
+        assert receiveTx.paymentDate == p1.dueDate
 
         contract = Contract.get(1)
         assert contract.loanBalance == 1334.655737
@@ -468,6 +473,7 @@ class PeriodProcessorServiceTests {
         assert receiveTx.fine == 0.00
         assert receiveTx.differential == 0.00
         assert receiveTx.isShareCapital == false
+        assert receiveTx.paymentDate == p2.dueDate
         assert p2.cooperativeInterest != 0.000000
 
 
@@ -493,6 +499,7 @@ class PeriodProcessorServiceTests {
         assert receiveTx.fine == 0.00
         assert receiveTx.differential == 39.775791
         assert receiveTx.isShareCapital == false
+        assert receiveTx.paymentDate == p3.dueDate
         assert p3.cooperativeInterest != 0.000000
 
         contract = Contract.get(1)
@@ -621,6 +628,7 @@ class PeriodProcessorServiceTests {
             assert receiveTx.fine == 0.00
             assert receiveTx.differential == expect[index][4]
             assert receiveTx.isShareCapital == false
+            assert receiveTx.paymentDate == period.dueDate
 
             contract = Contract.get(1)
             assert contract.loanBalance == expect[index][3]
@@ -753,6 +761,7 @@ class PeriodProcessorServiceTests {
             assert receiveTx.fine == 0.00
             assert receiveTx.differential == expect[index][6]
             assert receiveTx.isShareCapital == false
+            assert receiveTx.paymentDate == period.dueDate
 
             contract = Contract.get(1)
             assert contract.loanBalance == expect[index][4]

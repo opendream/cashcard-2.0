@@ -30,6 +30,7 @@ class PeriodProcessorService {
         receiveTx.fee = periodInterest.fee
         receiveTx.fine = fine
         receiveTx.isShareCapital = isShareCapital
+        receiveTx.paymentDate = date
 
         period.payoffDate = date
         period.payoffStatus = true
@@ -77,6 +78,7 @@ class PeriodProcessorService {
         receiveTx.fee = periodInterest.fee
         receiveTx.fine = fine
         receiveTx.isShareCapital = isShareCapital
+        receiveTx.paymentDate = date
 
         period.payoffDate = date
         period.payoffStatus = true
@@ -138,6 +140,7 @@ class PeriodProcessorService {
         receiveTx.fee = periodInterest.fee
         receiveTx.fine = fine
         receiveTx.isShareCapital = isShareCapital
+        receiveTx.paymentDate = date
 
         // check if is the last period by checking loanBalance == 0.00
         if (loanBalance == 0.00) {

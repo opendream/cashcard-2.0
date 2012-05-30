@@ -7,7 +7,7 @@ class ReportController {
     }
 
     def doPaymentOverdueReport() {
-        println params
+        //println params
         if(params.selectedDate) {
             params._name = params.name
             params._file = params.file   
@@ -24,7 +24,7 @@ class ReportController {
     }
 
     def doPaymentReport() {
-        println params 
+        //println params 
         if(params.fromDate <= params.toDate) { 
             params._name = params.name
             params._file = params.file	

@@ -46,13 +46,14 @@
 				</div>
 			</div>
 			
-			
-			<g:jasperButton format="pdf" jasper="${type}" class="btn btn-primary" text="สั่งพิมพ์" />
-			   	
-			
-
-				    
-
+			<g:hiddenField id="file" name="file" value="${type}"/>
+			<g:hiddenField id="name" name="name" value="${type}"/>
+			<g:hiddenField id="format" name="format" value="PDF"/>
+			<div class="form-actions">
+				<button class="btn btn-primary" type="submit">
+						<g:message code="default.button.ok.label"></g:message>
+					</button>
+			</div>
 		</g:jasperForm>
 				
 

@@ -4,7 +4,7 @@ import groovy.time.TimeCategory
 
 class ContractController {
 
-    def periodService, utilService, periodProcessorService, periodGeneratorProcessorService
+    def periodService, utilService, periodProcessorService, periodGeneratorProcessorService, interestProcessorService
 
     def create() {
         def member = Member.get(params.memberId)
@@ -23,14 +23,14 @@ class ContractController {
             contract.loanBalance = contract.loanAmount as BigDecimal
 
             def numberOfPeriod = (params.numberOfPeriod ?: 0) as Integer
-            def totalDebt = contract.loanAmount + (contract.loanAmount * (contract.interestRate / 100 / 12) * numberOfPeriod)
+            def interest = interestProcessorService.calculateInterestInMonthUnit(loanType.id, contract.loanAmount, contract.numberOfPeriod)
 
             if (loanType.mustKeepAdvancedInterest) {
-                contract.advancedInterestBalance = totalDebt
+                contract.advancedInterestBalance = interest
             }
 
             if (contract.save()) {
-                def periodList = periodGeneratorProcessorService.generate(loanType, totalDebt, numberOfPeriod)
+                def periodList = periodGeneratorProcessorService.generate(loanType, contract.loanAmount, numberOfPeriod)
                 periodList.each { period ->
                     period.contract = contract
                     period.status = false

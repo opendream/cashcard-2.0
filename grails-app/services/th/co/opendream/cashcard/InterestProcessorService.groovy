@@ -7,6 +7,10 @@ class InterestProcessorService {
         this."$processorName"(period, date)
     }
 
+    def calculateInterestInMonthUnit(amount, interestRate, numberOfPeriod) {
+        ( interestRate / 12 / 100 ) * numberOfPeriod * amount
+    }
+
     def effective(Period period, date) {
         date = date ? date : new Date()
 

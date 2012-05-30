@@ -11,10 +11,10 @@ import org.codehaus.groovy.grails.web.servlet.mvc.SynchronizerTokensHolder
  * See the API for {@link grails.test.mixin.web.ControllerUnitTestMixin} for usage instructions
  */
 @TestFor(ContractController)
-@Mock([Member, LoanType, Contract, PeriodService, Period, Transaction, UtilService])
+@Mock([Member, LoanType, Contract, PeriodService, Period, Transaction, UtilService, InterestProcessorService])
 class ContractControllerTests {
 
-    def utilService
+    def utilService, interestProcessorService
 
     @Before
     void setUp() {
@@ -30,6 +30,7 @@ class ContractControllerTests {
         utilService = [ check_id_card: { id -> true }, isPayable: { Contract c -> true } ] as UtilService
 
         controller.utilService = utilService
+        controller.interestProcessorService = new InterestProcessorService()
 
         m1.utilService = utilService
         m2.utilService = utilService
@@ -66,6 +67,8 @@ class ContractControllerTests {
     void testCreateFail() {
         params.memberId = '1'
         params.loanType = '1'
+        params.loanAmount = '1000.00'
+        params.numberOfPeriod = '3'
 
         Contract.metaClass.save = { null }
         controller.create()

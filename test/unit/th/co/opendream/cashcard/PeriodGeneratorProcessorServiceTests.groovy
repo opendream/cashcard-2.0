@@ -9,9 +9,9 @@ import org.junit.*
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
 @TestFor(PeriodGeneratorProcessorService)
-@Mock([LoanType, Member, Period, Contract])
+@Mock([LoanType, Member, Period, Contract, InterestProcessorService])
 class PeriodGeneratorProcessorServiceTests {
-    def loanType
+    def loanType, interestProcessorService
 
     @Before
     void setUp() {
@@ -21,6 +21,8 @@ class PeriodGeneratorProcessorServiceTests {
             interestRate: 24.00,
             numberOfPeriod: 3
         ).save()
+
+        service.interestProcessorService = new InterestProcessorService()
     }
 
     void testEffective() {
@@ -120,9 +122,5 @@ class PeriodGeneratorProcessorServiceTests {
         assert periodList[4].amount == 166
         assert periodList[5].amount == 170
         assert periodList.size() == 6
-    }
-
-    void testCalculateInterestInMonthUnit() {
-        assert 54 == service.calculateInterestInMonthUnit(1200.00, 18.00, 3)
     }
 }

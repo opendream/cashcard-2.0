@@ -567,4 +567,8 @@ class InterestProcessorServiceTests {
         assert result.cooperativeInterest == 0.00
         assert result.fee == 0.00
     }
+
+    void testCalculateInterestInMonthUnit() {
+        assert 54 == service.calculateInterestInMonthUnit(1200.00, 18.00, 3)
+    }
 }

@@ -1,6 +1,7 @@
 package th.co.opendream.cashcard
 
 class PeriodGeneratorProcessorService {
+    def interestProcessorService
 
     def generate(loanType, amount, numberOfPeriod) {
         if (loanType instanceof Integer) {
@@ -10,12 +11,8 @@ class PeriodGeneratorProcessorService {
         this."$processorName"(amount as BigDecimal, numberOfPeriod, loanType.interestRate)
     }
 
-    def calculateInterestInMonthUnit(amount, interestRate, numberOfPeriod) {
-        ( interestRate / 12 / 100 ) * numberOfPeriod * amount
-    }
-
     def effective(amount, numberOfPeriod, intRatePerYear) {
-        amount += calculateInterestInMonthUnit(amount, intRatePerYear, numberOfPeriod)
+        amount += interestProcessorService.calculateInterestInMonthUnit(amount, intRatePerYear, numberOfPeriod)
 
         def amountPerPeriod = (int)(amount / numberOfPeriod),
             remain = ((int)amount) % numberOfPeriod
@@ -26,7 +23,7 @@ class PeriodGeneratorProcessorService {
     }
 
     def commission(amount, numberOfPeriod, intRatePerYear) {
-        amount += calculateInterestInMonthUnit(amount, intRatePerYear, numberOfPeriod)
+        amount += interestProcessorService.calculateInterestInMonthUnit(amount, intRatePerYear, numberOfPeriod)
 
         def amountPerPeriod = (int)(amount / numberOfPeriod),
             remain = ((int)amount) % numberOfPeriod

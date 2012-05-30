@@ -10,7 +10,7 @@
 	<div class="container"><div class="row"><div class="span10">
 		<div class="row show-grid">
 			
-      <div class="span6">
+      <div class="span6" id="big-logo-image">
         <r:img uri="/images/logo_creditunion.gif" width="100%" />
       </div>
 			<div class="well span3">

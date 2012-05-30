@@ -60,6 +60,7 @@ class BootStrap {
         new RequestMap(url: '/role/**', configAttribute: 'ROLE_ADMIN').save()
         new RequestMap(url: '/company/**', configAttribute: 'ROLE_ADMIN').save()
         new RequestMap(url: '/member/**', configAttribute: 'ROLE_USER,ROLE_COUNTER').save()
+        new RequestMap(url: '/member/list/**', configAttribute: 'ROLE_USER,ROLE_COUNTER').save()
         new RequestMap(url: '/member/payment/**', configAttribute: 'ROLE_COUNTER').save()
         new RequestMap(url: '/member/pay/**', configAttribute: 'ROLE_COUNTER').save()
         new RequestMap(url: '/member/withdraw/**', configAttribute: 'ROLE_COUNTER').save()

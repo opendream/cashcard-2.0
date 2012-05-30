@@ -132,3 +132,7 @@ form#login > fieldset {
 body#login-page #row-wrapper {
   background-image: url(../images/forest.jpg);
 }
+
+#big-logo-image {
+  border-radius: 4px 4px 4px 4px;
+}

@@ -9,6 +9,7 @@
 	<parameter name="toDate" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
+	<parameter name="title" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT
      contract."approval_date" AS contract_approval_date,
@@ -124,7 +125,7 @@ WHERE
 			</textField>
 			<textField pattern="dd/MM/yyyy">
 				<reportElement stretchType="RelativeToTallestObject" x="27" y="0" width="70" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{contract_approval_date}]]></textFieldExpression>

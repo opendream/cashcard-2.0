@@ -7,13 +7,15 @@ class ReportController {
     }
 
     def doPaymentOverdueReport() {
-        println params
+        //println params
         if(params.selectedDate) {
-    	   params.selectedDate = params.selectedDate.format("yyyy-MM-dd'T'HH:mm:ss'Z'")  
-           println params.selectedDate  	
-    	   chain(controller:'jasper',action:'index',params:params)
+            params._name = params.name
+            params._file = params.file   
+            params._format = params.format
+    	    params.selectedDate = params.selectedDate.format("yyyy-MM-dd'T'HH:mm:ss'Z'")       	
+    	    chain(controller:'jasper',action:'index',params:params)
         } else {
-           render(view:'overdue')
+            render(view:'overdue')
         }
     }
 
@@ -21,13 +23,17 @@ class ReportController {
     	render(view:'payment', model:[type:params.paymenttype])
     }
 
-    def doPaymentReport() { 
-        if(params.fromDate <= params.toDate) {  	
-    	   params.fromDate = params.fromDate.format("yyyy-MM-dd'T'HH:mm:ss'Z'")
-    	   params.toDate = params.toDate.next().format("yyyy-MM-dd'T'HH:mm:ss'Z'")
-    	   chain(controller:'jasper',action:'index',params:params)
+    def doPaymentReport() {
+        //println params 
+        if(params.fromDate <= params.toDate) { 
+            params._name = params.name
+            params._file = params.file	
+            params._format = params.format
+    	    params.fromDate = params.fromDate.format("yyyy-MM-dd'T'HH:mm:ss'Z'")
+    	    params.toDate = params.toDate.next().format("yyyy-MM-dd'T'HH:mm:ss'Z'")
+    	    chain(controller:'jasper',action:'index',params:params)
         } else {
-           render(view:'payment', model:[type:params._file]) 
+            render(view:'payment', model:[type:params._file]) 
         }
     }
 }

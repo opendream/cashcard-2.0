@@ -123,3 +123,12 @@ table.member-list .identificationNumber {
 li.dropdown.active {
   background-color: #222;
 }
+
+form#login > fieldset {
+  margin: 0;
+  padding: 0;
+}
+
+body#login-page #row-wrapper {
+  background-image: url(../images/forest.jpg);
+}

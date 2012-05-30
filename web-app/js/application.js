@@ -21,5 +21,9 @@ if (typeof jQuery !== 'undefined') {
 		$('.navbar li.dropdown a[href="' + pathname + '"], .navbar li.dropdown a[href="' + pathname + search + '"]').parents('li.dropdown').addClass('active');
 		// Subnav
 		$('.subnav li > a[href="' + pathname + '"], .subnav li > a[href="' + pathname + search + '"]').parent().addClass('active');
+
+		if (pathname === "/cashcard/login/auth") {
+			$('body').attr('id', 'login-page');
+		}
 	})(jQuery);
 }

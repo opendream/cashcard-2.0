@@ -74,7 +74,7 @@
 
     <div class="container">
 	    <div class="content row">
-        <div class="span10 offset1"><div class="row">
+        <div class="span10 offset1"><div id="row-wrapper" class="row">
 				  <g:layoutBody/>
         </div></div>
 				<g:javascript library="application"/>

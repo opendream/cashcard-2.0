@@ -38,6 +38,10 @@ class Period {
 
     static hasMany = [receiveTransaction: ReceiveTransaction]
 
+    static mapping = {
+        receiveTransaction sort:"paymentDate", order: "asc"
+    }
+
     static constraints = {
         dueDate nullable: true
         status nullable: true

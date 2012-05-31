@@ -820,7 +820,9 @@ class PeriodProcessorServiceTests {
         receiveTx.save()
 
         p1.payoffStatus = true
-        p1.save()       
+        p1.payAmount = receiveTx.amount
+        p1.outstanding = 6.00
+        p1.save()
 
         contract.loanBalance = 1270.00
         contract.save()
@@ -831,6 +833,8 @@ class PeriodProcessorServiceTests {
 
         p1 = Period.get(1)
         assert p1.payoffStatus == false
+        assert p1.payAmount == 0.00
+        assert p1.outstanding == 706.00
 
         contract = Contract.get(1)
         assert contract.loanBalance == 2000.00
@@ -872,6 +876,8 @@ class PeriodProcessorServiceTests {
         receiveTx.save()
 
         p1.payoffStatus = true
+        p1.payAmount = receiveTx.amount
+        p1.outstanding = 1300.00
         p1.save()       
 
         contract.loanBalance = 57500.00
@@ -884,6 +890,8 @@ class PeriodProcessorServiceTests {
 
         p1 = Period.get(1)
         assert p1.payoffStatus == false
+        assert p1.payAmount == 0.00
+        assert p1.outstanding == 2500.00
 
         contract = Contract.get(1)
         assert contract.loanBalance == 60000.00
@@ -919,6 +927,8 @@ class PeriodProcessorServiceTests {
         receiveTx.save()
 
         p1.payoffStatus = true
+        p1.payAmount = receiveTx.amount
+        p1.outstanding = 6.00
         p1.cooperativeInterest = 20.00
         p1.save()
 
@@ -931,6 +941,8 @@ class PeriodProcessorServiceTests {
 
         p1 = Period.get(1)
         assert p1.payoffStatus == false
+        assert p1.payAmount == 0.00
+        assert p1.outstanding == 706.00
         assert p1.cooperativeInterest == 0.00
 
         contract = Contract.get(1)

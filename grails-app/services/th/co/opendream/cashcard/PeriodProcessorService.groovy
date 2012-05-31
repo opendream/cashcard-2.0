@@ -25,6 +25,8 @@ class PeriodProcessorService {
         receiveTx.save()
 
         period.payoffStatus = false
+        period.payAmount -= receiveTx.amount
+        period.outstanding += receiveTx.amount
         period.save()
 
         contract.loanBalance += receiveTx.balancePaid
@@ -39,6 +41,8 @@ class PeriodProcessorService {
         receiveTx.save()
 
         period.payoffStatus = false
+        period.payAmount -= receiveTx.amount
+        period.outstanding += receiveTx.amount
         period.save()
 
         contract.loanBalance += receiveTx.balancePaid
@@ -54,6 +58,8 @@ class PeriodProcessorService {
         receiveTx.save()
 
         period.payoffStatus = false
+        period.payAmount -= receiveTx.amount
+        period.outstanding += receiveTx.amount
         period.cooperativeInterest = 0.00
         period.save()
 

@@ -13,8 +13,8 @@ import org.junit.*
 class PeriodTests extends DomainTestTemplate  {
 
     def requiredProperties() {
-        ['contract', 'amount', 'payAmount', 'no', 'dueDate', 'status', 'payoffStatus', 'partialPayoff',
-         'payoffDate', 'cooperativeInterest', 'outstanding']
+        ['contract', 'amount', 'no', 'dueDate', 'status', 'payoffStatus',
+         'payoffDate', 'cooperativeInterest', 'receiveTransaction']
     }
 
     def domainClass() {
@@ -221,5 +221,16 @@ class PeriodTests extends DomainTestTemplate  {
         instance.validate([field])
         assertEquals "${field} must fail unique validation.",
             "unique", instance.errors[field]
+    }
+
+    void testReceiveTransaction() {
+        mockForConstraintsTests(Period)
+
+        def period = new Period(),
+            field = 'receiveTransaction'
+
+        period[field] = []
+        assertTrue "${field} must pass all validations.",
+            period.validate([field])
     }
 }

@@ -15,7 +15,7 @@ class ReceiveTransactionTests extends DomainTestTemplate {
         ['amount',          'balanceForward',        'balancePaid',
          'interestRate',    'interestPaid',          'fee',
          'period',          'fine',                  'isShareCapital',
-         'differential',    'paymentDate'
+         'differential',    'paymentDate',           'status'
         ]
     }
 

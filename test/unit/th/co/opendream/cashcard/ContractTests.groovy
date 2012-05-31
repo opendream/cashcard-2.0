@@ -26,6 +26,7 @@ class ContractTests {
             code: "ก.55-1000-20",
             member: member,
             loanType: commonLoan,
+            processor: "Effective",
             loanAmount: 2000.00,
             interestRate: 2.00,
             loanBalance: 0.00,
@@ -64,7 +65,7 @@ class ContractTests {
             'numberOfPeriod', 'member'          , 'approvalDate',
             'dateCreated'   , 'lastUpdated'     , 'advancedInterestKeep',
             'advancedInterestBalance'           , 'maxInterestRate',
-            'signedDate'
+            'signedDate'    , 'processor'
         ]
 
         def instanceProperties = Contract.metaClass.properties*.name
@@ -88,6 +89,22 @@ class ContractTests {
         def existingContract = generateValidContract().save()
         contract[field] = "ก.55-1000-20"
         verifyUnique(contract, field)
+
+        contract[field] = "Common Loan"
+        assertTrue "${field} `${contract.code}` must pass all validations.",
+            contract.validate([field])
+    }
+
+    void testValidateProcessor() {
+        mockForConstraintsTests(Contract)
+
+        def contract = new Contract(),
+            field = 'processor'
+
+        verifyNotNull(contract, field)
+
+        contract[field] = ""
+        verifyNotBlank(contract, field)
 
         contract[field] = "Common Loan"
         assertTrue "${field} `${contract.code}` must pass all validations.",

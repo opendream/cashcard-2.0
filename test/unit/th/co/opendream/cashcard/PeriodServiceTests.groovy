@@ -95,10 +95,6 @@ class PeriodServiceTests {
         contract
     }
 
-/*
-    
-*/
-
     void testGetCurrentPeriod() {
         setUpPeriod()
 

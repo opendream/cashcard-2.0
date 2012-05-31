@@ -14,7 +14,6 @@ class Period {
 
     static belongsTo = [contract: Contract]
 
-
     def beforeInsert = {
         outstanding = amount
     }
@@ -36,6 +35,8 @@ class Period {
            // ERROR
         }
     }
+
+    static hasMany = [receiveTransaction: ReceiveTransaction]
 
     static constraints = {
         dueDate nullable: true

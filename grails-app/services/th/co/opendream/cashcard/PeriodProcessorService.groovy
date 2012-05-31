@@ -4,8 +4,61 @@ class PeriodProcessorService {
 	def interestProcessorService
 
     def process(Period period, amount, fine, isShareCapital, date) {
-        def processorName = period.contract.loanType.processor.toLowerCase()
+        def processorName = period.contract.processor.toLowerCase()
         this."$processorName"(period, amount, fine, isShareCapital, date)
+    }
+
+    def cancelReceiveTransaction(receiveTx) {
+        if (! receiveTx.id) {
+            throw new Exception("Receive Transaction must already exists before cancel.");
+        }
+
+        def processorName = receiveTx.period.contract.processor
+        this."cancelReceiveTransaction$processorName"(receiveTx)
+    }
+
+    def cancelReceiveTransactionEffective(receiveTx) {
+        def period = receiveTx.period,
+            contract = period.contract
+
+        receiveTx.status = false
+        receiveTx.save()
+
+        period.payoffStatus = false
+        period.save()
+
+        contract.loanBalance += receiveTx.balancePaid
+        contract.save()
+    }
+
+    def cancelReceiveTransactionFlat(receiveTx) {
+        def period = receiveTx.period,
+            contract = period.contract
+
+        receiveTx.status = false
+        receiveTx.save()
+
+        period.payoffStatus = false
+        period.save()
+
+        contract.loanBalance += receiveTx.balancePaid
+        contract.advancedInterestBalance += receiveTx.interestPaid + receiveTx.fee
+        contract.save()
+    }
+
+    def cancelReceiveTransactionCommission(receiveTx) {
+        def period = receiveTx.period,
+            contract = period.contract
+
+        receiveTx.status = false
+        receiveTx.save()
+
+        period.payoffStatus = false
+        period.cooperativeInterest = 0.00
+        period.save()
+
+        contract.loanBalance += receiveTx.balancePaid
+        contract.save()
     }
 
     def effective(Period period, amount, fine, isShareCapital, date) {

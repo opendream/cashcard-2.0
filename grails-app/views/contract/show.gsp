@@ -141,11 +141,11 @@
             </g:else>
 		</h2>
 		<hr />
-		<table class="table table-condensed table-striped">
+		<table class="table table-condensed">
 			<thead>
 				<tr>
 
-					<td><g:message code="contract.show.period.thead.no" /></td>
+					<td rowspan="2"><g:message code="contract.show.period.thead.no" /></td>
 					<td><g:message code="contract.show.period.thead.amount" /></td>
 					<g:if test="${contract.approvalStatus}">
 						<td><g:message code="contract.show.period.thead.dueDate" /></td>
@@ -158,7 +158,12 @@
 			<tbody>
 				<g:each var="period" in="${periodList}">
 					<tr>
-						<td class='span2'>${period.no}</td>
+						<g:if test="${contract.approvalStatus}">
+							<td class='span2' rowspan="2">${period.no}</td>
+						</g:if>
+						<g:else>
+							<td class='span2'>${period.no}</td>
+						</g:else>
 						<td><g:formatNumber type="number" number="${period.amount}" maxFractionDigits="2" minFractionDigits="2" />
 </td>
 						<g:if test="${contract.approvalStatus}">
@@ -171,6 +176,48 @@
 								<g:else>-</g:else>
 							</td>
 						</g:if>
+					</tr>
+					
+					<g:if test="${contract.loanReceiveStatus}">
+						<tr>
+							<td colspan="5">
+								<!-- receive transaction details -->
+								<div class="period-transaction">
+									<h3><g:message code="contract.show.receiveTx.header" /></h3>
+									<table class="table table-striped">
+										<thead>
+											<tr>
+												<td><g:message code="contract.show.receiveTx.paymentDate" /></td>
+												<td><g:message code="contract.show.receiveTx.amount" /></td>
+												<td></td>
+											</tr>
+										</thead>
+										<tbody>
+											<g:if test="${period.receiveTransaction}">
+												<g:each var="rtx" in="${period.receiveTransaction}">
+												<tr>
+													<td><g:formatDate date="${rtx.paymentDate}" format="EE dd MMM yyyy" /></td>
+													<td>${rtx.amount}</td>
+													<td>
+														<g:link controller="contract" action="cancelTransaction" id="${rtx.id}" class="btn btn-danger">
+									                        <g:message code="contract.show.receiveTx.cancel" />
+									                    </g:link>
+									                </td>
+												</tr>
+												</g:each>
+											</g:if>		
+											<g:else>
+												<tr>
+													<td colspan="3"><g:message code="contract.show.receiveTx.noTransaction" /></td>
+												</tr>
+											</g:else>						
+										</tbody>
+									</table>
+								</div>
+								<!-- /receive transaction details -->
+							</td>
+						</tr>
+					</g:if>
 					</tr>
 				</g:each>
 			</tbody>

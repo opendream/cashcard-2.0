@@ -9,8 +9,18 @@ class PeriodProcessorService {
     }
 
     def cancelReceiveTransaction(receiveTx) {
-        if (! receiveTx.id) {
+        def period = Period.get(receiveTx.period.id)
+        if (! receiveTx.id || ! period?.receiveTransaction) {
             throw new Exception("Receive Transaction must already exists before cancel.");
+        }
+
+        // Not allow cancelling receive transaction that is not the latest.
+        def c = ReceiveTransaction.createCriteria()
+        def receiveTxList = c.list(sort: "paymentDate", order: "asc") {
+            eq("period", period)
+        }
+        if (receiveTxList.last() != receiveTx) {
+            throw new Exception("Receive Transaction must be the latest to cancel.");
         }
 
         def processorName = receiveTx.period.contract.processor

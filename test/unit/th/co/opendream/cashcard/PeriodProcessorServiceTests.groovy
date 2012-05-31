@@ -774,17 +774,39 @@ class PeriodProcessorServiceTests {
     /* Cancel receive transaction */
 
     void testCallCancelReceiveTransaction() {
-        def receiveTx = [id: 1, period: []]
-        receiveTx.period = [
-            contract: [ processor: 'MockyMocky' ]
-        ]
+        setUpPeriod()
+
+        def contract = Contract.get(1),
+            p1 = Period.get(1)
+
+        contract.processor = "MockyMocky"
+        contract.save()
+        
+        def rtx1 = new ReceiveTransaction(period: p1)
+
+        rtx1.amount = 100
+        rtx1.sign = 1
+        rtx1.period = p1
+        rtx1.balanceForward = 2000.00
+        rtx1.balancePaid = 75.00
+        rtx1.interestRate = 24.00
+        rtx1.interestPaid = 20.00
+        rtx1.fee = 5.00
+        rtx1.fine = 0.00
+        rtx1.isShareCapital = false
+        rtx1.paymentDate = p1.dueDate
+        rtx1.differential = 0.00
+
+        rtx1.validate()
+        println rtx1.errors
+        rtx1.save()
 
         def count = 0
         service.metaClass.cancelReceiveTransactionMockyMocky = { r ->
             ++count
         }
 
-        service.cancelReceiveTransaction(receiveTx)
+        service.cancelReceiveTransaction(rtx1)
         assert count == 1
     }
 
@@ -792,6 +814,63 @@ class PeriodProcessorServiceTests {
         def receiveTx = new ReceiveTransaction()
         shouldFail (Exception) {
             service.cancelReceiveTransaction(receiveTx)
+        }
+    }
+
+    void testCancelNotLatestReceiveTransaction() {
+        setUpPeriod()
+
+        def contract = Contract.get(1),
+            p1 = Period.get(1)
+        
+        def rtx1 = new ReceiveTransaction(period: p1)
+
+        rtx1.amount = 100
+        rtx1.sign = 1
+        rtx1.period = p1
+        rtx1.balanceForward = 2000.00
+        rtx1.balancePaid = 75.00
+        rtx1.interestRate = 24.00
+        rtx1.interestPaid = 20.00
+        rtx1.fee = 5.00
+        rtx1.fine = 0.00
+        rtx1.isShareCapital = false
+        rtx1.paymentDate = p1.dueDate
+        rtx1.differential = 0.00
+
+        rtx1.validate()
+        println rtx1.errors
+        rtx1.save()
+
+        def rtx2 = new ReceiveTransaction(period: p1)
+
+        rtx2.amount = 200
+        rtx2.sign = 1
+        rtx2.period = p1
+        rtx2.balanceForward = 1925.00
+        rtx2.balancePaid = 160.00
+        rtx2.interestRate = 24.00
+        rtx2.interestPaid = 30.00
+        rtx2.fee = 10.00
+        rtx2.fine = 0.00
+        rtx2.isShareCapital = false
+        rtx2.paymentDate = p1.dueDate
+        rtx2.differential = 0.00
+
+        rtx2.validate()
+        println rtx2.errors
+        rtx2.save()
+
+        p1.payoffStatus = true
+        p1.payAmount = 300.00
+        p1.outstanding = 406.00
+        p1.save()
+
+        contract.loanBalance = 1625.00
+        contract.save()
+
+        shouldFail (Exception) {
+            service.cancelReceiveTransaction(rtx1)
         }
     }
 
@@ -806,7 +885,7 @@ class PeriodProcessorServiceTests {
         receiveTx.sign = 1
         receiveTx.period = p1
         receiveTx.balanceForward = 2000.00
-        receiveTx.balancePaid = 730.00
+        receiveTx.balancePaid = 630.00
         receiveTx.interestRate = 24.00
         receiveTx.interestPaid = 60.00
         receiveTx.fee = 10.00
@@ -824,7 +903,7 @@ class PeriodProcessorServiceTests {
         p1.outstanding = 6.00
         p1.save()
 
-        contract.loanBalance = 1270.00
+        contract.loanBalance = 1370.00
         contract.save()
 
         service.cancelReceiveTransaction(receiveTx)
@@ -913,7 +992,7 @@ class PeriodProcessorServiceTests {
         receiveTx.sign = 1
         receiveTx.period = p1
         receiveTx.balanceForward = 2000.00
-        receiveTx.balancePaid = 730.00
+        receiveTx.balancePaid = 630.00
         receiveTx.interestRate = 24.00
         receiveTx.interestPaid = 60.00
         receiveTx.fee = 10.00
@@ -932,7 +1011,7 @@ class PeriodProcessorServiceTests {
         p1.cooperativeInterest = 20.00
         p1.save()
 
-        contract.loanBalance = 1270.00
+        contract.loanBalance = 1370.00
         contract.save()
 
         service.cancelReceiveTransaction(receiveTx)

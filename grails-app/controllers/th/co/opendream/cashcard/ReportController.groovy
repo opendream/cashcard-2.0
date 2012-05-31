@@ -33,7 +33,7 @@ class ReportController {
             params._file = params.file	
             params._format = params.format
     	    //params.fromDate = params.fromDate.format("yyyy-MM-dd'T'HH:mm:ss'Z'")
-            //params.toDate = params.toDate.next().format("yyyy-MM-dd'T'HH:mm:ss'Z'")
+            params.toDate = params.toDate.next()
             // fixed for demo
             params.fromDate = "$params.fromDate_year-$params.fromDate_month-$params.fromDate_day"
     	    params.toDate = "$params.toDate_year-$params.toDate_month-$params.toDate_day"

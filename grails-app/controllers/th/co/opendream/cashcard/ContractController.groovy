@@ -17,6 +17,7 @@ class ContractController {
             def signedDate = params.signedDate ?: new Date()
 
             def contract = new Contract(params)
+            contract.processor = loanType.processor
             contract.signedDate = signedDate
             contract.interestRate = loanType.interestRate
             contract.maxInterestRate = loanType.maxInterestRate
@@ -103,17 +104,21 @@ class ContractController {
                 def code
                 if (!period.payoffStatus && period.dueDate < new Date()) {
                     code = 'late'
-                    totalDebt += period.amount
+                    totalDebt += period.outstanding
                 }
                 else if (!period.payoffStatus) {
                     code = 'due'
-                    totalDebt += period.amount
+                    totalDebt += period.outstanding
                 }
                 else if (period.payoffStatus) {
                     code = 'paid'
                 }
 
                 period.metaClass.payoffStatusText = message(code: "contract.show.period.tbody.payoffStatus.${code}")
+
+                period.metaClass.effectiveReceiveTransaction = period.receiveTransaction.findAll { rtx ->
+                    rtx.status
+                }
 
                 period
             }

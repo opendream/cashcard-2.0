@@ -193,13 +193,13 @@
 											</tr>
 										</thead>
 										<tbody>
-											<g:if test="${period.receiveTransaction}">
-												<g:each var="rtx" in="${period.receiveTransaction}">
+											<g:if test="${period.effectiveReceiveTransaction}">
+												<g:each var="rtx" in="${period.effectiveReceiveTransaction}">
 												<tr>
 													<td><g:formatDate date="${rtx.paymentDate}" format="EE dd MMM yyyy" /></td>
 													<td>${rtx.amount}</td>
 													<td>
-														<g:link controller="contract" action="cancelTransaction" id="${rtx.id}" class="btn btn-danger">
+														<g:link controller="receiveTransaction" action="cancel" id="${rtx.id}" class="btn btn-danger">
 									                        <g:message code="contract.show.receiveTx.cancel" />
 									                    </g:link>
 									                </td>

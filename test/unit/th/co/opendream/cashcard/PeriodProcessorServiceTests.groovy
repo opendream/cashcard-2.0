@@ -243,7 +243,6 @@ class PeriodProcessorServiceTests {
         assert ReceiveTransaction.list().size() == 1
 
         p1 = Period.get(1) // Reload data
-        assert p1.payoffStatus == true
         assert p1.payoffDate == p1.dueDate
 
         def receiveTx = ReceiveTransaction.get(1)
@@ -267,7 +266,6 @@ class PeriodProcessorServiceTests {
         assert ReceiveTransaction.list().size() == 2
 
         p2 = Period.get(2) // Reload data
-        assert p2.payoffStatus == true
         assert p2.payoffDate == p2.dueDate
 
         receiveTx = ReceiveTransaction.get(2)
@@ -291,7 +289,6 @@ class PeriodProcessorServiceTests {
         assert ReceiveTransaction.list().size() == 3
 
         p3 = Period.get(3) // Reload data
-        assert p3.payoffStatus == true
         assert p3.payoffDate == p3.dueDate
 
         receiveTx = ReceiveTransaction.get(3)
@@ -382,7 +379,6 @@ class PeriodProcessorServiceTests {
             assert ReceiveTransaction.list().size() == period.id
 
             period = Period.get(period.id) // Reload data
-            assert period.payoffStatus == true
             assert period.payoffDate == period.dueDate
 
             def receiveTx = ReceiveTransaction.get(period.id)
@@ -432,7 +428,6 @@ class PeriodProcessorServiceTests {
         assert ReceiveTransaction.list().size() == 1
 
         p1 = Period.get(1) // Reload data
-        assert p1.payoffStatus == true
         assert p1.payoffDate == p1.dueDate
         //assert p1.cooperativeInterest != 0.000000
 
@@ -458,7 +453,6 @@ class PeriodProcessorServiceTests {
         assert ReceiveTransaction.list().size() == 2
 
         p2 = Period.get(2) // Reload data
-        assert p2.payoffStatus == true
         assert p2.payoffDate == p2.dueDate
         assert p2.cooperativeInterest != 0.000000
 
@@ -486,7 +480,6 @@ class PeriodProcessorServiceTests {
         assert ReceiveTransaction.list().size() == 3
 
         p3 = Period.get(3) // Reload data
-        assert p3.payoffStatus == true
         assert p3.payoffDate == p3.dueDate
 
         receiveTx = ReceiveTransaction.get(3)
@@ -614,7 +607,6 @@ class PeriodProcessorServiceTests {
             assert ReceiveTransaction.list().size() == period.id
 
             period = Period.get(period.id) // Reload data
-            assert period.payoffStatus == true
             assert period.payoffDate == period.dueDate
 
             def receiveTx = ReceiveTransaction.get(period.id)
@@ -747,7 +739,6 @@ class PeriodProcessorServiceTests {
             assert ReceiveTransaction.list().size() == period.id
 
             period = Period.get(period.id) // Reload data
-            assert period.payoffStatus == true
             assert period.payoffDate == period.dueDate
 
             def receiveTx = ReceiveTransaction.get(period.id)

@@ -133,6 +133,6 @@ body#login-page #row-wrapper {
   background-image: url(../images/forest.jpg);
 }
 
-#big-logo-image {
+#big-logo-image img {
   border-radius: 4px 4px 4px 4px;
 }

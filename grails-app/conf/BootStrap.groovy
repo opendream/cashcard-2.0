@@ -14,11 +14,13 @@ import th.co.opendream.cashcard.Contract
 class BootStrap {
     def grailsApplication
     def init = { servletContext ->
+        if (Users.count() != 0) {
+            return
+        }
+
     	def m1 = new Member(identificationNumber:"1159900100015", firstname:"สมหญิง", lastname: "รักเรียน", telNo: "0818526122", gender: "MALE", address: "Opendream")
-    	def m2 = new Member(identificationNumber: "1234567891234", firstname: "Noomz", lastname: "Siriwat", telNo: "111111111", gender: "MALE", address: "Opendream2")
 
     	m1.save()
-    	m2.save()
 
         def user = new Users(username:'admin', password:'password',
                                 , enabled:true, accountExpired:false, accountLocked:false, passwordExpired:false).save()

@@ -9,7 +9,6 @@
 	<parameter name="toDate" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="title" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT
      contract."approval_date" AS contract_approval_date,

@@ -73,7 +73,7 @@ class BootStrap {
 
     def generateLoanType() {
     	new LoanType(
-            name: "เงินกู้สามัญ", processor: "Effective", interestRate: 18.00,
+            name: "เงินกู้สามัญ", processor: "Effective", interestRate: 12.00,
             maxInterestRate: 18.00, mustKeepAdvancedInterest: false,
             numberOfPeriod: 3
         ).save()

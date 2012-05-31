@@ -12,7 +12,7 @@ import org.junit.*
 class PeriodTests extends DomainTestTemplate  {
 
     def requiredProperties() {
-        ['contract', 'amount', 'no', 'dueDate', 'status', 'payoffStatus',
+        ['contract', 'amount', 'no', 'dueDate', 'status', 'payoffStatus', 'partialPayoff',
          'payoffDate', 'cooperativeInterest']
     }
 

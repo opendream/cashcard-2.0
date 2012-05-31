@@ -7,6 +7,7 @@ class Period {
     Date dueDate
     Boolean status = false
     Boolean payoffStatus = false
+    Boolean partialPayoff
     Date payoffDate
 
     static belongsTo = [contract: Contract]
@@ -15,5 +16,6 @@ class Period {
         dueDate nullable: true
         status nullable: true
         payoffDate nullable: true
+        partialPayoff nullable: true
     }
 }

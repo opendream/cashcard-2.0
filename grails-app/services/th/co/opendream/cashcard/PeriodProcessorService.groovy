@@ -33,7 +33,7 @@ class PeriodProcessorService {
         receiveTx.paymentDate = date
 
         period.payoffDate = date
-        period.payoffStatus = true
+        period.payAmount = actualPaymentAmount
         period.save()
 
         def contract = period.contract
@@ -81,8 +81,8 @@ class PeriodProcessorService {
         receiveTx.paymentDate = date
 
         period.payoffDate = date
-        period.payoffStatus = true
         period.cooperativeInterest = periodInterest.cooperativeInterest
+        period.payAmount = actualPaymentAmount
         period.save()
 
         def contract = period.contract
@@ -152,7 +152,7 @@ class PeriodProcessorService {
         receiveTx.save()
 
         period.payoffDate = date
-        period.payoffStatus = true
+        period.payAmount = actualPaymentAmount
         period.save()
 
         contract.loanBalance -= balancePaid

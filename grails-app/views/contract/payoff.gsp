@@ -39,7 +39,7 @@
 						<g:message code="contract.payoff.form.amount.label" />
 					</label>
 					<div class="controls">
-						<g:field type="text" id="amount" name="amount" required="true" pattern="\\d*(\\.\\d\\d)?" value="${formatNumber(number: period.amount, format: '0.00')}" />
+						<g:field type="text" id="payAmount" name="payAmount" required="true" pattern="\\d*(\\.\\d\\d)?" value="${formatNumber(number: period.outstanding, format: '0.00')}" />
 					</div>
 				</div>
 
@@ -68,7 +68,7 @@
 					<button class="btn btn-primary" type="submit">
 						<i class="icon-ok icon-white"></i> <g:message code="default.button.ok.label"></g:message>
 					</button>
-				  
+
 					<g:link action="show" controller="member" id="${member?.id}">
 						<g:message code="default.button.cancel.label"></g:message>
 					</g:link>

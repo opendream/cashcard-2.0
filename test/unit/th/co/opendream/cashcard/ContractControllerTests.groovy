@@ -325,7 +325,7 @@ class ContractControllerTests {
 
     void testDoPayoff() {
         params.id = '1'
-        params.amount = '300.00'
+        params.payAmount = '300.00'
         params.fine = ''
         params.isShareCapital = ''
 

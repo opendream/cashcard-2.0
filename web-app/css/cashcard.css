@@ -159,3 +159,35 @@ body#login-page #row-wrapper {
 .period-transaction-row table {
   margin-top: 1em;
 }
+
+#loan-select li {
+  min-height: 140px;
+  cursor: pointer;
+  line-height: 3.6em;
+  text-align: center;
+  margin-top: auto;
+}
+
+#loan-select li:hover {
+  background-color: #3A87AD;
+}
+
+#loan-select li:hover a {
+  text-decoration: none;
+  color: #EEE;
+  border: dotted;
+}
+
+#loan-select li div {
+  line-height: 3.6em;
+  padding: 20px;
+  text-align: center;
+  margin-top: auto;
+}
+
+#loan-select li a {
+  display: block;
+  padding: 20px;
+  height: 94px;
+  font-size: 1.8em;
+}

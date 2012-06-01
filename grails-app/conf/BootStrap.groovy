@@ -57,7 +57,7 @@ class BootStrap {
         new RequestMap(url: '/logout/**', configAttribute: 'IS_AUTHENTICATED_ANONYMOUSLY').save()
         new RequestMap(url: '/j_spring_security_switch_user',
                        configAttribute: 'ROLE_SWITCH_USER,IS_AUTHENTICATED_FULLY').save()
-        new RequestMap(url: '/*', configAttribute: 'IS_AUTHENTICATED_ANONYMOUSLY').save()
+        new RequestMap(url: '/*', configAttribute: 'ROLE_COUNTER').save()
         new RequestMap(url: '/user/**', configAttribute: 'ROLE_ADMIN').save()
         new RequestMap(url: '/role/**', configAttribute: 'ROLE_ADMIN').save()
         new RequestMap(url: '/company/**', configAttribute: 'ROLE_ADMIN').save()

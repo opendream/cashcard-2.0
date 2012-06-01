@@ -136,3 +136,26 @@ body#login-page #row-wrapper {
 #big-logo-image img {
   border-radius: 4px 4px 4px 4px;
 }
+
+.period-transaction-row > td {
+  padding: 0;
+}
+
+.period-transaction > h4 {
+  background-color: #EEE;
+  padding: 3px;
+  cursor: pointer;
+}
+
+.label-amount {
+  font-size: 120%;
+  line-height: 1.5em;
+}
+
+.period-no {
+  font-size: 150%;
+}
+
+.period-transaction-row table {
+  margin-top: 1em;
+}

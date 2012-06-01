@@ -14,7 +14,6 @@ class Period {
 
     static belongsTo = [contract: Contract]
 
-
     def beforeInsert = {
         outstanding = amount
     }
@@ -35,6 +34,12 @@ class Period {
         else {
            // ERROR
         }
+    }
+
+    static hasMany = [receiveTransaction: ReceiveTransaction]
+
+    static mapping = {
+        receiveTransaction sort:"paymentDate", order: "asc"
     }
 
     static constraints = {

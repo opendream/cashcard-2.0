@@ -3,6 +3,7 @@ package th.co.opendream.cashcard
 class Contract {
 	String code
 	LoanType loanType
+	String processor
 	Date signedDate = new Date()
 	BigDecimal loanAmount = 0.000000
 	BigDecimal interestRate = 0.00
@@ -27,5 +28,6 @@ class Contract {
     	code nullable: false, blank: false, unique: true
     	approvalDate nullable: true, blank: true
     	payloanDate nullable: true, blank: true
+    	processor nullable: false, blank: false
     }
 }

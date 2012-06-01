@@ -34,6 +34,7 @@ class InterestProcessorServiceTests {
             code: "ก.55-1000-20",
             member: member,
             loanType: loanType,
+            processor: type,
             loanAmount: 2000.00,
             interestRate: 24.00,
             cooperativeShare: 0.75, // For Commission
@@ -71,6 +72,7 @@ class InterestProcessorServiceTests {
             code: "ก.55-1000-20",
             member: member,
             loanType: loanType,
+            processor: "Flat",
             loanAmount: 2000.00,
             interestRate: 24.00,
             loanBalance: 2000.00,
@@ -96,6 +98,7 @@ class InterestProcessorServiceTests {
         def contract = new Contract(
             code: "ก.55-1000-10",
             member: member,
+            processor: loanType.processor,
             loanType: loanType,
             loanAmount: 2000.00,
             interestRate: 24.00,

@@ -141,16 +141,16 @@
             </g:else>
 		</h2>
 		<hr />
-		<table class="table table-condensed table-striped">
+		<table class="table table-condensed">
 			<thead>
 				<tr>
 
-					<td><g:message code="contract.show.period.thead.no" /></td>
-					<td><g:message code="contract.show.period.thead.amount" /></td>
+					<th class="string" rowspan="2"><g:message code="contract.show.period.thead.no" /></th>
+					<th><g:message code="contract.show.period.thead.amount" /></th>
 					<g:if test="${contract.approvalStatus}">
-						<td><g:message code="contract.show.period.thead.dueDate" /></td>
-						<td><g:message code="contract.show.period.thead.payoffStatus" /></td>
-						<td><g:message code="contract.show.period.thead.payoffDate" /></td>
+						<th><g:message code="contract.show.period.thead.dueDate" /></th>
+						<th><g:message code="contract.show.period.thead.payoffStatus" /></th>
+						<th><g:message code="contract.show.period.thead.payoffDate" /></th>
 					</g:if>
 				</tr>
 			</thead>
@@ -158,11 +158,19 @@
 			<tbody>
 				<g:each var="period" in="${periodList}">
 					<tr>
-						<td class='span2'>${period.no}</td>
-						<td><g:formatNumber type="number" number="${period.amount}" maxFractionDigits="2" minFractionDigits="2" />
-</td>
 						<g:if test="${contract.approvalStatus}">
-							<td><g:formatDate date="${period.dueDate}" format="EEEE dd MMMM yyyy" /></td>
+							<td class='span2 period-no' rowspan="2">${period.no}</td>
+						</g:if>
+						<g:else>
+							<td class='span2'>${period.no}</td>
+						</g:else>
+						<td class="date">
+							<span class="label label-inverse label-amount">
+								<g:formatNumber type="number" number="${period.amount}" maxFractionDigits="2" minFractionDigits="2" />
+							</span>
+						</td>
+						<g:if test="${contract.approvalStatus}">
+							<td><g:formatDate date="${period.dueDate}" format="EEEE d MMMM yyyy" /></td>
 							<td>${period.payoffStatusText}</td>
 							<td>
 								<g:if test="${period.payoffStatus}">
@@ -172,10 +180,76 @@
 							</td>
 						</g:if>
 					</tr>
+					
+					<g:if test="${contract.loanReceiveStatus}">
+						<tr class="period-transaction-row">
+							<td colspan="5">
+								<!-- receive transaction details -->
+								<div class="period-transaction">
+									<h4>
+										<span class="expand-tx-list"> + </span>
+										<g:message code="contract.show.receiveTx.header" />
+									</h4>
+									<table class="table table-striped hide">
+										<thead>
+											<tr>
+												<td><g:message code="contract.show.receiveTx.paymentDate" /></td>
+												<td class="number"><g:message code="contract.show.receiveTx.amount" /></td>
+												<td></td>
+											</tr>
+										</thead>
+										<tbody>
+											<g:if test="${period.effectiveReceiveTransaction}">
+												<g:each var="rtx" in="${period.effectiveReceiveTransaction}">
+												<tr>
+													<td><g:formatDate date="${rtx.paymentDate}" format="EE dd MMM yyyy" /></td>
+													<td class="number">${rtx.amount}</td>
+													<td class="date">
+														<g:link controller="receiveTransaction" action="cancel" id="${rtx.id}" class="btn">
+									                        <g:message code="contract.show.receiveTx.cancel" />
+									                    </g:link>
+									                </td>
+												</tr>
+												</g:each>
+											</g:if>		
+											<g:else>
+												<tr>
+													<td colspan="3"><g:message code="contract.show.receiveTx.noTransaction" /></td>
+												</tr>
+											</g:else>						
+										</tbody>
+									</table>
+								</div>
+								<!-- /receive transaction details -->
+							</td>
+						</tr>
+					</g:if>
+					</tr>
 				</g:each>
 			</tbody>
 		</table>
 	</section>
+
+	<r:script>
+	!function ($) {
+		var context = $('.period-transaction');
+
+		$('h4', context).click(function (e) {
+			var h = $(this);
+
+			$('table', $(this).parent()).slideToggle('fast');
+
+			var sign = $('.expand-tx-list', h),
+				current_sign = sign.text()
+			;
+
+			sign.text( current_sign == ' + ' ? ' - ' : ' + ' );
+		});
+
+		$('.btn', context).hide();
+		$('.btn:last', context).show();
+	}(jQuery);
+	</r:script>
 
 </body>
 </html>

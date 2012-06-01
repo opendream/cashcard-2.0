@@ -28,6 +28,7 @@ class PeriodProcessorServiceTests {
         def contract = new Contract(
             id: 1,
             code: "ก.55-1000-20",
+            processor: type,
             member: member,
             loanType: loanType,
             loanAmount: 2000.00,
@@ -66,6 +67,7 @@ class PeriodProcessorServiceTests {
             code: "ก.55-1000-10",
             member: member,
             loanType: loanType,
+            processor: type,
             cooperativeShare: 0.75,
             loanAmount: 2000.00,
             interestRate: 24.00,
@@ -116,6 +118,7 @@ class PeriodProcessorServiceTests {
             code: "ก.55-1000-10",
             member: member,
             loanType: loanType,
+            processor: 'Flat',
             cooperativeShare: 0.75,
             loanAmount: principle,
             interestRate: interestRate,
@@ -152,6 +155,7 @@ class PeriodProcessorServiceTests {
             code: "ก.55-1000-10",
             member: member,
             loanType: loanType,
+            processor: type,
             cooperativeShare: 0.75,
             loanAmount: 2000.00,
             interestRate: 24.00,
@@ -765,5 +769,263 @@ class PeriodProcessorServiceTests {
     /***********************************
      * Commission
      **********************************/
+    /* TODO: */
+
+    /* Cancel receive transaction */
+
+    void testCallCancelReceiveTransaction() {
+        setUpPeriod()
+
+        def contract = Contract.get(1),
+            p1 = Period.get(1)
+
+        contract.processor = "MockyMocky"
+        contract.save()
+        
+        def rtx1 = new ReceiveTransaction(period: p1)
+
+        rtx1.amount = 100
+        rtx1.sign = 1
+        rtx1.period = p1
+        rtx1.balanceForward = 2000.00
+        rtx1.balancePaid = 75.00
+        rtx1.interestRate = 24.00
+        rtx1.interestPaid = 20.00
+        rtx1.fee = 5.00
+        rtx1.fine = 0.00
+        rtx1.isShareCapital = false
+        rtx1.paymentDate = p1.dueDate
+        rtx1.differential = 0.00
+
+        rtx1.validate()
+        println rtx1.errors
+        rtx1.save()
+
+        def count = 0
+        service.metaClass.cancelReceiveTransactionMockyMocky = { r ->
+            ++count
+        }
+
+        service.cancelReceiveTransaction(rtx1)
+        assert count == 1
+    }
+
+    void testCancelInvalidReceiveTransaction() {
+        def receiveTx = new ReceiveTransaction()
+        shouldFail (Exception) {
+            service.cancelReceiveTransaction(receiveTx)
+        }
+    }
+
+    void testCancelNotLatestReceiveTransaction() {
+        setUpPeriod()
+
+        def contract = Contract.get(1),
+            p1 = Period.get(1)
+        
+        def rtx1 = new ReceiveTransaction(period: p1)
+
+        rtx1.amount = 100
+        rtx1.sign = 1
+        rtx1.period = p1
+        rtx1.balanceForward = 2000.00
+        rtx1.balancePaid = 75.00
+        rtx1.interestRate = 24.00
+        rtx1.interestPaid = 20.00
+        rtx1.fee = 5.00
+        rtx1.fine = 0.00
+        rtx1.isShareCapital = false
+        rtx1.paymentDate = p1.dueDate
+        rtx1.differential = 0.00
+
+        rtx1.validate()
+        println rtx1.errors
+        rtx1.save()
+
+        def rtx2 = new ReceiveTransaction(period: p1)
+
+        rtx2.amount = 200
+        rtx2.sign = 1
+        rtx2.period = p1
+        rtx2.balanceForward = 1925.00
+        rtx2.balancePaid = 160.00
+        rtx2.interestRate = 24.00
+        rtx2.interestPaid = 30.00
+        rtx2.fee = 10.00
+        rtx2.fine = 0.00
+        rtx2.isShareCapital = false
+        rtx2.paymentDate = p1.dueDate
+        rtx2.differential = 0.00
+
+        rtx2.validate()
+        println rtx2.errors
+        rtx2.save()
+
+        p1.payoffStatus = true
+        p1.payAmount = 300.00
+        p1.outstanding = 406.00
+        p1.save()
+
+        contract.loanBalance = 1625.00
+        contract.save()
+
+        shouldFail (Exception) {
+            service.cancelReceiveTransaction(rtx1)
+        }
+    }
+
+    void testCancelReceiveTransactionEffective() {
+        setUpPeriod()
+
+        def contract = Contract.get(1),
+            p1 = Period.get(1),
+            receiveTx = new ReceiveTransaction(period: p1)
+
+        receiveTx.amount = 700
+        receiveTx.sign = 1
+        receiveTx.period = p1
+        receiveTx.balanceForward = 2000.00
+        receiveTx.balancePaid = 630.00
+        receiveTx.interestRate = 24.00
+        receiveTx.interestPaid = 60.00
+        receiveTx.fee = 10.00
+        receiveTx.fine = 0.00
+        receiveTx.isShareCapital = false
+        receiveTx.paymentDate = p1.dueDate
+        receiveTx.differential = 0.00
+
+        receiveTx.validate()
+        println receiveTx.errors
+        receiveTx.save()
+
+        p1.payoffStatus = true
+        p1.payAmount = receiveTx.amount
+        p1.outstanding = 6.00
+        p1.save()
+
+        contract.loanBalance = 1370.00
+        contract.save()
+
+        service.cancelReceiveTransaction(receiveTx)
+        receiveTx = ReceiveTransaction.get(1)
+        assert receiveTx.status == false
+
+        p1 = Period.get(1)
+        assert p1.payoffStatus == false
+        assert p1.payAmount == 0.00
+        assert p1.outstanding == 706.00
+
+        contract = Contract.get(1)
+        assert contract.loanBalance == 2000.00
+    }
+
+    void testCancelReceiveTransactionFlat() {
+        def getDate = { str -> Date.parse("yyyy-MM-dd", str) }
+
+        def principle = 60000.00,
+            interest = 0.12,
+            interestlimit = 0.18,
+            numberOfPeriod = 24,
+            keep = 14400.00,
+            contract = setUpMockForFlatPeriodPayoff(principle, interest, numberOfPeriod, keep, getDate("2012-03-01"))
+
+        def p1 = new Period(
+            contract: contract, no: 1, amount: 2500.00,
+            dueDate: getDate("2012-04-01"), status: true, payoffStatus: false
+        )
+        p1.save()
+        
+        def receiveTx = new ReceiveTransaction(period: p1)
+
+        receiveTx.amount = 1200.00
+        receiveTx.sign = 1
+        receiveTx.period = p1
+        receiveTx.balanceForward = 60000.00
+        receiveTx.balancePaid = 2500.00
+        receiveTx.interestRate = 24.00
+        receiveTx.interestPaid = 400.00
+        receiveTx.fee = 100.00
+        receiveTx.fine = 0.00
+        receiveTx.isShareCapital = false
+        receiveTx.paymentDate = p1.dueDate
+        receiveTx.differential = 0.00
+
+        receiveTx.validate()
+        println receiveTx.errors
+        receiveTx.save()
+
+        p1.payoffStatus = true
+        p1.payAmount = receiveTx.amount
+        p1.outstanding = 1300.00
+        p1.save()       
+
+        contract.loanBalance = 57500.00
+        contract.advancedInterestBalance = 13900.00
+        contract.save()
+
+        service.cancelReceiveTransaction(receiveTx)
+        receiveTx = ReceiveTransaction.get(1)
+        assert receiveTx.status == false
+
+        p1 = Period.get(1)
+        assert p1.payoffStatus == false
+        assert p1.payAmount == 0.00
+        assert p1.outstanding == 2500.00
+
+        contract = Contract.get(1)
+        assert contract.loanBalance == 60000.00
+        assert contract.advancedInterestBalance == 14400.00
+    }
+
+    void testCancelReceiveTransactionCommission() {
+        setUpPeriod()
+
+        def contract = Contract.get(1),
+            loanType = contract.loanType,
+            p1 = Period.get(1),
+            receiveTx = new ReceiveTransaction(period: p1)
+
+        contract.processor = 'Commission'
+        contract.save()
+
+        receiveTx.amount = 700
+        receiveTx.sign = 1
+        receiveTx.period = p1
+        receiveTx.balanceForward = 2000.00
+        receiveTx.balancePaid = 630.00
+        receiveTx.interestRate = 24.00
+        receiveTx.interestPaid = 60.00
+        receiveTx.fee = 10.00
+        receiveTx.fine = 0.00
+        receiveTx.isShareCapital = false
+        receiveTx.paymentDate = p1.dueDate
+        receiveTx.differential = 0.00
+
+        receiveTx.validate()
+        println receiveTx.errors
+        receiveTx.save()
+
+        p1.payoffStatus = true
+        p1.payAmount = receiveTx.amount
+        p1.outstanding = 6.00
+        p1.cooperativeInterest = 20.00
+        p1.save()
+
+        contract.loanBalance = 1370.00
+        contract.save()
+
+        service.cancelReceiveTransaction(receiveTx)
+        receiveTx = ReceiveTransaction.get(1)
+        assert receiveTx.status == false
+
+        p1 = Period.get(1)
+        assert p1.payoffStatus == false
+        assert p1.payAmount == 0.00
+        assert p1.outstanding == 706.00
+        assert p1.cooperativeInterest == 0.00
+
+        contract = Contract.get(1)
+        assert contract.loanBalance == 2000.00
+    }
 
 }

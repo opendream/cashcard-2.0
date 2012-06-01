@@ -15,7 +15,7 @@ class ReceiveTransactionTests extends DomainTestTemplate {
         ['amount',          'balanceForward',        'balancePaid',
          'interestRate',    'interestPaid',          'fee',
          'period',          'fine',                  'isShareCapital',
-         'differential',    'paymentDate'
+         'differential',    'paymentDate',           'status'
         ]
     }
 
@@ -64,7 +64,7 @@ class ReceiveTransactionTests extends DomainTestTemplate {
             field = 'paymentDate'
 
         // default value
-        assert instance[field].compareTo(new Date()) == 0
+        assert instance[field].getDateString() == new Date().getDateString()
 
         instance[field] = null
         verifyNotNull(instance, field)

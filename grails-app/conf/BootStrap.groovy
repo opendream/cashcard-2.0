@@ -73,7 +73,7 @@ class BootStrap {
 
     def generateLoanType() {
     	new LoanType(
-            name: "เงินกู้สามัญ", processor: "Effective", interestRate: 18.00,
+            name: "เงินกู้สามัญ", processor: "Effective", interestRate: 12.00,
             maxInterestRate: 18.00, mustKeepAdvancedInterest: false,
             numberOfPeriod: 3
         ).save()
@@ -83,27 +83,27 @@ class BootStrap {
             numberOfPeriod: 3
         ).save()
     	new LoanType(
-            name: "เงินกู้ซื้อยานพาหนะ", processor: "Flat", interestRate: 18.00,
+            name: "เงินกู้ซื้อยานพาหนะ", processor: "Flat", interestRate: 12.00,
             maxInterestRate: 18.00, mustKeepAdvancedInterest: true,
             numberOfPeriod: 24
         ).save()
     	new LoanType(
-            name: "เงินกู้ซื้อทอง", processor: "Effective", interestRate: 18.00,
+            name: "เงินกู้ซื้อทอง", processor: "Effective", interestRate: 12.00,
             maxInterestRate: 18.00, mustKeepAdvancedInterest: false,
             numberOfPeriod: 3
         ).save()
     	new LoanType(
-            name: "เงินกู้ซื้เครื่องใช้ไฟฟ้า", processor: "Effective", interestRate: 18.00,
+            name: "เงินกู้ซื้อเครื่องใช้ไฟฟ้า", processor: "Effective", interestRate: 12.00,
             maxInterestRate: 18.00, mustKeepAdvancedInterest: false,
             numberOfPeriod: 3
         ).save()
     	new LoanType(
-            name: "เงินกู้โดยอสังหาริมทรัพย์", processor: "Effective",interestRate: 24.00,
+            name: "เงินกู้โดยอสังหาริมทรัพย์", processor: "Commission",interestRate: 24.00,
             maxInterestRate: 18.00, mustKeepAdvancedInterest: true,
             numberOfPeriod: 24
         ).save()
     	new LoanType(
-            name: "เงินกู้โดยใช้ทรัพย์สินจำนอง", processor: "Effective", interestRate: 36.00,
+            name: "เงินกู้โดยใช้ทรัพย์สินจำนอง", processor: "Commission", interestRate: 36.00,
             maxInterestRate: 18.00, mustKeepAdvancedInterest: false,
             numberOfPeriod: 24
         ).save()

@@ -23,6 +23,10 @@ class Contract {
 
 	static belongsTo = [member: Member]
 
+	def beforeInsert = {
+		cooperativeShare = loanType.cooperativeShare
+	}
+
     static constraints = {
     	code nullable: false, blank: false, unique: true
     	approvalDate nullable: true, blank: true

@@ -9,7 +9,7 @@ import org.junit.*
  * See the API for {@link grails.test.mixin.domain.DomainClassUnitTestMixin} for usage instructions
  */
 @TestFor(Contract)
-@Mock([Member])
+@Mock([Member, LoanType])
 class ContractTests {
 
     def commonLoan
@@ -19,13 +19,17 @@ class ContractTests {
         commonLoan = new LoanType(name: "Common")
     }
 
-    def generateValidContract() {
+    def generateValidContract(type='Effective') {
         def member = new Member(identificationNumber:"1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")
+        assert LoanType.count() == 0
+        def loanType = new LoanType(name: "Commission", processor: "Commission", numberOfPeriod: 3)
+        loanType.cooperativeShare = 0.80
+        loanType.save()
 
-        new Contract(
+        def contract = new Contract(
             code: "ก.55-1000-20",
             member: member,
-            loanType: commonLoan,
+            loanType: loanType,
             loanAmount: 2000.00,
             interestRate: 2.00,
             loanBalance: 0.00,
@@ -36,6 +40,15 @@ class ContractTests {
             numberOfPeriod: 3,
             approvalDate: null
         )
+
+        return contract
+    }
+
+    void testBeforeInsert() {
+        def contract = generateValidContract()
+        assert contract.cooperativeShare != contract.loanType.cooperativeShare
+        contract.beforeInsert.call()
+        assert contract.cooperativeShare == contract.loanType.cooperativeShare
     }
 
     void verifyNotNull(instance, field) {

@@ -6,9 +6,11 @@
 	</head>
 	<body>
 		<header class="page-header">
-			<g:link controller="member" action="show" id="${member.id}">
-				<em><i class="icon-arrow-left"></i><g:message code="back.to.member" args="[period.contract.member]" /></em>
-			</g:link>
+			<p>
+				<g:link controller="member" action="show" id="${member.id}">
+					<em><i class="icon-arrow-left"></i><g:message code="back.to.member" args="[period.contract.member]" /></em>
+				</g:link>
+			</p>
 			<h1><g:message code="contract.payoff.title" args="[period.contract.code, period.no]" /></h1>
 		</header>
 

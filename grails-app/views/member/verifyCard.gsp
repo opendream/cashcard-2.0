@@ -19,7 +19,7 @@
     		<div class="control-group ${flash.error? 'error' : ''}">
           <label for="id-number" class="control-label">${message(code: "member.label.identificationNumber", default: "Identification Number")}</label>
           <div class="controls">
-            <input id="id-number" name="cardId" type="text" placeholder="${message(code: "member.placeholder.identificationNumber", default: "Identification Number")}" />
+            <input id="id-number" name="cardId" type="text" placeholder="${message(code: "member.placeholder.identificationNumber", default: "Identification Number")}" required="true" />
             <span class="help-block"><g:message code="id_card_help" /></span>
           </div>
         </div>

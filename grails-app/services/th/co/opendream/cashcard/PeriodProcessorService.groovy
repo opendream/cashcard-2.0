@@ -18,6 +18,7 @@ class PeriodProcessorService {
         def c = ReceiveTransaction.createCriteria()
         def receiveTxList = c.list(sort: "paymentDate", order: "asc") {
             eq("period", period)
+            eq("status", true)
         }
         if (receiveTxList.last() != receiveTx) {
             throw new Exception("Receive Transaction must be the latest to cancel.");

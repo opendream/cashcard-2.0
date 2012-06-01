@@ -872,6 +872,13 @@ class PeriodProcessorServiceTests {
         shouldFail (Exception) {
             service.cancelReceiveTransaction(rtx1)
         }
+
+        rtx2.status = false
+        rtx2.save()
+
+        assert rtx1.status == true
+        service.cancelReceiveTransaction(rtx1)
+        assert rtx1.status == false
     }
 
     void testCancelReceiveTransactionEffective() {

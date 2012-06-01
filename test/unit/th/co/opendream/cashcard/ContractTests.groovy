@@ -321,7 +321,7 @@ class ContractTests {
             field = 'signedDate'
 
         // default value
-        assert contract[field].compareTo(new Date()) == 0
+        assert contract[field].getDateString() == new Date().getDateString()
 
         contract[field] = null
         verifyNotNull(contract, field)

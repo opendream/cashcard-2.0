@@ -64,7 +64,7 @@ class ReceiveTransactionTests extends DomainTestTemplate {
             field = 'paymentDate'
 
         // default value
-        assert instance[field].compareTo(new Date()) == 0
+        assert instance[field].getDateString() == new Date().getDateString()
 
         instance[field] = null
         verifyNotNull(instance, field)

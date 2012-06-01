@@ -13,7 +13,6 @@
           ${flash.error}
         </div><!-- /errors -->
     </g:if>
-	  <div class="container"><div class="row"><div class="span10">
       <g:form action="verifyCard" class="form-horizontal">
 
     		<div class="control-group ${flash.error? 'error' : ''}">
@@ -28,7 +27,6 @@
           <button class="btn btn-primary" type="submit"><i class="icon-ok icon-white"></i> ${message(code: "member.label.verify", default: "Verify")}</button>
         </div>
   	  </g:form>
-	  </div></div></div>
 
 	</body>
 </html>

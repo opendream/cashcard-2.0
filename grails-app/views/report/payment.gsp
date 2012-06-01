@@ -14,7 +14,7 @@
 			</g:if></h1>
 	</header>
 
-	<div class="container"><div class="row"><div class="span10">
+	
 		
 		<g:hasErrors bean="${contract}">
 			<div id="errors" class="alert alert-error">
@@ -54,13 +54,6 @@
 			</div>
 		</g:jasperForm>
 				
-
-				
-			
-
-			
-		
-	</div></div></div>
 
 	
 </body>

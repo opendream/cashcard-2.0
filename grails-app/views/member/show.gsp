@@ -10,8 +10,7 @@
             <h1>${"${memberInstance.firstname} ${memberInstance.lastname}"}</h1>
         </header>
 
-        <div class="container">
-            <div class="row"><div class="span10">
+        <div>
                 <g:if test="${flash.message}">
                     <div class="message alert alert-success" role="status">${flash.message}</div>
                 </g:if>
@@ -145,7 +144,6 @@
                 <div class="form-actions">
                     <g:link class="btn" action="edit" id="${memberInstance.id}"><i class="icon-edit"></i> <g:message code="member.label.update" /></g:link>
                 </div>
-            </div></div>
 
         </div>
 

@@ -3,20 +3,25 @@ html, body {
   background-color: #eee;
 }
 body {
-  padding-top: 40px; /* 40px to make the container go all the way to the bottom of the topbar */
+  /*padding-top: 40px; /* 40px to make the container go all the way to the bottom of the topbar */
 }
 .container > footer p {
   text-align: center; /* center align it with the container */
 }
-.container {
+body > .container {
   /*width: 820px; /* downsize our container to make the content feel a bit tighter and more cohesive. NOTE: this removes two full columns from the grid, meaning you only go to 14 columns and not 16. */
+  /*padding-top: 40px;*/
+}
+
+#hidden-container {
+  height: 40px;
 }
 
 /* The white background content wrapper */
 .container > .content.row > div > .row {
   background-color: #fff;
   padding: 20px;
-  margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
+  /*margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
   -webkit-border-radius: 0 0 6px 6px;
      -moz-border-radius: 0 0 6px 6px;
           border-radius: 0 0 6px 6px;
@@ -116,6 +121,10 @@ table.member-list .identificationNumber {
   height: 38px;
 }
 
+.navbar.navbar-fixed-top .btn-group.pull-right {
+  margin-right: 0;
+}
+
 .navbar .btn-group.pull-right {
   margin-right: -20px;
 }
@@ -190,4 +199,26 @@ body#login-page #row-wrapper {
   padding: 20px;
   height: 94px;
   font-size: 1.8em;
+}
+
+.navbar .navbar-inner {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+#standalone-logout a {
+  display: block;
+}
+
+#standalone-logout a:hover {
+  background-color: #EEE;
+  text-decoration: none;
+}
+
+section { 
+  clear: both;
+}
+
+section#contract-basic-info > div {
+  margin-left: 0;
 }

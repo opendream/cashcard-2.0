@@ -9,6 +9,18 @@
 		<h1><g:message code="contract.show.header" args="[contract.code]" /></h1>
 	</header>
 
+	<g:if test="${flash.error}">
+        <div id="errors" class="alert alert-error">
+          ${flash.error}
+        </div><!-- /errors -->
+    </g:if>
+
+    <g:if test="${flash.message}">
+        <div id="messages" class="alert alert-success">
+          ${flash.message}
+        </div><!-- /errors -->
+    </g:if>
+
 	<section id="contract-basic-info">
 		<div class="container">
 			<div class="row">
@@ -205,7 +217,7 @@
 													<td><g:formatDate date="${rtx.paymentDate}" format="EE dd MMM yyyy" /></td>
 													<td class="number">${rtx.amount}</td>
 													<td class="date">
-														<g:link controller="receiveTransaction" action="cancel" id="${rtx.id}" class="btn">
+														<g:link controller="receiveTransaction" action="cancel" id="${rtx.id}" class="btn cancel-btn">
 									                        <g:message code="contract.show.receiveTx.cancel" />
 									                    </g:link>
 									                </td>
@@ -248,6 +260,12 @@
 
 		$('.btn', context).hide();
 		$('.btn:last', context).show();
+
+		// Bind cancel btn
+		$('.cancel-btn').click(function (e) {
+			var ans = confirm("<g:message code="default.button.delete.confirm.message" />");
+			return ans;
+		});
 	}(jQuery);
 	</r:script>
 

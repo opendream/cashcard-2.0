@@ -10,6 +10,7 @@ class ReceiveTransactionController {
     	try {
     		periodProcessorService.cancelReceiveTransaction(receiveTx)
 
+            flash.message = message(code: "receiveTx.cancelSuccess");
     		redirect url: "/contract/show/${receiveTx.period.contract.id}"
     	}
     	catch (Exception e) {

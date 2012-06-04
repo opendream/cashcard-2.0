@@ -37,12 +37,16 @@ class InterestProcessorService {
             dayFromLastPeriod = date - lastPeriod.payoffDate
         }
 
-        def actualInterest = contract.loanBalance * (contract.interestRate / 100) / yearDivider * dayFromLastPeriod
-        def effectedInterest = contract.loanBalance * (contract.maxInterestRate / 100) / yearDivider * dayFromLastPeriod
+        def interestRate = contract.interestRate
+        def maxInterestRate = contract.maxInterestRate >= interestRate ? interestRate : contract.maxInterestRate
+
+        def actualInterest = contract.loanBalance * (interestRate / 100) / yearDivider * dayFromLastPeriod
+        def effectedInterest = contract.loanBalance * (maxInterestRate / 100) / yearDivider * dayFromLastPeriod
         def fee = 0.00
 
         actualInterest = actualInterest.setScale(6, BigDecimal.ROUND_HALF_UP)
         effectedInterest = effectedInterest.setScale(6, BigDecimal.ROUND_HALF_UP)
+
         if (effectedInterest < actualInterest) {
             fee = actualInterest - effectedInterest
         }

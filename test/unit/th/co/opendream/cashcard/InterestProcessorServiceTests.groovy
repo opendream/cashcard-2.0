@@ -203,6 +203,76 @@ class InterestProcessorServiceTests {
 
     }
 
+    void testCalculateEffectiveMethodLeapYearWithInterestLessThanMaxInterest() {
+        /*
+         *********************************************************************
+         * Loan Amount : 2000.00, Interest Rate : 12% /year
+         * ================================================
+         * First month :
+         * -- balance : 2000.00
+         * -- interest : 20.327869
+         * -- effected interest : 20.327869
+         * -- fee : 0.00
+         * ================================================
+         * Next month :
+         * -- balance : 1334.327869
+         * -- interest : 13.124536
+         * -- effected interest : 13.124536
+         * -- fee : 0.00
+         *********************************************************************
+        */
+
+        setUpPeriod('Effective')
+
+        def contract = Contract.get(1)
+        contract.interestRate = 12.00
+        contract.maxInterestRate = 18.00
+        contract.approvalStatus = true
+        contract.approvalDate = new Date().parse("yyyy-MM-dd", "2012-03-01")
+        contract.loanReceiveStatus = true
+        contract.payloanDate = contract.approvalDate
+        contract.save()
+
+        def p1 = Period.get(1)
+        p1.dueDate = new Date().parse("yyyy-MM-dd", "2012-04-01")
+        p1.save()
+
+
+        /**
+         * Test first period.
+         */
+        def result = service.process(p1, p1.dueDate)
+        assert result.actualInterest == 20.327869
+        assert result.effectedInterest == 20.327869
+        assert result.fee == 0.00
+
+        contract.loanBalance = 1334.327869
+        contract.save()
+
+        p1.payoffStatus = true
+        p1.payoffDate = p1.dueDate
+        p1.save()
+
+        def p2 = Period.get(2)
+        p2.dueDate = new Date().parse("yyyy-MM-dd", "2012-05-01")
+        p2.save()
+
+        def p3 = Period.get(3)
+        p3.dueDate = new Date().parse("yyyy-MM-dd", "2012-06-01")
+        p3.save()
+
+        PeriodService.metaClass.getCurrentPeriod = { it -> p2 }
+
+        /**
+         * Test second period.
+         */
+        result = service.process(p2, p2.dueDate)
+        assert result.actualInterest == 13.124536
+        assert result.effectedInterest == 13.124536
+        assert result.fee == 0.00
+
+    }
+
     void testCalculateEffectiveMethodNotLeapYear() {
         /*
          *********************************************************************

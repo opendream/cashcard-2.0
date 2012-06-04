@@ -4,7 +4,13 @@ import groovy.time.TimeCategory
 
 class ContractController {
 
-    def periodService, utilService, periodProcessorService, periodGeneratorProcessorService, interestProcessorService
+    /* Service */
+    def periodService,
+        utilService,
+        periodProcessorService,
+        periodGeneratorProcessorService,
+        interestProcessorService,
+        messageService
 
     def create() {
         def member = Member.get(params.memberId)
@@ -176,6 +182,8 @@ class ContractController {
                 }
             }
 
+            messageService.sendApproved(existsContract)
+
             redirect action: 'show', controller: 'member', id: existsContract.member.id
         }
         else {
@@ -256,14 +264,17 @@ class ContractController {
 
             if (period) {
                 def contract = period.contract,
-                member = contract.member,
-                receiveTx
+                    member = contract.member,
+                    receiveTx
 
                 try {
                     receiveTx = periodProcessorService.process(period, payAmount, fine, isShareCapital, paymentDate)
+                    messageService.sendPayoff(receiveTx)
+
                     redirect url: "/member/show/${period.contract.member.id}"
                 }
                 catch (e) {
+                    println e
                     render view: '/contract/payoff', model: [receiveTx: receiveTx, member: member, contract: contract, period: period, amount: payAmount, fine: fine, isShareCapital: isShareCapital]
                 }
             }

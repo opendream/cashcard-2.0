@@ -644,4 +644,17 @@ class InterestProcessorServiceTests {
     void testCalculateInterestInMonthUnit() {
         assert 54 == service.calculateInterestInMonthUnit(1200.00, 18.00, 3)
     }
+
+    void testGetEffectiveInterestRate() {
+        def contract = [
+            interestRate: 24.00,
+            maxInterestRate: 18.00
+        ]
+
+        assert service.getEffectiveInterestRate(contract) == 18.00
+
+        contract['interestRate'] = 12.00
+
+        assert service.getEffectiveInterestRate(contract) == 12.00
+    }
 }

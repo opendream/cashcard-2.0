@@ -11,6 +11,12 @@ class InterestProcessorService {
         ( interestRate / 12 / 100 ) * numberOfPeriod * amount
     }
 
+    def getEffectiveInterestRate(contract) {
+        contract.maxInterestRate >= contract.interestRate ?
+            contract.interestRate
+            : contract.maxInterestRate
+    }
+
     def effective(Period period, date) {
         date = date ? date : new Date()
 
@@ -38,10 +44,10 @@ class InterestProcessorService {
         }
 
         def interestRate = contract.interestRate
-        def maxInterestRate = contract.maxInterestRate >= interestRate ? interestRate : contract.maxInterestRate
+        def effectiveInterestRate = getEffectiveInterestRate(contract)
 
         def actualInterest = contract.loanBalance * (interestRate / 100) / yearDivider * dayFromLastPeriod
-        def effectedInterest = contract.loanBalance * (maxInterestRate / 100) / yearDivider * dayFromLastPeriod
+        def effectedInterest = contract.loanBalance * (effectiveInterestRate / 100) / yearDivider * dayFromLastPeriod
         def fee = 0.00
 
         actualInterest = actualInterest.setScale(6, BigDecimal.ROUND_HALF_UP)
@@ -84,7 +90,8 @@ class InterestProcessorService {
             dayFromLastPeriod = date - lastPeriod.payoffDate
         }
 
-        def effectiveInterestRate = contract.interestRate > contract.maxInterestRate ? contract.maxInterestRate : contract.interestRate
+        def interestRate = contract.interestRate
+        def effectiveInterestRate = getEffectiveInterestRate(contract)
 
         def actualInterest = contract.loanBalance * (contract.interestRate / 100) / yearDivider * dayFromLastPeriod
         def effectedInterest = contract.loanBalance * (effectiveInterestRate / 100) / yearDivider * dayFromLastPeriod
@@ -129,8 +136,11 @@ class InterestProcessorService {
             dayFromLastPeriod = date - lastPeriod.payoffDate
         }
 
-        def actualInterest = contract.loanBalance * (contract.interestRate / 100) / yearDivider * dayFromLastPeriod
-        def effectedInterest = contract.loanBalance * (contract.maxInterestRate / 100) / yearDivider * dayFromLastPeriod
+        def interestRate = contract.interestRate
+        def effectiveInterestRate = getEffectiveInterestRate(contract)
+
+        def actualInterest = contract.loanBalance * (interestRate / 100) / yearDivider * dayFromLastPeriod
+        def effectedInterest = contract.loanBalance * (effectiveInterestRate / 100) / yearDivider * dayFromLastPeriod
         def fee = 0.00
 
         actualInterest = actualInterest.setScale(6, BigDecimal.ROUND_HALF_UP)

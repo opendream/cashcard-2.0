@@ -312,6 +312,45 @@ class PeriodProcessorServiceTests {
         /*********************** /END Verify money ****************************/
     }
 
+    void testProcessPeriodPartialPayoff() {
+        def contract = setUpMockForPeriodPayoff('Effective')
+        def p1 = Period.get(1)
+        p1.outstanding = 706.00
+
+        service.interestProcessorService = [ process: { p, d ->
+            if (p.id == 1) {
+                [actualInterest: 20.550000, effectedInterest: 17.240000, fee: 3.260000]
+            }
+        } ] as InterestProcessorService
+
+        /****** Verify ******/
+        service.process(p1, 100.00, 0.00, false, p1.dueDate)
+        assert ReceiveTransaction.list().size() == 1
+
+        p1 = Period.get(1) // Reload data
+        p1.beforeUpdate()
+        assert p1.payoffDate == p1.dueDate
+        assert p1.partialPayoff == true
+        assert p1.outstanding == 606.00
+        assert p1.payoffStatus == false
+        assert p1.status == true
+
+        def receiveTx = ReceiveTransaction.get(1)
+        assert receiveTx.amount == 100.00
+        assert receiveTx.balanceForward == 2000.00
+        assert receiveTx.balancePaid == 79.450000
+        assert receiveTx.interestRate == 24.00
+        assert receiveTx.interestPaid == 17.240000
+        assert receiveTx.fee == 3.260000
+        assert receiveTx.fine == 0.00
+        assert receiveTx.differential == 0.00
+        assert receiveTx.isShareCapital == false
+        assert receiveTx.paymentDate == p1.dueDate
+
+        contract = Contract.get(1)
+        assert contract.loanBalance == 1920.550000
+    }
+
     void testProcessPeriodPayoff_12Months() {
         def contract = setUpMockForPeriodPayoff_12Months()
         def period

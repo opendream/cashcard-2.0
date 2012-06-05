@@ -36,7 +36,13 @@ FROM
 
 WHERE
      transaction."class" like 'th.co.opendream.cashcard.ReceiveTransaction'
-AND  transaction."payment_date" between to_date($P{fromDate}, 'yyyy-MM-dd') AND to_date($P{toDate}, 'yyyy-MM-dd')]]>
+AND  transaction."status" = true
+AND  transaction."payment_date" between to_date($P{fromDate}, 'yyyy-MM-dd') AND to_date($P{toDate}, 'yyyy-MM-dd')
+ORDER BY loan_type."name",
+transaction."payment_date",
+member."firstname",
+member."lastname",
+period."no"]]>
 	</queryString>
 	<field name="transaction_amount" class="java.math.BigDecimal"/>
 	<field name="transaction_class" class="java.lang.String"/>
@@ -64,7 +70,7 @@ AND  transaction."payment_date" between to_date($P{fromDate}, 'yyyy-MM-dd') AND 
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H"/>
 					</textElement>
-					<text><![CDATA[วันที่]]></text>
+					<text><![CDATA[วันที่รับชำระ]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="532" y="25" width="60" height="25"/>

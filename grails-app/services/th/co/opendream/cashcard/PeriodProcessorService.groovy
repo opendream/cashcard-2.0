@@ -1,7 +1,10 @@
 package th.co.opendream.cashcard
 
+import org.springframework.context.i18n.LocaleContextHolder as LCH
+
 class PeriodProcessorService {
-	def interestProcessorService
+	def interestProcessorService,
+        messageSource
 
     def process(Period period, amount, fine, isShareCapital, date) {
         def processorName = period.contract.processor.toLowerCase()
@@ -79,6 +82,10 @@ class PeriodProcessorService {
     }
 
     def effective(Period period, amount, fine, isShareCapital, date) {
+        if (amount > period.outstanding) {
+            throw new RuntimeException(messageSource.getMessage("errors.receiveOverpayAmount", null, null, LCH.getLocale()))
+        }
+
         def actualPaymentAmount = amount
         def periodInterest = interestProcessorService.process(period, date)
 
@@ -127,6 +134,10 @@ class PeriodProcessorService {
     }
 
     def commission(Period period, amount, fine, isShareCapital, date) {
+        if (amount > period.outstanding) {
+            throw new RuntimeException(messageSource.getMessage("errors.receiveOverpayAmount", null, null, LCH.getLocale()))
+        }
+
         def actualPaymentAmount = amount
         def periodInterest = interestProcessorService.process(period, date)
 
@@ -177,6 +188,10 @@ class PeriodProcessorService {
 
 
     def flat(Period period, amount, fine, isShareCapital, date) {
+        if (amount > period.outstanding) {
+            throw new RuntimeException(messageSource.getMessage("errors.receiveOverpayAmount", null, null, LCH.getLocale()))
+        }
+
         def periodInterest = interestProcessorService.process(period, date),
             contract = period.contract,
             receiveTx = new ReceiveTransaction()

@@ -18,7 +18,7 @@ class PeriodGeneratorProcessorService {
             remain = ((int)amount) % numberOfPeriod
 
         (0..<numberOfPeriod).collect { id ->
-            new Period(amount: amountPerPeriod + (id == numberOfPeriod - 1 ? remain : 0), no: id + 1)
+            new Period(amount: amountPerPeriod, no: id + 1)
         }
     }
 
@@ -29,7 +29,7 @@ class PeriodGeneratorProcessorService {
             remain = ((int)amount) % numberOfPeriod
 
         (0..<numberOfPeriod).collect { id ->
-            new Period(amount: amountPerPeriod + (id == numberOfPeriod - 1 ? remain : 0), no: id + 1)
+            new Period(amount: amountPerPeriod, no: id + 1)
         }
     }
 
@@ -39,7 +39,7 @@ class PeriodGeneratorProcessorService {
             remain = ((int)amount) % numberOfPeriod
 
         (0..<numberOfPeriod).collect { id ->
-            new Period(amount: amountPerPeriod + (id == numberOfPeriod - 1 ? remain : 0), no: id + 1)
+            new Period(amount: amountPerPeriod, no: id + 1)
         }
     }
 

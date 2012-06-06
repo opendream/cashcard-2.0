@@ -29,3 +29,6 @@ target
 .DS_Store
 
 target-eclipse
+
+# lib dir
+lib/*

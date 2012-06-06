@@ -11,6 +11,7 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT
+     contract."payloan_date" AS contract_payloan_date,
      contract."approval_date" AS contract_approval_date,
      contract."code" AS contract_code,
      contract."interest_rate" AS contract_interest_rate,
@@ -24,8 +25,11 @@ FROM
      INNER JOIN "public"."member" member ON contract."member_id" = member."id"
 WHERE
      contract."payloan_date" between to_date($P{fromDate}, 'yyyy-MM-dd')
-     AND to_date($P{toDate}, 'yyyy-MM-dd')]]>
+     AND to_date($P{toDate}, 'yyyy-MM-dd')
+ORDER BY loan_type."name",
+     contract."payloan_date"]]>
 	</queryString>
+	<field name="contract_payloan_date" class="java.sql.Timestamp"/>
 	<field name="contract_approval_date" class="java.sql.Timestamp"/>
 	<field name="contract_code" class="java.lang.String"/>
 	<field name="contract_interest_rate" class="java.math.BigDecimal"/>
@@ -50,7 +54,7 @@ WHERE
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 					</textElement>
-					<text><![CDATA[วันที่อนุมัติ]]></text>
+					<text><![CDATA[วันที่จ่ายเงินกู้]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="430" y="25" width="50" height="25"/>
@@ -164,7 +168,7 @@ WHERE
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{contract_approval_date}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{contract_payloan_date}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement stretchType="RelativeToTallestObject" x="97" y="0" width="245" height="20"/>

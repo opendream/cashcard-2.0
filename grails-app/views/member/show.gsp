@@ -147,10 +147,6 @@
 
         </div>
 
-        <div class="pagination">
-            <cashcard:paginate controller="member" action="list" total="${memberCount}" />
-        </div>
-
         <r:script>
             !(function ($) {
                 $('.btn-info').tipsy({gravity: 's'});

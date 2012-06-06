@@ -222,7 +222,7 @@ class PeriodProcessorService {
         receiveTx.save()
 
         period.payoffDate = date
-        period.payAmount = actualPaymentAmount
+        period.payAmount = amount
         period.save()
 
         contract.loanBalance -= balancePaid

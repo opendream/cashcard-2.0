@@ -9,11 +9,12 @@ import org.junit.*
  * See the API for {@link grails.test.mixin.domain.DomainClassUnitTestMixin} for usage instructions
  */
 @TestFor(Period)
+@Mock([LoanType, Contract, Member])
 class PeriodTests extends DomainTestTemplate  {
 
     def requiredProperties() {
         ['contract', 'amount', 'no', 'dueDate', 'status', 'payoffStatus',
-         'payoffDate', 'cooperativeInterest']
+         'payoffDate', 'cooperativeInterest', 'receiveTransaction']
     }
 
     def domainClass() {
@@ -119,6 +120,12 @@ class PeriodTests extends DomainTestTemplate  {
     }
 
     def generateValidPeriod() {
+        def commonLoan = new LoanType(
+            name: "Common", processor: "Commission", interestRate: 18.00,
+            maxInterestRate: 18.00, mustKeepAdvancedInterest: false,
+            numberOfPeriod: 3
+        ).save()
+
         def member = new Member(identificationNumber:"1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")
 
         def contract = new Contract(
@@ -145,6 +152,59 @@ class PeriodTests extends DomainTestTemplate  {
         )
     }
 
+    void testBeforeSaveNoPartialPayoff() {
+        def period = generateValidPeriod()
+
+        assert period.outstanding == 0.00
+        assert period.payoffStatus == false
+        assert period.partialPayoff == null
+
+        period.beforeInsert.call()
+
+
+        period.payAmount = 200
+        period.beforeUpdate.call()
+
+        assert period.partialPayoff == false
+        assert period.payoffStatus == true
+    }
+
+    void testBeforeSavePartialPayoff() {
+        def period = generateValidPeriod()
+
+        assert period.outstanding == 0.00
+        assert period.payoffStatus == false
+        assert period.partialPayoff == null
+
+        // 1st Partial
+        period.payAmount = 100.00
+        period.beforeInsert.call()
+        period.beforeUpdate.call()
+
+        assert period.partialPayoff == true
+        assert period.payoffStatus == false
+        assert period.outstanding == 100.00
+
+
+        // 2nd Partial
+        period.payAmount = 50.00
+        period.beforeUpdate.call()
+
+        assert period.partialPayoff == true
+        assert period.payoffStatus == false
+        assert period.outstanding == 50.00
+
+        // Last Partial
+        period.payAmount = 50.00
+        period.beforeUpdate.call()
+
+        assert period.partialPayoff == false
+        assert period.payoffStatus == true
+        assert period.outstanding == 0.00
+    }
+
+
+
     void verifyNotNull(instance, field) {
         instance.validate([field])
         assertEquals "${field} must fail null validation.",
@@ -161,5 +221,16 @@ class PeriodTests extends DomainTestTemplate  {
         instance.validate([field])
         assertEquals "${field} must fail unique validation.",
             "unique", instance.errors[field]
+    }
+
+    void testReceiveTransaction() {
+        mockForConstraintsTests(Period)
+
+        def period = new Period(),
+            field = 'receiveTransaction'
+
+        period[field] = []
+        assertTrue "${field} must pass all validations.",
+            period.validate([field])
     }
 }

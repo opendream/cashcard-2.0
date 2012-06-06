@@ -3,6 +3,7 @@ package th.co.opendream.cashcard
 class LoanType {
 	String name
 	String processor
+	BigDecimal cooperativeShare = 0.00 // Percent ที่ได้คือ %ของเงินที่จ่ายจริง
 	BigDecimal interestRate = 0.00
 	BigDecimal maxInterestRate = 18.00
 	Boolean mustKeepAdvancedInterest = false

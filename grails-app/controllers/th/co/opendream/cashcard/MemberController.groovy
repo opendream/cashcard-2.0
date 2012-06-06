@@ -76,7 +76,7 @@ class MemberController {
             def totalDebt = 0.00
             periodList.each { p ->
                 if (!p.payoffStatus) {
-                    totalDebt += p.amount
+                    totalDebt += p.outstanding
                 }
             }
             contract.metaClass.totalDebt = totalDebt
@@ -132,11 +132,12 @@ class MemberController {
     def verifyCard(String cardId) {
         flash.error = null // Clear flash
 
+        cardId = cardId ?: ''
         def memberInstance = Member.findByIdentificationNumber("${cardId}")
         if (memberInstance) {
             redirect(action: "show", id: memberInstance.id)
         }
-        else if (cardId != null && cardId != '') {
+        else if (! memberInstance && cardId) {
             flash.error = "ไม่พบสมาชิกที่มีหมายเลขบัตรประชาชน ${cardId}, ต้องการลงทะเบียนสมาชิกใหม่? โปรดไปที่ " + link(controller: "member", action: "create") { "ลงทะเบียน" }
             render(view: 'verifyCard')
         }

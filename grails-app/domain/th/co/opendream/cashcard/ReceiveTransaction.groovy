@@ -7,10 +7,11 @@ class ReceiveTransaction extends Transaction {
 	BigDecimal interestRate
 	BigDecimal interestPaid
 	BigDecimal fee
-	BigDecimal fine
+	BigDecimal fine = 0.00
 	BigDecimal differential
 	Boolean isShareCapital
 	Date paymentDate = new Date()
+	Boolean status = true
 
     static constraints = {
     }

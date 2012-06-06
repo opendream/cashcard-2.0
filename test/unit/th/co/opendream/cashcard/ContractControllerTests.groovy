@@ -184,10 +184,16 @@ class ContractControllerTests {
             }
         }
 
+        def sendCounter = 0
+        controller.messageService = [
+            sendApproved: { c -> ++sendCounter }
+        ]
+
         params.id = 1
         generateContractMethods(params.id).call()
         controller.doApprove()
         assert response.redirectedUrl == "/member/show/1"
+        assert sendCounter == 1
 
         response.reset()
 
@@ -203,9 +209,15 @@ class ContractControllerTests {
             [ id: gid, member: Member.get(gid) ] as Contract
         }
         params.id = 1
+
+        def sendCounter = 0
+        controller.messageService = [
+            sendApproved: { c -> ++sendCounter }
+        ]
         controller.doApprove()
         assert model != null
         assert view == '/contract/approve'
+        assert sendCounter == 0
     }
 
     void testPreparePeriod() {
@@ -325,7 +337,7 @@ class ContractControllerTests {
 
     void testDoPayoff() {
         params.id = '1'
-        params.amount = '300.00'
+        params.payAmount = '300.00'
         params.fine = ''
         params.isShareCapital = ''
 
@@ -341,8 +353,15 @@ class ContractControllerTests {
         def token = SynchronizerTokensHolder.store(session)
         params[SynchronizerTokensHolder.TOKEN_URI] = '/member/show/1'
         params[SynchronizerTokensHolder.TOKEN_KEY] = token.generateToken(params[SynchronizerTokensHolder.TOKEN_URI])
+
+        def sendCounter = 0
+        controller.messageService = [
+            sendPayoff: { c -> ++sendCounter }
+        ]
+
         controller.doPayoff()
         assert response.redirectUrl == '/member/show/1'
+        assert sendCounter == 1
 
         controller.periodProcessorService = [
             process: { -> throw new Exception ('Just throw') }
@@ -354,6 +373,7 @@ class ContractControllerTests {
         response.reset()
         controller.doPayoff()
         assert view =='/contract/payoff'
+        assert sendCounter == 1
     }
 
     void testDoErrorPayoff() {

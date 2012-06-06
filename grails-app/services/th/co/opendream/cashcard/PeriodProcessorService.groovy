@@ -4,8 +4,78 @@ class PeriodProcessorService {
 	def interestProcessorService
 
     def process(Period period, amount, fine, isShareCapital, date) {
-        def processorName = period.contract.loanType.processor.toLowerCase()
+        def processorName = period.contract.processor.toLowerCase()
         this."$processorName"(period, amount, fine, isShareCapital, date)
+    }
+
+    def cancelReceiveTransaction(receiveTx) {
+        def period = Period.get(receiveTx.period.id)
+        if (! receiveTx.id || ! period?.receiveTransaction) {
+            throw new Exception("Receive Transaction must already exists before cancel.");
+        }
+
+        // Not allow cancelling receive transaction that is not the latest.
+        def c = ReceiveTransaction.createCriteria()
+        def receiveTxList = c.list(sort: "paymentDate", order: "asc") {
+            eq("period", period)
+            eq("status", true)
+        }
+        if (receiveTxList.last() != receiveTx) {
+            throw new Exception("Receive Transaction must be the latest to cancel.");
+        }
+
+        def processorName = receiveTx.period.contract.processor
+        this."cancelReceiveTransaction$processorName"(receiveTx)
+    }
+
+    def cancelReceiveTransactionEffective(receiveTx) {
+        def period = receiveTx.period,
+            contract = period.contract
+
+        receiveTx.status = false
+        receiveTx.save()
+
+        period.payoffStatus = false
+        period.payAmount -= receiveTx.amount
+        period.outstanding += receiveTx.amount
+        period.save()
+
+        contract.loanBalance += receiveTx.balancePaid
+        contract.save()
+    }
+
+    def cancelReceiveTransactionFlat(receiveTx) {
+        def period = receiveTx.period,
+            contract = period.contract
+
+        receiveTx.status = false
+        receiveTx.save()
+
+        period.payoffStatus = false
+        period.payAmount -= receiveTx.amount
+        period.outstanding += receiveTx.amount
+        period.save()
+
+        contract.loanBalance += receiveTx.balancePaid
+        contract.advancedInterestBalance += receiveTx.interestPaid + receiveTx.fee
+        contract.save()
+    }
+
+    def cancelReceiveTransactionCommission(receiveTx) {
+        def period = receiveTx.period,
+            contract = period.contract
+
+        receiveTx.status = false
+        receiveTx.save()
+
+        period.payoffStatus = false
+        period.payAmount -= receiveTx.amount
+        period.outstanding += receiveTx.amount
+        period.cooperativeInterest = 0.00
+        period.save()
+
+        contract.loanBalance += receiveTx.balancePaid
+        contract.save()
     }
 
     def effective(Period period, amount, fine, isShareCapital, date) {
@@ -33,7 +103,7 @@ class PeriodProcessorService {
         receiveTx.paymentDate = date
 
         period.payoffDate = date
-        period.payoffStatus = true
+        period.payAmount = actualPaymentAmount
         period.save()
 
         def contract = period.contract
@@ -81,8 +151,8 @@ class PeriodProcessorService {
         receiveTx.paymentDate = date
 
         period.payoffDate = date
-        period.payoffStatus = true
         period.cooperativeInterest = periodInterest.cooperativeInterest
+        period.payAmount = actualPaymentAmount
         period.save()
 
         def contract = period.contract
@@ -152,7 +222,7 @@ class PeriodProcessorService {
         receiveTx.save()
 
         period.payoffDate = date
-        period.payoffStatus = true
+        period.payAmount = actualPaymentAmount
         period.save()
 
         contract.loanBalance -= balancePaid

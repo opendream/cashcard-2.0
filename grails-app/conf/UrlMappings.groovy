@@ -7,7 +7,7 @@ class UrlMappings {
 			}
 		}
 
-		"/"(controller: 'member', action:"list")
+		"/"(controller: 'member', action:"verifyCard")
 		"500"(view:'/error')
 	}
 }

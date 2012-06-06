@@ -4,7 +4,13 @@ import groovy.time.TimeCategory
 
 class ContractController {
 
-    def periodService, utilService, periodProcessorService, periodGeneratorProcessorService, interestProcessorService
+    /* Service */
+    def periodService,
+        utilService,
+        periodProcessorService,
+        periodGeneratorProcessorService,
+        interestProcessorService,
+        messageService
 
     def create() {
         def member = Member.get(params.memberId)
@@ -17,6 +23,7 @@ class ContractController {
             def signedDate = params.signedDate ?: new Date()
 
             def contract = new Contract(params)
+            contract.processor = loanType.processor
             contract.signedDate = signedDate
             contract.interestRate = loanType.interestRate
             contract.maxInterestRate = loanType.maxInterestRate
@@ -103,11 +110,11 @@ class ContractController {
                 def code
                 if (!period.payoffStatus && period.dueDate < new Date()) {
                     code = 'late'
-                    totalDebt += period.amount
+                    totalDebt += period.outstanding
                 }
                 else if (!period.payoffStatus) {
                     code = 'due'
-                    totalDebt += period.amount
+                    totalDebt += period.outstanding
                 }
                 else if (period.payoffStatus) {
                     code = 'paid'
@@ -115,9 +122,13 @@ class ContractController {
 
                 period.metaClass.payoffStatusText = message(code: "contract.show.period.tbody.payoffStatus.${code}")
 
+                period.metaClass.effectiveReceiveTransaction = period.receiveTransaction.findAll { rtx ->
+                    rtx.status
+                }
+
                 period
             }
-            
+
             contract.metaClass.isPayable = utilService.isPayable(contract)
             contract.metaClass.currentPeriod = periodService.getCurrentPeriod(contract)
 
@@ -170,6 +181,8 @@ class ContractController {
                     lastDueDate += 1.month
                 }
             }
+
+            messageService.sendApproved(existsContract)
 
             redirect action: 'show', controller: 'member', id: existsContract.member.id
         }
@@ -244,22 +257,25 @@ class ContractController {
     def doPayoff() {
         withForm {
             def period         = Period.get(params.id)
-            def amount         = (params.amount         ?: '0.00') as BigDecimal
+            def payAmount      = (params.payAmount         ?: '0.00') as BigDecimal
             def fine           = (params.fine           ?: '0.00') as BigDecimal
             def isShareCapital = params.isShareCapital ?: false
             def paymentDate    = params.paymentDate ?: new Date()
 
             if (period) {
                 def contract = period.contract,
-                member = contract.member,
-                receiveTx
+                    member = contract.member,
+                    receiveTx
 
                 try {
-                    receiveTx = periodProcessorService.process(period, amount, fine, isShareCapital, paymentDate)
+                    receiveTx = periodProcessorService.process(period, payAmount, fine, isShareCapital, paymentDate)
+                    messageService.sendPayoff(receiveTx)
+
                     redirect url: "/member/show/${period.contract.member.id}"
                 }
                 catch (e) {
-                    render view: '/contract/payoff', model: [receiveTx: receiveTx, member: member, contract: contract, period: period, amount: amount, fine: fine, isShareCapital: isShareCapital]
+                    println e
+                    render view: '/contract/payoff', model: [receiveTx: receiveTx, member: member, contract: contract, period: period, amount: payAmount, fine: fine, isShareCapital: isShareCapital]
                 }
             }
             else {

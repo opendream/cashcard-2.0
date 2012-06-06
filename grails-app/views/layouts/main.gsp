@@ -26,33 +26,19 @@
 	<body>
 		<div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
-        <div class="container"><div class="row"><div class="span10 offset1">
-          <a class="brand" href="${createLink(controller:'member', action:'verifyCard')}">
+        <div class="container">
+          <a data-target=".nav-collapse" data-toggle="collapse" class="btn btn-navbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="${resource(dir: '/')}">
             <r:img uri="/images/credit-union-logo.png" />
             <g:message code="project.name" />
           </a>
-          <ul class="nav">
-            <li class="#"><a href="${createLink(url: '')}">${message(code: 'main.menu.home', default: 'Home')}</a></li>
-            <li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">${message(code: 'main.menu.member', default: 'Member')} <b class="caret"></b></a>
-							<ul class="dropdown-menu">
-								<li><a href="${createLink(controller:'member', action:'create')}">${message(code: 'main.menu.register', default: 'Register')}</a></li>
-								<li><a href="${createLink(controller:'member', action:'verifyCard')}">${message(code: 'main.menu.verifyCard', default: 'Verify Card')}</a></li>
-								<li><a href="${createLink(controller:'member', action:'list')}">${message(code: 'main.menu.listMember', default: 'List')}</a></li>
-							</ul>
-            </li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">${message(code: 'main.menu.report', default: 'Report')}<b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a href="${createLink(controller:'report', action:'overdue')}">${message(code: 'main.menu.overduepaymentReport', default: 'รายงานหนี้ที่เกินวันกำหนดชำระจ่าย')}</a></li>
-                <li><a href="${createLink(controller:'report', action:'payment', params:[paymenttype:'daily-payloan'])}">${message(code: 'main.menu.payloanReport', default: 'รายงานการจ่ายเงินกู้')}</a></li>
-                <li><a href="${createLink(controller:'report', action:'payment', params:[paymenttype:'daily-payoff'])}">${message(code: 'main.menu.payoffReport', default: 'รายงานการชำระเงินกู้ของลูกหนี้')}</a></li>                
-              </ul>
-            </li>
-          </ul>
-
           <sec:ifLoggedIn>
-            <div class="btn-group pull-right">
+
+            <div class="btn-group pull-right hidden-phone hidden-tablet">
 
               <a href='#' class="btn dropdown-toggle" data-toggle="dropdown">
                 <i class="icon-user"></i>
@@ -68,22 +54,52 @@
 
             </div>
           </sec:ifLoggedIn>
-        </div></div></div>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li class="#"><a href="${resource(dir: '/')}">${message(code: 'main.menu.home', default: 'Home')}</a></li>
+              <sec:ifLoggedIn>
+                <li class="dropdown">
+    							<a href="#" class="dropdown-toggle" data-toggle="dropdown">${message(code: 'main.menu.member', default: 'Member')} <b class="caret"></b></a>
+    							<ul class="dropdown-menu">
+    								<li><a href="${createLink(controller:'member', action:'create')}">${message(code: 'main.menu.register', default: 'Register')}</a></li>
+    								<li><a href="${createLink(controller:'member', action:'verifyCard')}">${message(code: 'main.menu.verifyCard', default: 'Verify Card')}</a></li>
+    								<li><a href="${createLink(controller:'member', action:'list')}">${message(code: 'main.menu.listMember', default: 'List')}</a></li>
+    							</ul>
+                </li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">${message(code: 'main.menu.report', default: 'Report')}<b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="${createLink(controller:'report', action:'overdue')}">${message(code: 'main.menu.overduepaymentReport', default: 'รายงานหนี้ที่เกินวันกำหนดชำระจ่าย')}</a></li>
+                    <li><a href="${createLink(controller:'report', action:'payment', params:[paymenttype:'daily-payloan'])}">${message(code: 'main.menu.payloanReport', default: 'รายงานการจ่ายเงินกู้')}</a></li>
+                    <li><a href="${createLink(controller:'report', action:'payment', params:[paymenttype:'daily-payoff'])}">${message(code: 'main.menu.payoffReport', default: 'รายงานการชำระเงินกู้ของลูกหนี้')}</a></li>                
+                  </ul>
+                </li>
+              </sec:ifLoggedIn>
+            </ul>
+            <sec:ifLoggedIn>
+              <div id="standalone-logout" class="hidden-desktop visible-phone visible-tablet">
+                <g:link controller='logout'>${message(code:'cashcard.logout.label', default: 'Logout')}</g:link>
+              </div>
+            </sec:ifLoggedIn>
+          </div>
       </div>
     </div>
+  </div>
 
-    <div class="container">
-	    <div class="content row">
-        <div class="span10 offset1"><div id="row-wrapper" class="row">
-				  <g:layoutBody/>
-        </div></div>
-				<g:javascript library="application"/>
-				<r:layoutResources />
-			</div>
+  <div id="hidden-container" class="container visible-desktop hidden-tablet hidden-phone"></div>
 
-			<footer>
-				<p align="center">&copy; Opendream</p>
-			</footer>
+  <div class="container">
+    <div class="content row">
+      <div class="span10 offset1"><div id="row-wrapper" class="row">
+			  <g:layoutBody/>
+      </div></div>
+			<g:javascript library="application"/>
+			<r:layoutResources />
 		</div>
+
+		<footer>
+			<p align="center">&copy; Opendream</p>
+		</footer>
+	</div>
 	</body>
 </html>

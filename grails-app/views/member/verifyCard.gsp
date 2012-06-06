@@ -13,13 +13,12 @@
           ${flash.error}
         </div><!-- /errors -->
     </g:if>
-	  <div class="container"><div class="row"><div class="span10">
       <g:form action="verifyCard" class="form-horizontal">
 
     		<div class="control-group ${flash.error? 'error' : ''}">
           <label for="id-number" class="control-label">${message(code: "member.label.identificationNumber", default: "Identification Number")}</label>
           <div class="controls">
-            <input id="id-number" name="cardId" type="text" placeholder="${message(code: "member.placeholder.identificationNumber", default: "Identification Number")}" />
+            <input id="id-number" name="cardId" type="text" placeholder="${message(code: "member.placeholder.identificationNumber", default: "Identification Number")}" required="true" />
             <span class="help-block"><g:message code="id_card_help" /></span>
           </div>
         </div>
@@ -28,7 +27,6 @@
           <button class="btn btn-primary" type="submit"><i class="icon-ok icon-white"></i> ${message(code: "member.label.verify", default: "Verify")}</button>
         </div>
   	  </g:form>
-	  </div></div></div>
 
 	</body>
 </html>

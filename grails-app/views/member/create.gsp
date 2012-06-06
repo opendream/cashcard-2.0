@@ -14,7 +14,6 @@
           <g:renderErrors bean="${memberInstance}" as="list"></g:renderErrors>
       </div><!-- /errors -->
     </g:hasErrors>
-    <div class="container"><div class="row"><div class="span10">
       <g:form action="save" class="form-horizontal">
         <div class="control-group ${hasErrors(bean: memberInstance, field: 'identificationNumber', 'error')}">
           <label for="id-number" class="control-label">${message(code: 'member.label.identificationNumber', default: 'Identification Number')}</label>
@@ -69,7 +68,6 @@
           <button class="btn btn-primary" type="submit"><i class="icon-ok icon-white"></i> ${message(code: 'member.label.register', default: 'Register')}</button>
         </div>
       </g:form>
-    </div></div></div>
 
   </body>
 </html>

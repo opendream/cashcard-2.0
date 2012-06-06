@@ -102,3 +102,17 @@ grails.plugins.springsecurity.requestMap.className = 'th.co.opendream.cashcard.R
 grails.plugins.springsecurity.securityConfigType = 'Requestmap'
 
 jasper.dir.reports = '/reports'
+
+// Added by openmsngr-grails-client plugin:
+openmsngr.grails.client.uri='http://dminer.in.th:8090'
+openmsngr.grails.client.auth='/OpenMessenger/api/auth'
+openmsngr.grails.client.ping='/OpenMessenger/api/ping'
+openmsngr.grails.client.sendMessage='/OpenMessenger/api/event/sendPersonalMessage'
+openmsngr.grails.client.eventId='1'
+openmsngr.grails.client.username='admin'
+openmsngr.grails.client.password='openpubyesroti!'
+
+// Added by openmsngr-grails-client plugin: (config rest plugin)
+rest.https.keystore.path='web-app/certs/messenger.jks'
+rest.https.keystore.pass='openpubyesroti!'
+rest.https.cert.hostnameVerifier='ALLOW_ALL'

@@ -18,13 +18,34 @@ class MessageServiceTests {
             ]
 
         service.openmsngrClientService = [
-        	sendMessage: { msisdn, message -> ++sendCounter }
+        	sendMessage: { msisdn, message -> ++sendCounter; true }
         ]
 
         service.metaClass.makeMSISDN = { n -> '66841291342' }
 
-        service.send(member, 'Hello, sms')
+        def result = service.send(member, 'Hello, sms')
         assert sendCounter == 1
+        assert result == true
+    }
+
+    void testSendWithErrorHandling() {
+        def sendCounter = 0,
+            member = [
+                telNo: '66841291342'
+            ]
+
+        service.openmsngrClientService = [
+            sendMessage: { msisdn, message ->
+                ++sendCounter
+                throw new Exception("Error to send message.")
+            }
+        ]
+
+        service.metaClass.makeMSISDN = { n -> '66841291342' }
+
+        def result = service.send(member, 'Hello, sms')
+        assert sendCounter == 1
+        assert result == false
     }
 
     void testSendApproved() {

@@ -312,7 +312,7 @@ class PeriodProcessorServiceTests {
         /*********************** /END Verify money ****************************/
     }
 
-    void testProcessPeriodPartialPayoff() {
+    void testProcessPeriodEffectivePartialPayoff() {
         def contract = setUpMockForPeriodPayoff('Effective')
         def p1 = Period.get(1)
         p1.outstanding = 706.00
@@ -541,6 +541,45 @@ class PeriodProcessorServiceTests {
         contract = Contract.get(1)
         assert contract.loanBalance == 0.00
         /*********************** /END Verify money ****************************/
+    }
+
+    void testProcessPeriodCommisionPartialPayoff() {
+        def contract = setUpMockForPeriodPayoff('Commission')
+        def p1 = Period.get(1)
+        p1.outstanding = 706.00
+
+        service.interestProcessorService = [ process: { p, d ->
+            if (p.id == 1) {
+                [actualInterest: 20.550000, effectedInterest: 17.240000, fee: 3.260000]
+            }
+        } ] as InterestProcessorService
+
+        /****** Verify ******/
+        service.process(p1, 100.00, 0.00, false, p1.dueDate)
+        assert ReceiveTransaction.list().size() == 1
+
+        p1 = Period.get(1) // Reload data
+        p1.beforeUpdate()
+        assert p1.payoffDate == p1.dueDate
+        assert p1.partialPayoff == true
+        assert p1.outstanding == 606.00
+        assert p1.payoffStatus == false
+        assert p1.status == true
+
+        def receiveTx = ReceiveTransaction.get(1)
+        assert receiveTx.amount == 100.00
+        assert receiveTx.balanceForward == 2000.00
+        assert receiveTx.balancePaid == 79.450000
+        assert receiveTx.interestRate == 24.00
+        assert receiveTx.interestPaid == 17.240000
+        assert receiveTx.fee == 3.260000
+        assert receiveTx.fine == 0.00
+        assert receiveTx.differential == 0.00
+        assert receiveTx.isShareCapital == false
+        assert receiveTx.paymentDate == p1.dueDate
+
+        contract = Contract.get(1)
+        assert contract.loanBalance == 1920.550000
     }
 
     void testCommissionProcessPeriodPayoff_12Months() {
@@ -803,6 +842,78 @@ class PeriodProcessorServiceTests {
 
             println " ===> pass"
         }
+    }
+
+    /***********************************
+     * Flat
+     **********************************/
+    void testFlatPeriodProcessPartialPayoff() {
+        def getDate = { str -> Date.parse("yyyy-MM-dd", str) }
+
+        def sample_period = [
+            // no, amount, dueDate
+            [1,    2500, "2012-04-1"], [2,    2500, "2012-05-1"],
+        ]
+
+        service.interestProcessorService = [ process: { p, d ->
+            def result = [
+                [60.850000,  60.850000,  0],
+            ][p.id - 1 as Integer]
+
+            [
+                actualInterest: result[0],
+                effectedInterest: result[1],
+                fee: result[2]
+            ]
+        } ]
+
+        def principle = 60000.00,
+            interest = 12.00,
+            interestlimit = 18.00,
+            numberOfPeriod = 24,
+            keep = 14400.00,
+            contract = setUpMockForFlatPeriodPayoff(principle, interest, numberOfPeriod, keep, getDate("2012-03-01"))
+
+        // prepare periods
+        def periodList = sample_period.collect {
+            def p = new Period(
+                contract: contract, no: it[0], amount: it[1],
+                dueDate: getDate(it[2]), status: true, payoffStatus: false
+            )
+            p.beforeInsert()
+            p.save()
+            return p
+        }
+
+        def period = Period.get(1)
+        print "period: ${period.no}"
+
+        service.flat(period, 200.00, 0.00, false, period.dueDate.minus(5))
+        assert ReceiveTransaction.list().size() == 1
+
+        period = Period.get(period.id) // Reload data
+        period.beforeUpdate()
+        assert period.partialPayoff == true
+        assert period.payoffDate == period.dueDate.minus(5)
+        assert period.payoffStatus == false
+        assert period.outstanding == 2300.00
+
+        def receiveTx = ReceiveTransaction.get(period.id)
+        def index = (period.id - 1) as Integer
+        assert receiveTx.amount == 200.00
+        assert receiveTx.balanceForward == 60000.00
+        assert receiveTx.balancePaid == 200.00
+        assert receiveTx.interestRate == 12.00
+        assert receiveTx.interestPaid == 60.850000
+        assert receiveTx.fee == 0.00
+        assert receiveTx.fine == 0.00
+        assert receiveTx.differential == 0.00
+        assert receiveTx.isShareCapital == false
+        assert receiveTx.paymentDate == period.dueDate.minus(5)
+
+        contract = Contract.get(1)
+        assert contract.loanBalance == 59800.00
+        assert contract.advancedInterestBalance == 14339.150000
     }
 
     /***********************************

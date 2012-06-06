@@ -24,7 +24,13 @@ class MessageService {
 
         if (!msisdn) return null
 
-        openmsngrClientService.sendMessage(msisdn, message)
+        try {
+            openmsngrClientService.sendMessage(msisdn, message)
+            return true
+        }
+        catch (Exception e) {
+            return false
+        }
     }
 
     def sendApproved(contract) {

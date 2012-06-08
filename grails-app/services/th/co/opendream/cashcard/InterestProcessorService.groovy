@@ -17,6 +17,20 @@ class InterestProcessorService {
             : contract.maxInterestRate
     }
 
+    def getLastPayment(c) {
+        def criteria = ReceiveTransaction.createCriteria()
+        criteria.get {
+            period {
+                contract {
+                    eq('id', c.id)
+                }
+            }
+            eq('status', true)
+            maxResults(1)
+            order('paymentDate', 'desc')
+        }
+    }
+
     def effective(Period period, date) {
         date = date ? date : new Date()
 
@@ -35,12 +49,14 @@ class InterestProcessorService {
             }
         }
 
+        def lastPayment = getLastPayment(contract)
+
         def dayFromLastPeriod = 0
-        if (period.no == 1) {
+        if (lastPayment == null) {
             dayFromLastPeriod = date - contract.approvalDate
         }
         else {
-            dayFromLastPeriod = date - lastPeriod.payoffDate
+            dayFromLastPeriod = date - lastPayment.paymentDate
         }
 
         def interestRate = contract.interestRate
@@ -82,12 +98,14 @@ class InterestProcessorService {
             }
         }
 
+        def lastPayment = getLastPayment(contract)
+
         def dayFromLastPeriod = 0
-        if (period.no == 1) {
+        if (lastPayment == null) {
             dayFromLastPeriod = date - contract.approvalDate
         }
         else {
-            dayFromLastPeriod = date - lastPeriod.payoffDate
+            dayFromLastPeriod = date - lastPayment.paymentDate
         }
 
         def interestRate = contract.interestRate
@@ -128,12 +146,14 @@ class InterestProcessorService {
             }
         }
 
+        def lastPayment = getLastPayment(contract)
+
         def dayFromLastPeriod = 0
-        if (period.no == 1) {
+        if (lastPayment == null) {
             dayFromLastPeriod = date - contract.approvalDate
         }
         else {
-            dayFromLastPeriod = date - lastPeriod.payoffDate
+            dayFromLastPeriod = date - lastPayment.paymentDate
         }
 
         def interestRate = contract.interestRate

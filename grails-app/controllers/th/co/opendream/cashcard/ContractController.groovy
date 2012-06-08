@@ -275,6 +275,7 @@ class ContractController {
                 }
                 catch (e) {
                     println e
+                    flash.error = e.message
                     render view: '/contract/payoff', model: [receiveTx: receiveTx, member: member, contract: contract, period: period, amount: payAmount, fine: fine, isShareCapital: isShareCapital]
                 }
             }

@@ -9,7 +9,7 @@ import org.junit.*
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
 @TestFor(InterestProcessorService)
-@Mock([LoanType, Contract, Period, Member])
+@Mock([LoanType, Contract, Period, Member, ReceiveTransaction])
 class InterestProcessorServiceTests {
 
     @Before
@@ -193,6 +193,10 @@ class InterestProcessorServiceTests {
 
         PeriodService.metaClass.getCurrentPeriod = { it -> p2 }
 
+        service.metaClass.getLastPayment = { c ->
+            [ paymentDate: p1.dueDate ]
+        }
+
         /**
          * Test second period.
          */
@@ -263,6 +267,10 @@ class InterestProcessorServiceTests {
 
         PeriodService.metaClass.getCurrentPeriod = { it -> p2 }
 
+        service.metaClass.getLastPayment = { c ->
+            [ paymentDate: p1.dueDate ]
+        }
+
         /**
          * Test second period.
          */
@@ -271,6 +279,71 @@ class InterestProcessorServiceTests {
         assert result.effectedInterest == 13.124536
         assert result.fee == 0.00
 
+    }
+
+    def saveRecieveTx(period, amount, interest, fee, date) {
+        def receiveTx = new ReceiveTransaction(
+            period: period,
+            amount: amount,
+            balanceForward: 2000.00,
+            balancePaid: amount,
+            interestRate: 12.00,
+            interestPaid: interest,
+            fee: 0.00,
+            fine: 0.00,
+            differential: 0.00,
+            isShareCapital: false,
+            paymentDate: date,
+            sign: +1,
+            status: true
+        )
+        receiveTx.save()
+
+        receiveTx
+    }
+
+    void testCalculateEffectiveMethodLeapYearWithPartialPayment() {
+        setUpPeriod('Effective')
+
+        def contract = Contract.get(1)
+        contract.interestRate = 12.00
+        contract.maxInterestRate = 18.00
+        contract.approvalStatus = true
+        contract.approvalDate = new Date().parse("yyyy-MM-dd", "2012-03-01")
+        contract.loanReceiveStatus = true
+        contract.payloanDate = contract.approvalDate
+        contract.save()
+
+        def p1 = Period.get(1)
+        p1.dueDate = new Date().parse("yyyy-MM-dd", "2012-04-01")
+        p1.save()
+
+        /* First paid */
+        def paymentDate = new Date().parse("yyyy-MM-dd", "2012-03-11")
+        def result = service.effective(p1, paymentDate)
+        assert result.actualInterest == 6.557377
+        assert result.effectedInterest == 6.557377
+        assert result.fee == 0.00
+
+        contract.loanBalance = 1300.000000
+        contract.save()
+
+        p1.payoffStatus = true
+        p1.payoffDate = p1.dueDate
+        p1.save()
+
+        PeriodService.metaClass.getCurrentPeriod = { it -> p1 }
+
+        service.metaClass.getLastPayment = { c ->
+            [ paymentDate: Date.parse("yyyy-MM-dd", "2012-03-11") ]
+        }
+
+        /* Second */
+        paymentDate = new Date().parse("yyyy-MM-dd", "2012-03-16")
+        result = service.process(p1, paymentDate)
+        assert result.actualInterest == 2.131148
+        assert result.effectedInterest == 2.131148
+        assert result.fee == 0.00
     }
 
     void testCalculateEffectiveMethodNotLeapYear() {
@@ -330,10 +403,14 @@ class InterestProcessorServiceTests {
 
         PeriodService.metaClass.getCurrentPeriod = { it -> p2 }
 
+        service.metaClass.getLastPayment = { c ->
+            [ paymentDate: p1.dueDate ]
+        }
+
         /**
          * Test second period.
          */
-        result = service.process(p2, p2.dueDate)
+        result = service.effective(p2, p2.dueDate)
         assert result.actualInterest == 26.329653
         assert result.effectedInterest == 19.74724
         assert result.fee == 6.582413
@@ -343,6 +420,7 @@ class InterestProcessorServiceTests {
         setUpPeriod()
 
         def contract = Contract.get(1)
+        contract.approvalDate = Date.parse("yyyy-MM-dd", "2012-01-01")
         contract.loanBalance = 0
         contract.save()
 
@@ -362,7 +440,7 @@ class InterestProcessorServiceTests {
         )
         period.save()
 
-        def result = service.process(period, period.dueDate)
+        def result = service.effective(period, period.dueDate)
         assert result.actualInterest == 0.00
         assert result.effectedInterest == 0.00
         assert result.fee == 0.00
@@ -447,6 +525,11 @@ class InterestProcessorServiceTests {
             return p
         }
 
+        def paymentDate = contract.approvalDate
+        service.metaClass.getLastPayment = { c ->
+            [ paymentDate: paymentDate ]
+        }
+
         def amountPerMonth = contract.loanAmount / contract.numberOfPeriod
         periodList.each { period ->
             print "period : ${period.no}"
@@ -467,7 +550,65 @@ class InterestProcessorServiceTests {
             contract.save()
 
             println " ===> pass"
+
+            paymentDate = period.dueDate
         }
+    }
+
+    void testCalculateFlatMethodLeapYearWithPartialPayment() {
+        def getDate = { str -> Date.parse("yyyy-MM-dd", str) }
+
+        setUpPeriodFlat()
+
+        def contract = Contract.get(1)
+        contract.approvalStatus = true
+        contract.approvalDate = getDate("2012-03-01")
+        contract.loanReceiveStatus = true
+        contract.payloanDate = contract.approvalDate
+        contract.loanAmount = 60000.00
+        contract.loanBalance = 60000.00
+        contract.advancedInterestKeep = 14400.00
+        contract.advancedInterestBalance = 14400.00
+        contract.interestRate = 12.00
+        contract.maxInterestRate = 18.00
+        contract.numberOfPeriod = 24
+        contract.save()
+
+        def p1 = new Period()
+        p1.amount = 2500.00
+        p1.contract = contract
+        p1.no = 1
+        p1.status = true
+        p1.dueDate = new Date().parse("yyyy-MM-dd", "2012-04-01")
+        p1.save()
+        println p1.errors
+
+        /* First paid */
+        def paymentDate = new Date().parse("yyyy-MM-dd", "2012-03-11")
+        def result = service.effective(p1, paymentDate)
+        assert result.actualInterest == 196.721311
+        assert result.effectedInterest == 196.721311
+        assert result.fee == 0.00
+
+        contract.loanBalance = 59000.000000
+        contract.save()
+
+        p1.payoffStatus = true
+        p1.payoffDate = p1.dueDate
+        p1.save()
+
+        PeriodService.metaClass.getCurrentPeriod = { it -> p1 }
+
+        service.metaClass.getLastPayment = { c ->
+            [ paymentDate: Date.parse("yyyy-MM-dd", "2012-03-11") ]
+        }
+
+        /* Second */
+        paymentDate = new Date().parse("yyyy-MM-dd", "2012-03-16")
+        result = service.process(p1, paymentDate)
+        assert result.actualInterest == 96.721311
+        assert result.effectedInterest == 96.721311
+        assert result.fee == 0.00
     }
 
     /******************************************
@@ -533,6 +674,10 @@ class InterestProcessorServiceTests {
 
         PeriodService.metaClass.getCurrentPeriod = { it -> p2 }
 
+        service.metaClass.getLastPayment = { c ->
+            [ paymentDate: p1.dueDate ]
+        }
+
         /**
          * Test second period.
          */
@@ -541,6 +686,52 @@ class InterestProcessorServiceTests {
         assert result.effectedInterest == 19.691642
         assert result.cooperativeInterest == 14.768732
         assert result.fee == 6.563881
+    }
+
+    void testCalculateCommissionMethodLeapYearWithPartialPayment() {
+        setUpPeriod('Commission')
+
+        def contract = Contract.get(1)
+        contract.interestRate = 12.00
+        contract.maxInterestRate = 18.00
+        contract.approvalStatus = true
+        contract.approvalDate = new Date().parse("yyyy-MM-dd", "2012-03-01")
+        contract.loanReceiveStatus = true
+        contract.payloanDate = contract.approvalDate
+        contract.save()
+
+        def p1 = Period.get(1)
+        p1.dueDate = new Date().parse("yyyy-MM-dd", "2012-04-01")
+        p1.save()
+
+        /* First paid */
+        def paymentDate = new Date().parse("yyyy-MM-dd", "2012-03-11")
+        def result = service.commission(p1, paymentDate)
+        assert result.actualInterest == 6.557377
+        assert result.effectedInterest == 6.557377
+        assert result.cooperativeInterest == 4.918033
+        assert result.fee == 0.00
+
+        contract.loanBalance = 1300.000000
+        contract.save()
+
+        p1.payoffStatus = true
+        p1.payoffDate = p1.dueDate
+        p1.save()
+
+        PeriodService.metaClass.getCurrentPeriod = { it -> p1 }
+
+        service.metaClass.getLastPayment = { c ->
+            [ paymentDate: Date.parse("yyyy-MM-dd", "2012-03-11") ]
+        }
+
+        /* Second */
+        paymentDate = new Date().parse("yyyy-MM-dd", "2012-03-16")
+        result = service.process(p1, paymentDate)
+        assert result.actualInterest == 2.131148
+        assert result.effectedInterest == 2.131148
+        assert result.cooperativeInterest == 1.598361
+        assert result.fee == 0.00
     }
 
     void testCalculateCommissionMethodNotLeapYear() {
@@ -601,6 +792,10 @@ class InterestProcessorServiceTests {
 
         PeriodService.metaClass.getCurrentPeriod = { it -> p2 }
 
+        service.metaClass.getLastPayment = { c ->
+            [ paymentDate: p1.dueDate ]
+        }
+
         /**
          * Test second period.
          */
@@ -615,6 +810,7 @@ class InterestProcessorServiceTests {
         setUpPeriod('Commission')
 
         def contract = Contract.get(1)
+        contract.approvalDate = Date.parse("yyyy-MM-dd", "2012-01-01")
         contract.loanBalance = 0
         contract.save()
 
@@ -656,5 +852,15 @@ class InterestProcessorServiceTests {
         contract['interestRate'] = 12.00
 
         assert service.getEffectiveInterestRate(contract) == 12.00
+    }
+
+    void testGetLastPayment() {
+        setUpPeriod()
+
+        def contract = Contract.get(1)
+        def period = Period.get(1)
+        def receiveTx = saveRecieveTx(period, 100.00, 9.25, 0.00, new Date())
+
+        assert service.getLastPayment(contract) == receiveTx
     }
 }

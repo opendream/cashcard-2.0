@@ -14,7 +14,7 @@ class MemberController {
 
     def list() {
         params.offset = params.offset ? params.int('offset') : 0
-        params.max = params.max ? params.int('max') : 10
+        params.max = params.max ? params.int('max') : 20
 
         def c = Member.createCriteria()
         def memberList = c.list(offset: params.offset, max: params.max) {

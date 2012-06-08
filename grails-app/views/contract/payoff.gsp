@@ -14,6 +14,12 @@
 			<h1><g:message code="contract.payoff.title" args="[period.contract.code, period.no]" /></h1>
 		</header>
 
+		<g:if test="${flash.error}">
+	      <div id="errors" class="alert alert-error">
+	          ${flash.error}
+	      </div><!-- /errors -->
+	    </g:if>
+
 		<div class="container" ><div class="row"><div class="span10">
 			<g:form action="doPayoff" class="form-horizontal" useToken="true">
 				<g:hiddenField name="id" value="${period.id}" />

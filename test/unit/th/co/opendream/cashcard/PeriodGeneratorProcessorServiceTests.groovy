@@ -64,7 +64,7 @@ class PeriodGeneratorProcessorServiceTests {
 
         assert periodList[0].amount == 353
         assert periodList[1].amount == 353
-        assert periodList[2].amount == 354
+        assert periodList[2].amount == 353
         assert periodList.size() == 3
 
         periodList = service.generate(1, 1000.00, 6)
@@ -74,7 +74,7 @@ class PeriodGeneratorProcessorServiceTests {
         assert periodList[2].amount == 186
         assert periodList[3].amount == 186
         assert periodList[4].amount == 186
-        assert periodList[5].amount == 190
+        assert periodList[5].amount == 186
         assert periodList.size() == 6
     }
 
@@ -87,7 +87,7 @@ class PeriodGeneratorProcessorServiceTests {
 
         assert periodList[0].amount == 353
         assert periodList[1].amount == 353
-        assert periodList[2].amount == 354
+        assert periodList[2].amount == 353
         assert periodList.size() == 3
 
         periodList = service.generate(1, 1000.00, 6)
@@ -97,7 +97,7 @@ class PeriodGeneratorProcessorServiceTests {
         assert periodList[2].amount == 186
         assert periodList[3].amount == 186
         assert periodList[4].amount == 186
-        assert periodList[5].amount == 190
+        assert periodList[5].amount == 186
         assert periodList.size() == 6
     }
 
@@ -110,7 +110,7 @@ class PeriodGeneratorProcessorServiceTests {
 
         assert periodList[0].amount == 333
         assert periodList[1].amount == 333
-        assert periodList[2].amount == 334
+        assert periodList[2].amount == 333
         assert periodList.size() == 3
 
         periodList = service.generate(1, 1000.00, 6)
@@ -120,7 +120,7 @@ class PeriodGeneratorProcessorServiceTests {
         assert periodList[2].amount == 166
         assert periodList[3].amount == 166
         assert periodList[4].amount == 166
-        assert periodList[5].amount == 170
+        assert periodList[5].amount == 166
         assert periodList.size() == 6
     }
 }

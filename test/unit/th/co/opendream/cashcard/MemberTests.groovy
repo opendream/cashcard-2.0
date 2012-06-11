@@ -55,7 +55,7 @@ class MemberTests {
         assert "unique" == member.errors[field]
 
         member.utilService = [ check_id_card: { id -> false } ] as UtilService
-        member.identificationNumber = '1234567890'
+        member.identificationNumber = '1'
         assert member.validate([field]) == false
         assert "invalid.id" == member.errors[field]
 

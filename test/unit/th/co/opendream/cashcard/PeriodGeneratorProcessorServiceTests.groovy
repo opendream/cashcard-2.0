@@ -142,4 +142,50 @@ class PeriodGeneratorProcessorServiceTests {
         assert periodList[5].amount == 166
         assert periodList.size() == 6
     }
+
+    void testGeneratePeriodExpressCash01() {
+        def periodList = service.expressCash01(1000.00, 3, 24.00)
+
+        assert periodList[0].amount == 353
+        assert periodList[1].amount == 353
+        assert periodList[2].amount == 353
+        assert periodList[0].interestAmount == 20
+        assert periodList[1].interestAmount == 20
+        assert periodList[2].interestAmount == 20
+        assert periodList[0].interestOutstanding == 20
+        assert periodList[1].interestOutstanding == 20
+        assert periodList[2].interestOutstanding == 20
+        assert periodList[0].interestPaid == false
+        assert periodList[1].interestPaid == false
+        assert periodList[2].interestPaid == false
+        assert periodList.size() == 3
+
+        periodList = service.expressCash01(1000.00, 6, 24.00)
+
+        assert periodList[0].amount == 186
+        assert periodList[1].amount == 186
+        assert periodList[2].amount == 186
+        assert periodList[3].amount == 186
+        assert periodList[4].amount == 186
+        assert periodList[5].amount == 186
+        assert periodList[0].interestAmount == 20
+        assert periodList[1].interestAmount == 20
+        assert periodList[2].interestAmount == 20
+        assert periodList[3].interestAmount == 20
+        assert periodList[4].interestAmount == 20
+        assert periodList[5].interestAmount == 20
+        assert periodList[0].interestOutstanding == 20
+        assert periodList[1].interestOutstanding == 20
+        assert periodList[2].interestOutstanding == 20
+        assert periodList[3].interestOutstanding == 20
+        assert periodList[4].interestOutstanding == 20
+        assert periodList[5].interestOutstanding == 20
+        assert periodList[0].interestPaid == false
+        assert periodList[1].interestPaid == false
+        assert periodList[2].interestPaid == false
+        assert periodList[3].interestPaid == false
+        assert periodList[4].interestPaid == false
+        assert periodList[5].interestPaid == false
+        assert periodList.size() == 6
+    }
 }

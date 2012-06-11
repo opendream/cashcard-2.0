@@ -5,6 +5,9 @@ class Period {
     BigDecimal payAmount = 0.000000
     BigDecimal outstanding = 0.000000
     BigDecimal cooperativeInterest = 0.000000
+    BigDecimal interestAmount = 0.000000
+    BigDecimal interestOutstanding = 0.000000
+    Boolean interestPaid = false
     Integer no
     Date dueDate
     Boolean status = false

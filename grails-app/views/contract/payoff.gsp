@@ -126,25 +126,39 @@
         </div>
         <script type="text/javascript">
             jQuery(function($) {
+                // cache selected elements
+                var inputBox = $('.controls.payAmount input');
+                var innerSpan = $('.controls.payAmount span');
+                var controlGroup =  $('.control-group.totalDebt, .control-group.interest');
+                var labelLoanAmount = $('.control-label.loanAmount');
+
+                // bind event
                 $('input#payAll').change(function(e){
                     var checked = $(this).attr('checked');
                     var msg = '';
-
+                    labelLoanAmount.hide();
                     if (checked) {
                       msg = "จำนวนเงินที่กู้";
-                      $('.controls.payAmount input').hide();
-                      $('.controls.payAmount span').fadeIn();
-                      $('.control-group.totalDebt, .control-group.interest').slideDown(function() {});
-                      $('.control-label.loanAmount').hide().text(msg).fadeIn();
+                      // DisAppear
+                      labelLoanAmount.text(msg);
+                      inputBox.hide();
+
+                      // WillDidAppear
+                      innerSpan.fadeIn();
+                      labelLoanAmount.fadeIn();
+                      controlGroup.slideDown();
                     }
                     else {
-                      msg = '<g:message code="contract.payoff.form.amount.label" />'
-                      $('.control-label.loanAmount').hide().text(msg).fadeIn();
-                      $('.controls.payAmount input').fadeIn();
-                      $('.controls.payAmount span').hide()
-                      $('.control-group.totalDebt, .control-group.interest').slideUp()
-                    }
+                      msg = '<g:message code="contract.payoff.form.amount.label" />';
+                      // Dissappear
+                      labelLoanAmount.text(msg);
+                      innerSpan.hide();
 
+                      // WillDidAppear
+                      inputBox.fadeIn();
+                      labelLoanAmount.fadeIn();
+                      controlGroup.slideUp();
+                    }
                 });
             });
         </script>

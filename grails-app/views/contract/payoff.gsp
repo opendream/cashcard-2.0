@@ -132,32 +132,46 @@
                 var controlGroup =  $('.control-group.totalDebt, .control-group.interest');
                 var labelLoanAmount = $('.control-label.loanAmount');
 
-                // bind event
-                $('input#payAll').change(function(e){
-                    var checked = $(this).attr('checked');
-                    var msg = '';
-                    labelLoanAmount.hide();
-                    if (checked) {
-                      msg = "จำนวนเงินที่กู้";
+                var elementControl = {
+                    showPayAllDebtForm: function(options) {
+                      var msg = '<g:message code="contract.payoff.form.amount.label" />';
+                      labelLoanAmount.text(options && options.labelMsg || msg);
+
                       // DisAppear
                       labelLoanAmount.text(msg);
                       inputBox.hide();
+                      labelLoanAmount.hide();
 
                       // WillDidAppear
                       innerSpan.fadeIn();
                       labelLoanAmount.fadeIn();
                       controlGroup.slideDown();
-                    }
-                    else {
-                      msg = '<g:message code="contract.payoff.form.amount.label" />';
+
+                    },
+                    showPeriodPayForm: function(options) {
                       // Dissappear
-                      labelLoanAmount.text(msg);
+                      var msg = '<g:message code="contract.payoff.form.amount.label" />';
+                      labelLoanAmount.text(options && options.labelMsg || msg);
+                      labelLoanAmount.hide();
                       innerSpan.hide();
 
                       // WillDidAppear
                       inputBox.fadeIn();
                       labelLoanAmount.fadeIn();
                       controlGroup.slideUp();
+                    }
+                };
+                // bind event
+                $('input#payAll').change(function(e){
+                    var checked = $(this).attr('checked');
+                    var options = { };
+                    if (checked) {
+                      options.labelMsg = "จำนวนเงินที่กู้";
+                      elementControl.showPayAllDebtForm(options);
+                    }
+                    else {
+                      options.labelMsg = '<g:message code="contract.payoff.form.amount.label" />';
+                      elementControl.showPeriodPayForm(options);
                     }
                 });
             });

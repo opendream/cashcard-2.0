@@ -134,8 +134,7 @@
 
                 var elementControl = {
                     showPayAllDebtForm: function(options) {
-                      var msg = '<g:message code="contract.payoff.form.amount.label" />';
-                      labelLoanAmount.text(options && options.labelMsg || msg);
+                      var msg = options && options.labelMsg || '<g:message code="contract.payoff.form.amount.label" />';
 
                       // DisAppear
                       labelLoanAmount.text(msg);
@@ -149,9 +148,10 @@
 
                     },
                     showPeriodPayForm: function(options) {
+                      var msg = options && options.labelMsg || '<g:message code="contract.payoff.form.amount.label" />';
+
                       // Dissappear
-                      var msg = '<g:message code="contract.payoff.form.amount.label" />';
-                      labelLoanAmount.text(options && options.labelMsg || msg);
+                      labelLoanAmount.text(msg);
                       labelLoanAmount.hide();
                       innerSpan.hide();
 

@@ -7,7 +7,7 @@ class PeriodGeneratorProcessorService {
         if (loanType instanceof Integer) {
            loanType = LoanType.get(loanType)
         }
-        def processorName = loanType.processor.toLowerCase()
+        def processorName = loanType.periodGeneratorProcessor.toLowerCase()
         this."$processorName"(amount as BigDecimal, numberOfPeriod, loanType.interestRate)
     }
 

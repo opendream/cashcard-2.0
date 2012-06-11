@@ -125,57 +125,57 @@
             </div>
         </div>
         <script type="text/javascript">
-            jQuery(function($) {
-                var elementControl = function() {
-                    // cache selected elements
-                    var inputBox = $('.controls.payAmount input');
-                    var innerSpan = $('.controls.payAmount span');
-                    var controlGroup =  $('.control-group.totalDebt, .control-group.interest');
-                    var labelLoanAmount = $('.control-label.loanAmount');
+            jQuery(function ($) {
+                var elementControl = (function () {
+                  "use strict";
+                  // cache selected elements
+                  var inputBox = $('.controls.payAmount input'),
+                    innerSpan = $('.controls.payAmount span'),
+                    controlGroup =  $('.control-group.totalDebt, .control-group.interest'),
+                    labelLoanAmount = $('.control-label.loanAmount');
 
-                    var elementControlFunc = {
-                        showPayAllDebtForm: function(options) {
-                          var msg = options && options.labelMsg || '<g:message code="contract.payoff.form.amount.label" />';
+                  return {
+                    showPayAllDebtForm: function (options) {
+                      var msg = (options && options.labelMsg) || '<g:message code="contract.payoff.form.amount.label" />';
 
-                          // DisAppear
-                          labelLoanAmount.text(msg);
-                          inputBox.hide();
-                          labelLoanAmount.hide();
+                      // DisAppear
+                      labelLoanAmount.text(msg);
+                      inputBox.hide();
+                      labelLoanAmount.hide();
 
-                          // WillDidAppear
-                          innerSpan.fadeIn();
-                          labelLoanAmount.fadeIn();
-                          controlGroup.slideDown();
+                      // WillDidAppear
+                      innerSpan.fadeIn();
+                      labelLoanAmount.fadeIn();
+                      controlGroup.slideDown();
 
-                        },
-                        showPeriodPayForm: function(options) {
-                          var msg = options && options.labelMsg || '<g:message code="contract.payoff.form.amount.label" />';
+                    },
+                    showPeriodPayForm: function (options) {
+                      var msg = (options && options.labelMsg) || '<g:message code="contract.payoff.form.amount.label" />';
 
-                          // Dissappear
-                          labelLoanAmount.text(msg);
-                          labelLoanAmount.hide();
-                          innerSpan.hide();
+                      // Dissappear
+                      labelLoanAmount.text(msg);
+                      labelLoanAmount.hide();
+                      innerSpan.hide();
 
-                          // WillDidAppear
-                          inputBox.fadeIn();
-                          labelLoanAmount.fadeIn();
-                          controlGroup.slideUp();
-                        }
-                    };
-                    return elementControlFunc;
-                }();
-
+                      // WillDidAppear
+                      inputBox.fadeIn();
+                      labelLoanAmount.fadeIn();
+                      controlGroup.slideUp();
+                    }
+                  };
+                }());
                 // bind event
-                $('input#payAll').change(function(e){
-                    var checked = $(this).attr('checked');
-                    var options = { };
+                $('input#payAll').change(function (e) {
+                    'use strict';
+                    var checked = $(this).attr('checked'),
+                        options = { };
                     if (checked) {
-                      options.labelMsg = "จำนวนเงินที่กู้";
-                      elementControl.showPayAllDebtForm(options);
+                        options.labelMsg = "จำนวนเงินที่กู้";
+                        elementControl.showPayAllDebtForm(options);
                     }
                     else {
-                      options.labelMsg = '<g:message code="contract.payoff.form.amount.label" />';
-                      elementControl.showPeriodPayForm(options);
+                        options.labelMsg = '<g:message code="contract.payoff.form.amount.label" />';
+                        elementControl.showPeriodPayForm(options);
                     }
                 });
             });

@@ -16,12 +16,12 @@
 		<link rel="apple-touch-icon" sizes="114x114" href="${resource(dir: 'images', file: 'credit-union-logo.png')}">
 
     <link rel="stylesheet" href="${resource(dir: 'css', file: 'tipsy.css')}" />
-    
+
 		<g:layoutHead/>
 		<r:layoutResources />
     <link rel="stylesheet" href="${resource(dir: 'css', file: 'cashcard.css')}" />
     <g:javascript src="jquery.tipsy.js" />
-    
+
 	</head>
 	<body>
 		<div class="navbar navbar-fixed-top">
@@ -69,9 +69,18 @@
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown">${message(code: 'main.menu.report', default: 'Report')}<b class="caret"></b></a>
                   <ul class="dropdown-menu">
-                    <li><a href="${createLink(controller:'report', action:'overdue')}">${message(code: 'main.menu.overduepaymentReport', default: 'รายงานหนี้ที่เกินวันกำหนดชำระจ่าย')}</a></li>
-                    <li><a href="${createLink(controller:'report', action:'payment', params:[paymenttype:'daily-payloan'])}">${message(code: 'main.menu.payloanReport', default: 'รายงานการจ่ายเงินกู้')}</a></li>
-                    <li><a href="${createLink(controller:'report', action:'payment', params:[paymenttype:'daily-payoff'])}">${message(code: 'main.menu.payoffReport', default: 'รายงานการชำระเงินกู้ของลูกหนี้')}</a></li>                
+                    <li>
+                      <a href="${createLink(controller:'report', action:'overdue')}">${message(code: 'main.menu.overduepaymentReport', default: 'รายงานหนี้ที่เกินวันกำหนดชำระจ่าย')}</a>
+                    </li>
+                    <li>
+                      <a href="${createLink(controller:'report', action:'payment', params:[paymenttype:'daily-payloan'])}">${message(code: 'main.menu.payloanReport', default: 'รายงานการจ่ายเงินกู้')}</a>
+                    </li>
+                    <li>
+                      <a href="${createLink(controller:'report', action:'payment', params:[paymenttype:'daily-payoff'])}">${message(code: 'main.menu.payoffReport', default: 'รายงานการชำระเงินกู้ของลูกหนี้')}</a>
+                    </li>
+                    <li>
+                      <a href="${createLink(controller:'report', action:'payment', params:[paymenttype:'daily-report'])}">${message(code: 'main.menu.dailyReport', default: 'รายงานประจำวัน')}</a>
+                    </li>
                   </ul>
                 </li>
               </sec:ifLoggedIn>

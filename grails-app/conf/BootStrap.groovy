@@ -40,10 +40,12 @@ class BootStrap {
 
         //asign roport realPath to system
         
-        def reports= grailsApplication.config.jasper.dir.reports
+        def reports = grailsApplication.config.jasper.dir.reports
         def realPath =  servletContext.getRealPath(reports)
-        println "realPath $realPath"
         grailsApplication.config.jasper.dir.reports = realPath 
+
+        def kettle = grailsApplication.config.kettle.repository.path
+        grailsApplication.config.kettle.repository.path = servletContext.getRealPath(kettle)
     }
     def destroy = {
 

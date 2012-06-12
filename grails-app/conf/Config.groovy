@@ -63,10 +63,50 @@ grails.hibernate.cache.queries = true
 environments {
     development {
         grails.logging.jul.usebridge = true
+        // Added by openmsngr-grails-client plugin:
+        openmsngr.grails.client.uri='http://dminer.in.th:8090'
+        openmsngr.grails.client.auth='/OpenMessenger/api/auth'
+        openmsngr.grails.client.ping='/OpenMessenger/api/ping'
+        openmsngr.grails.client.sendMessage='/OpenMessenger/api/event/sendPersonalMessage'
+        openmsngr.grails.client.eventId='1'
+        openmsngr.grails.client.username='admin'
+        openmsngr.grails.client.password='openpubyesroti!'
+
+        // Added by openmsngr-grails-client plugin: (config rest plugin)
+        rest.https.keystore.path='web-app/certs/messenger.jks'
+        rest.https.keystore.pass='openpubyesroti!'
+        rest.https.cert.hostnameVerifier='ALLOW_ALL'
+
+        //path to Kettle home
+        kettle.engine.path='/home/cashcard/data-integration'
     }
     production {
         grails.logging.jul.usebridge = false
         // TODO: grails.serverURL = "http://www.changeme.com"
+
+        // Added by openmsngr-grails-client plugin:
+        openmsngr.grails.client.uri='https://messenger.opendream.org'
+        openmsngr.grails.client.auth='/api/auth'
+        openmsngr.grails.client.ping='/api/ping'
+        openmsngr.grails.client.sendMessage='/api/sendPersonalMessage'
+        openmsngr.grails.client.eventId=''
+        openmsngr.grails.client.username=''
+        openmsngr.grails.client.password=''
+
+        // Added by openmsngr-grails-client plugin: (config rest plugin)
+        rest.https.keystore.path='web-app/certs/messenger.jks'
+        rest.https.keystore.pass='openpubyesroti!'
+        rest.https.cert.hostnameVerifier='ALLOW_ALL'
+
+        //path to Kettle home
+        kettle.engine.path='/home/cashcard/data-integration'
+    }
+    test {
+        grails.logging.jul.usebridge = false
+
+        //path to Kettle home
+        kettle.engine.path='/home/boyone/data-integration'
+        //kettle.engine.path='/home/boyone/pentaho/design-tools/data-integration4.3'
     }
 }
 
@@ -103,16 +143,4 @@ grails.plugins.springsecurity.securityConfigType = 'Requestmap'
 
 jasper.dir.reports = '/reports'
 
-// Added by openmsngr-grails-client plugin:
-openmsngr.grails.client.uri='http://dminer.in.th:8090'
-openmsngr.grails.client.auth='/OpenMessenger/api/auth'
-openmsngr.grails.client.ping='/OpenMessenger/api/ping'
-openmsngr.grails.client.sendMessage='/OpenMessenger/api/event/sendPersonalMessage'
-openmsngr.grails.client.eventId='1'
-openmsngr.grails.client.username='admin'
-openmsngr.grails.client.password='openpubyesroti!'
-
-// Added by openmsngr-grails-client plugin: (config rest plugin)
-rest.https.keystore.path='web-app/certs/messenger.jks'
-rest.https.keystore.pass='openpubyesroti!'
-rest.https.cert.hostnameVerifier='ALLOW_ALL'
+kettle.repository.path='/kettle'

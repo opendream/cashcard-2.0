@@ -79,6 +79,7 @@ environments {
 
         //path to Kettle home
         kettle.engine.path='/home/cashcard/data-integration'
+        //kettle.engine.path='/home/boyone/data-integration'
     }
     production {
         grails.logging.jul.usebridge = false

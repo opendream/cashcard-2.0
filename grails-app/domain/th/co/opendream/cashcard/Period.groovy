@@ -8,6 +8,7 @@ class Period {
     BigDecimal interestAmount = 0.000000
     BigDecimal interestOutstanding = 0.000000
     Boolean interestPaid = false
+    Boolean cancelledDueToDebtClearance = false
     Integer no
     Date dueDate
     Boolean status = false

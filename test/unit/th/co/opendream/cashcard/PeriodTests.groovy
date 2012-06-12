@@ -15,7 +15,7 @@ class PeriodTests extends DomainTestTemplate  {
     def requiredProperties() {
         ['contract', 'amount', 'no', 'dueDate', 'status', 'payoffStatus',
          'payoffDate', 'cooperativeInterest', 'receiveTransaction',
-         'interestAmount', 'interestOutstanding', 'interestPaid']
+         'interestAmount', 'interestOutstanding', 'interestPaid', 'cancelledDueToDebtClearance']
     }
 
     def domainClass() {

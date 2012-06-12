@@ -103,12 +103,14 @@
 			  <g:layoutBody/>
       </div></div>
 			<g:javascript library="application"/>
-			<r:layoutResources />
-		</div>
 
-		<footer>
-			<p align="center">&copy; Opendream</p>
-		</footer>
-	</div>
+      <r:layoutResources />
+    </div>
+
+    <footer>
+      <p align="center">&copy; Opendream</p>
+    </footer>
+  </div>
+      <g:javascript src="bootstrap-typeahead.js" />
 	</body>
 </html>

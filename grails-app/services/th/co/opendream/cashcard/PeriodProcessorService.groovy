@@ -7,7 +7,7 @@ class PeriodProcessorService {
         messageSource
 
     def process(Period period, amount, fine, isShareCapital, date) {
-        def processorName = period.contract.periodProcessor.toLowerCase()
+        def processorName = period.contract.processor.toLowerCase()
         this."$processorName"(period, amount, fine, isShareCapital, date)
     }
 

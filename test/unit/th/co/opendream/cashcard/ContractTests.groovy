@@ -31,9 +31,6 @@ class ContractTests {
             member: member,
             loanType: commonLoan,
             processor: "Effective",
-			interestProcessor: "Effective",
-			periodProcessor: "Effective",
-			periodGeneratorProcessor: "Effective",
             loanAmount: 2000.00,
             interestRate: 2.00,
             loanBalance: 0.00,
@@ -50,7 +47,6 @@ class ContractTests {
 
     void testBeforeInsert() {
         def contract = generateValidContract()
-		contract.cooperativeShare = 1.5
         assert contract.cooperativeShare != contract.loanType.cooperativeShare
         contract.beforeInsert.call()
         assert contract.cooperativeShare == contract.loanType.cooperativeShare
@@ -82,8 +78,7 @@ class ContractTests {
             'numberOfPeriod', 'member'          , 'approvalDate',
             'dateCreated'   , 'lastUpdated'     , 'advancedInterestKeep',
             'advancedInterestBalance'           , 'maxInterestRate',
-            'signedDate'    , 'processor'       , 'interestProcessor',
-			'periodProcessor', 'periodGeneratorProcessor'
+            'signedDate'    , 'processor'
         ]
 
         def instanceProperties = Contract.metaClass.properties*.name
@@ -92,24 +87,6 @@ class ContractTests {
         assert 0 == missing_properties.size(),
             "Domain class is missing some required properties => ${missing_properties}"
     }
-	
-	void testProcessor() {
-		mockForConstraintsTests(Contract)
-		
-		def contract = new Contract()
-
-		verifyNotNull(contract, 'interestProcessor')
-		contract.interestProcessor = ''
-		verifyNotBlank(contract, 'interestProcessor')
-		
-		verifyNotNull(contract, 'periodProcessor')
-		contract.periodProcessor = ''
-		verifyNotBlank(contract, 'periodProcessor')
-		
-		verifyNotNull(contract, 'periodGeneratorProcessor')
-		contract.periodGeneratorProcessor = ''
-		verifyNotBlank(contract, 'periodGeneratorProcessor')
-	}
 
     void testValidateCode() {
         mockForConstraintsTests(Contract)

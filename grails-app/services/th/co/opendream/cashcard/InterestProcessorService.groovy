@@ -3,7 +3,7 @@ package th.co.opendream.cashcard
 class InterestProcessorService {
 
     def process(Period period, date) {
-        def processorName = period.contract.interestProcessor.toLowerCase()
+        def processorName = period.contract.loanType.processor.toLowerCase()
         this."$processorName"(period, date)
     }
 

@@ -19,7 +19,7 @@ class ContractControllerTests {
     @Before
     void setUp() {
         def commonLoan = new LoanType(
-            name: "Common", processor: "Effective", interestProcessor: 'Effective', periodProcessor: 'Effective', periodGeneratorProcessor: 'Effective', interestRate: 18.00,
+            name: "Common", processor: "Commission", interestRate: 18.00,
             maxInterestRate: 18.00, mustKeepAdvancedInterest: false,
             numberOfPeriod: 3
         ).save()

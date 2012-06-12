@@ -14,13 +14,13 @@ class InterestProcessorServiceTests {
 
     @Before
     void setUp() {
-        new LoanType(name: 'A', processor: 'Effective', interestProcessor: 'Effective', periodProcessor: 'Effective', periodGeneratorProcessor: 'Effective').save()
-        new LoanType(name: 'B', processor: 'Hybrid', interestProcessor: 'Hybrid', periodProcessor: 'Hybrid', periodGeneratorProcessor: 'Hybrid').save()
-        new LoanType(name: 'C', processor: 'Flat', interestProcessor: 'Flat', periodProcessor: 'Flat', periodGeneratorProcessor: 'Flat').save()
+        new LoanType(name: 'A', processor: 'Effective').save()
+        new LoanType(name: 'B', processor: 'Hybrid').save()
+        new LoanType(name: 'C', processor: 'Flat').save()
     }
 
     void setUpPeriod(type='Effective') {
-        def loanType = new LoanType(name: 'A', processor: type, interestProcessor: type, periodProcessor: type, periodGeneratorProcessor: type)
+        def loanType = new LoanType(name: 'Common', processor: type)
         loanType.save()
 
         def member = new Member(identificationNumber:"1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")
@@ -35,9 +35,6 @@ class InterestProcessorServiceTests {
             member: member,
             loanType: loanType,
             processor: type,
-            interestProcessor: loanType.interestProcessor,
-            periodProcessor: loanType.periodProcessor,
-            periodGeneratorProcessor: loanType.periodGeneratorProcessor,
             loanAmount: 2000.00,
             interestRate: 24.00,
             cooperativeShare: 0.75, // For Commission
@@ -61,7 +58,7 @@ class InterestProcessorServiceTests {
     }
 
     void setUpPeriodFlat() {
-        def loanType = new LoanType(name: 'Common', processor: 'Flat', interestProcessor: 'Flat', periodProcessor: 'Flat', periodGeneratorProcessor: 'Flat')
+        def loanType = new LoanType(name: 'Common', processor: 'Flat')
         loanType.save()
 
         def member = new Member(identificationNumber:"1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")
@@ -76,9 +73,6 @@ class InterestProcessorServiceTests {
             member: member,
             loanType: loanType,
             processor: "Flat",
-            interestProcessor: "Flat",
-            periodProcessor: "Flat",
-            periodGeneratorProcessor: "Flat",
             loanAmount: 2000.00,
             interestRate: 24.00,
             loanBalance: 2000.00,
@@ -137,45 +131,10 @@ class InterestProcessorServiceTests {
         contract
     }
 
-    void testProcess() {
-        setUpPeriod()
-
-        def contract = Contract.get(1),
-            period = Period.get(1),
-            date = new Date()
-
-        def effectiveCounter = 0
-        service.metaClass.effective = { Period p, d ->
-            effectiveCounter++
-        }
-        // Make sure contract.interestProcessor will effect the process
-        // selection.
-        contract.interestProcessor = 'effective'
-        contract.save()
-
-        // Reload period after contract is saved.
-        period = Period.get(period.id)
-        service.process(period, date)
-        assert effectiveCounter == 1
-
-        // Trick it! make interestProcessor not the same as Loan type.
-        def flatCounter = 0
-        service.metaClass.flat = { Period p, d ->
-            flatCounter++
-        }
-        contract.interestProcessor = 'flat'
-        contract.save()
-
-        // Reload period after contract is saved.
-        period = Period.get(period.id)
-        service.process(period, date)
-        assert effectiveCounter == 1
-        assert flatCounter == 1
-    }
-
     /******************************************
      * Effective
      ******************************************/
+
     void testCalculateEffectiveMethodLeapYear() {
         /*
          *********************************************************************

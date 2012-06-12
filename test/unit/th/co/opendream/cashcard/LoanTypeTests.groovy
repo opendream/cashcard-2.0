@@ -14,8 +14,7 @@ class LoanTypeTests extends DomainTestTemplate {
     def requiredProperties() {
         [
             'name', 'processor', 'interestRate', 'maxInterestRate',
-            'mustKeepAdvancedInterest', 'numberOfPeriod', 'interestProcessor',
-			'periodProcessor', 'periodGeneratorProcessor'
+            'mustKeepAdvancedInterest', 'numberOfPeriod'
         ]
     }
 
@@ -27,28 +26,9 @@ class LoanTypeTests extends DomainTestTemplate {
         new LoanType(
             name: name, processor: processor, interestRate: 18.00,
             maxInterestRate: 18.00, mustKeepAdvancedInterest: false,
-            numberOfPeriod: 3, interestProcessor: processor,
-			periodProcessor: processor, periodGeneratorProcessor: processor
+            numberOfPeriod: 3
         )
     }
-	
-	void testProcessor() {
-		mockForConstraintsTests(LoanType)
-		
-		def loanType = new LoanType()
-
-		verifyNotNull(loanType, 'interestProcessor')
-		loanType.interestProcessor = ''
-		verifyNotBlank(loanType, 'interestProcessor')
-		
-		verifyNotNull(loanType, 'periodProcessor')
-		loanType.periodProcessor = ''
-		verifyNotBlank(loanType, 'periodProcessor')
-		
-		verifyNotNull(loanType, 'periodGeneratorProcessor')
-		loanType.periodGeneratorProcessor = ''
-		verifyNotBlank(loanType, 'periodGeneratorProcessor')
-	}
 
     void testValidateName() {
         mockForConstraintsTests(LoanType)

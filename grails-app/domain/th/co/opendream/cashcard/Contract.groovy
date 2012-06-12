@@ -4,9 +4,6 @@ class Contract {
 	String code
 	LoanType loanType
 	String processor
-	String interestProcessor
-	String periodProcessor
-	String periodGeneratorProcessor
 	Date signedDate = new Date()
 	BigDecimal loanAmount = 0.000000
 	BigDecimal interestRate = 0.00
@@ -36,8 +33,5 @@ class Contract {
     	approvalDate nullable: true, blank: true
     	payloanDate nullable: true, blank: true
     	processor nullable: false, blank: false
-		interestProcessor nullable: false, blank: false
-		periodProcessor nullable: false, blank: false
-		periodGeneratorProcessor nullable: false, blank: false
     }
 }

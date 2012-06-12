@@ -6,8 +6,19 @@
     <extended_description/>
     <trans_version/>
     <trans_type>Normal</trans_type>
+    <trans_status>0</trans_status>
     <directory>&#47;</directory>
     <parameters>
+        <parameter>
+            <name>extension</name>
+            <default_value/>
+            <description/>
+        </parameter>
+        <parameter>
+            <name>memberfile</name>
+            <default_value/>
+            <description/>
+        </parameter>
     </parameters>
     <log>
 <trans-log-table><connection/>
@@ -69,150 +80,7 @@
   <notepads>
   </notepads>
   <order>
-  <hop> <from>CSV file input</from><to>spilt member_name and group address</to><enabled>N</enabled> </hop>  <hop> <from>remove unused fields</from><to>validate fields</to><enabled>Y</enabled> </hop>  <hop> <from>Filter title</from><to>remove unused fields</to><enabled>Y</enabled> </hop>  <hop> <from>Filter title</from><to>lookup title</to><enabled>Y</enabled> </hop>  <hop> <from>Json Input</from><to>spilt member_name and group address</to><enabled>N</enabled> </hop>  <hop> <from>lookup title</from><to>Select title and fname</to><enabled>Y</enabled> </hop>  <hop> <from>Select title and fname</from><to>validate fields</to><enabled>Y</enabled> </hop>  <hop> <from>spilt member_name and group address</from><to>Replace &apos;-&apos; with &apos;&apos;</to><enabled>Y</enabled> </hop>  <hop> <from>Replace &apos;-&apos; with &apos;&apos;</from><to>Filter title</to><enabled>Y</enabled> </hop>  <hop> <from>Text file input</from><to>spilt member_name and group address</to><enabled>Y</enabled> </hop>  </order>
-  <step>
-    <name>CSV file input</name>
-    <type>CsvInput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <filename>&#47;home&#47;boyone&#47;workspace&#47;opendreamspace&#47;docs&#47;creditUnion&#47;memberformat&#47;member.csv</filename>
-    <filename_field/>
-    <rownum_field/>
-    <include_filename>N</include_filename>
-    <separator>,</separator>
-    <enclosure>&quot;</enclosure>
-    <header>Y</header>
-    <buffer_size>50000</buffer_size>
-    <lazy_conversion>N</lazy_conversion>
-    <add_filename_result>N</add_filename_result>
-    <parallel>N</parallel>
-    <newline_possible>N</newline_possible>
-    <encoding>UTF-8</encoding>
-    <fields>
-      <field>
-        <name>member_id</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>-1</precision>
-        <trim_type>both</trim_type>
-      </field>
-      <field>
-        <name>id_card</name>
-        <type>String</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>-1</precision>
-        <trim_type>both</trim_type>
-      </field>
-      <field>
-        <name>member_no</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>13</length>
-        <precision>-1</precision>
-        <trim_type>both</trim_type>
-      </field>
-      <field>
-        <name>member_fname</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>both</trim_type>
-      </field>
-      <field>
-        <name>member_name</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>23</length>
-        <precision>-1</precision>
-        <trim_type>both</trim_type>
-      </field>
-      <field>
-        <name>member_add2</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>40</length>
-        <precision>-1</precision>
-        <trim_type>both</trim_type>
-      </field>
-      <field>
-        <name>member_add3</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>14</length>
-        <precision>-1</precision>
-        <trim_type>both</trim_type>
-      </field>
-      <field>
-        <name>member_po</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>17</length>
-        <precision>-1</precision>
-        <trim_type>both</trim_type>
-      </field>
-      <field>
-        <name>member_zip</name>
-        <type>String</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>-1</precision>
-        <trim_type>both</trim_type>
-      </field>
-      <field>
-        <name>member_28</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>both</trim_type>
-      </field>
-    </fields>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>42</xloc>
-      <yloc>112</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
+  <hop> <from>remove unused fields</from><to>validate fields</to><enabled>Y</enabled> </hop>  <hop> <from>Filter title</from><to>remove unused fields</to><enabled>Y</enabled> </hop>  <hop> <from>Filter title</from><to>lookup title</to><enabled>Y</enabled> </hop>  <hop> <from>read Json</from><to>spilt member_name and group address</to><enabled>Y</enabled> </hop>  <hop> <from>lookup title</from><to>Select title and fname</to><enabled>Y</enabled> </hop>  <hop> <from>Select title and fname</from><to>validate fields</to><enabled>Y</enabled> </hop>  <hop> <from>spilt member_name and group address</from><to>Replace &apos;-&apos; with &apos;&apos;</to><enabled>Y</enabled> </hop>  <hop> <from>Replace &apos;-&apos; with &apos;&apos;</from><to>Filter title</to><enabled>Y</enabled> </hop>  <hop> <from>read csv</from><to>spilt member_name and group address</to><enabled>Y</enabled> </hop>  <hop> <from>Get Variables</from><to>Switch &#47; Case</to><enabled>Y</enabled> </hop>  <hop> <from>Switch &#47; Case</from><to>read csv</to><enabled>Y</enabled> </hop>  <hop> <from>Switch &#47; Case</from><to>read Json</to><enabled>Y</enabled> </hop>  </order>
   <step>
     <name>Filter title</name>
     <type>FilterRows</type>
@@ -235,14 +103,227 @@
     </compare>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>503</xloc>
+      <xloc>609</xloc>
+      <yloc>112</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Get Variables</name>
+    <type>GetVariable</type>
+    <description/>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <fields>
+      <field>
+        <name>memberfile</name>
+        <variable>${memberfile}</variable>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>both</trim_type>
+      </field>
+      <field>
+        <name>extension</name>
+        <variable>${extension}</variable>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>both</trim_type>
+      </field>
+    </fields>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>34</xloc>
       <yloc>113</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
 
   <step>
-    <name>Json Input</name>
+    <name>Replace &apos;-&apos; with &apos;&apos;</name>
+    <type>ReplaceString</type>
+    <description/>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <fields>
+      <field>
+        <in_stream_name>member_28</in_stream_name>
+        <out_stream_name/>
+        <use_regex>no</use_regex>
+        <replace_string>-</replace_string>
+        <replace_by_string/>
+        <replace_field_by_string/>
+        <whole_word>no</whole_word>
+        <case_sensitive>no</case_sensitive>
+      </field>
+      <field>
+        <in_stream_name>id_card</in_stream_name>
+        <out_stream_name/>
+        <use_regex>no</use_regex>
+        <replace_string> </replace_string>
+        <replace_by_string/>
+        <replace_field_by_string/>
+        <whole_word>no</whole_word>
+        <case_sensitive>no</case_sensitive>
+      </field>
+    </fields>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>514</xloc>
+      <yloc>112</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Select title and fname</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <fields>      <field>        <name>id_card</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>member_no</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>member_28</name>
+        <rename>member_tel</rename>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>title</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>fname</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>lname</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>address</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>        <select_unspecified>N</select_unspecified>
+    </fields>     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>770</xloc>
+      <yloc>237</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Switch &#47; Case</name>
+    <type>SwitchCase</type>
+    <description/>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+<fieldname>extension</fieldname>
+<use_contains>Y</use_contains>
+<case_value_type>String</case_value_type>
+<case_value_format/>
+<case_value_decimal/>
+<case_value_group/>
+<default_target_step/>
+<cases><case><value>csv</value>
+<target_step>read csv</target_step>
+</case><case><value>js</value>
+<target_step>read Json</target_step>
+</case></cases>     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>134</xloc>
+      <yloc>112</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>lookup title</name>
+    <type>ScriptValueMod</type>
+    <description/>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>      <jsScript>        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>&#47;&#47;Script here
+var title=&apos;&apos;;
+function findTitle(name) {
+	var title = &apos;&apos;;
+	var titles = [&apos;นาย&apos;, &apos;นางสาว&apos;, &apos;นาง&apos;];
+	for(i=0; i&lt;titles.length; i++) {
+		var index = indexOf(name, titles[i]);
+		if(index==0) {
+			title = titles[i];			
+			return title;
+		}
+	}
+	return title;
+}
+
+if(fname!=undefined &amp;&amp; fname!=&apos;&apos;) {
+	title = findTitle(fname);
+	fname = fname.substring(title.length, fname.length);			
+}</jsScript_script>
+      </jsScript>    </jsScripts>    <fields>      <field>        <name>title</name>
+        <rename>title</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>      <field>        <name>fname</name>
+        <rename>fname</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>Y</replace>
+      </field>    </fields>     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>610</xloc>
+      <yloc>237</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>read Json</name>
     <type>JsonInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -400,9 +481,9 @@
       </field>
     </fields>
     <limit>0</limit>
-    <IsInFields>N</IsInFields>
-    <IsAFile>N</IsAFile>
-    <valueField/>
+    <IsInFields>Y</IsInFields>
+    <IsAFile>Y</IsAFile>
+    <valueField>memberfile</valueField>
     <shortFileFieldName/>
     <pathFieldName/>
     <hiddenFieldName/>
@@ -413,342 +494,14 @@
     <sizeFieldName/>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>45</xloc>
-      <yloc>227</yloc>
+      <xloc>236</xloc>
+      <yloc>213</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
 
   <step>
-    <name>Replace &apos;-&apos; with &apos;&apos;</name>
-    <type>ReplaceString</type>
-    <description/>
-    <distribute>Y</distribute>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <fields>
-      <field>
-        <in_stream_name>member_28</in_stream_name>
-        <out_stream_name/>
-        <use_regex>no</use_regex>
-        <replace_string>-</replace_string>
-        <replace_by_string/>
-        <replace_field_by_string/>
-        <whole_word>no</whole_word>
-        <case_sensitive>no</case_sensitive>
-      </field>
-    </fields>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>385</xloc>
-      <yloc>112</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>Select title and fname</name>
-    <type>SelectValues</type>
-    <description/>
-    <distribute>Y</distribute>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <fields>      <field>        <name>id_card</name>
-        <rename/>
-        <length>-2</length>
-        <precision>-2</precision>
-      </field>      <field>        <name>member_no</name>
-        <rename/>
-        <length>-2</length>
-        <precision>-2</precision>
-      </field>      <field>        <name>member_28</name>
-        <rename>member_tel</rename>
-        <length>-2</length>
-        <precision>-2</precision>
-      </field>      <field>        <name>title</name>
-        <rename/>
-        <length>-2</length>
-        <precision>-2</precision>
-      </field>      <field>        <name>fname</name>
-        <rename/>
-        <length>-2</length>
-        <precision>-2</precision>
-      </field>      <field>        <name>lname</name>
-        <rename/>
-        <length>-2</length>
-        <precision>-2</precision>
-      </field>      <field>        <name>address</name>
-        <rename/>
-        <length>-2</length>
-        <precision>-2</precision>
-      </field>        <select_unspecified>N</select_unspecified>
-    </fields>     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>664</xloc>
-      <yloc>238</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>lookup title</name>
-    <type>ScriptValueMod</type>
-    <description/>
-    <distribute>Y</distribute>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <compatible>N</compatible>
-    <optimizationLevel>9</optimizationLevel>
-    <jsScripts>      <jsScript>        <jsScript_type>0</jsScript_type>
-        <jsScript_name>Script 1</jsScript_name>
-        <jsScript_script>&#47;&#47;Script here
-var title=&apos;&apos;;
-function findTitle(name) {
-	var title = &apos;&apos;;
-	var titles = [&apos;นาย&apos;, &apos;นางสาว&apos;, &apos;นาง&apos;];
-	for(i=0; i&lt;titles.length; i++) {
-		var index = indexOf(name, titles[i]);
-		if(index==0) {
-			title = titles[i];			
-			return title;
-		}
-	}
-	return title;
-}
-
-if(fname!=undefined &amp;&amp; fname!=&apos;&apos;) {
-	title = findTitle(fname);
-	fname = fname.substring(title.length, fname.length);			
-}</jsScript_script>
-      </jsScript>    </jsScripts>    <fields>      <field>        <name>title</name>
-        <rename>title</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>      <field>        <name>fname</name>
-        <rename>fname</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>Y</replace>
-      </field>    </fields>     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>504</xloc>
-      <yloc>238</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>remove unused fields</name>
-    <type>SelectValues</type>
-    <description/>
-    <distribute>Y</distribute>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <fields>      <field>        <name>id_card</name>
-        <rename/>
-        <length>-2</length>
-        <precision>-2</precision>
-      </field>      <field>        <name>member_no</name>
-        <rename/>
-        <length>-2</length>
-        <precision>-2</precision>
-      </field>      <field>        <name>member_28</name>
-        <rename>member_tel</rename>
-        <length>-2</length>
-        <precision>-2</precision>
-      </field>      <field>        <name>member_fname</name>
-        <rename>title</rename>
-        <length>-2</length>
-        <precision>-2</precision>
-      </field>      <field>        <name>fname</name>
-        <rename/>
-        <length>-2</length>
-        <precision>-2</precision>
-      </field>      <field>        <name>lname</name>
-        <rename/>
-        <length>-2</length>
-        <precision>-2</precision>
-      </field>      <field>        <name>address</name>
-        <rename/>
-        <length>-2</length>
-        <precision>-2</precision>
-      </field>        <select_unspecified>N</select_unspecified>
-    </fields>     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>663</xloc>
-      <yloc>113</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>spilt member_name and group address</name>
-    <type>ScriptValueMod</type>
-    <description/>
-    <distribute>Y</distribute>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <compatible>N</compatible>
-    <optimizationLevel>9</optimizationLevel>
-    <jsScripts>      <jsScript>        <jsScript_type>0</jsScript_type>
-        <jsScript_name>Script 1</jsScript_name>
-        <jsScript_script>&#47;&#47;Script here
-var fname= &apos;&apos;;
-var lname= &apos;&apos;;
-&#47;&#47;member_name!=null &amp;&amp; member_name!=&apos;&apos; &amp;&amp; member_name!=undefined
-if(member_name){
-	var index = indexOf(member_name,&quot; &quot;);
-	fname = trim(member_name.substring(0, index));
-	lname = trim(member_name.substring(index, member_name.length));
-}
-
-var address = (member_add2?member_add2:&apos;&apos;)+&apos; &apos;+(member_add3?member_add3:&apos;&apos;)+&apos; &apos;+(member_po?member_po:&apos; &apos;)+&apos; &apos;+(member_zip?member_zip:&apos;&apos;);
-address = trim(address);
-</jsScript_script>
-      </jsScript>      <jsScript>        <jsScript_type>-1</jsScript_type>
-        <jsScript_name>substr_Sample</jsScript_name>
-        <jsScript_script>&#47;&#47; Perform the substring function
-&#47;&#47; 
-&#47;&#47; Usage:
-&#47;&#47; substr(var, from);
-&#47;&#47; substr(var, from, to);
-&#47;&#47;
-&#47;&#47; 2007-01-25
-&#47;&#47;
-var str1= &quot;Hello Pentaho!&quot;;
-var str2= substr(str1, 6);
-var str3= substr(str1, 6, 7);
-Alert(&quot;Input : &quot; + str1);
-Alert(&quot;From position 6: &quot; + str2);
-Alert(&quot;From position 6 for 7 long : &quot; + str3);
-</jsScript_script>
-      </jsScript>    </jsScripts>    <fields>      <field>        <name>fname</name>
-        <rename>fname</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>      <field>        <name>lname</name>
-        <rename>lname</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>      <field>        <name>address</name>
-        <rename>address</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>    </fields>     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>217</xloc>
-      <yloc>112</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>validate fields</name>
-    <type>ScriptValueMod</type>
-    <description/>
-    <distribute>Y</distribute>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <compatible>N</compatible>
-    <optimizationLevel>9</optimizationLevel>
-    <jsScripts>      <jsScript>        <jsScript_type>0</jsScript_type>
-        <jsScript_name>Script 1</jsScript_name>
-        <jsScript_script>&#47;&#47;Script here
-var valid_title = false;
-var valid_id_card = false;
-var valid_member_tel = false;
-var valid_fname = false;
-var valid_lname = false;
-
-
-if(id_card!=&apos;&apos; &amp;&amp; id_card!=undefined){
-	if(id_card.length==13)
-		valid_id_card = true;
-}
-
-if(member_tel!=&apos;&apos; &amp;&amp; member_tel!=undefined){
-	valid_member_tel = true;
-}
-
-if(fname!=&apos;&apos;){
-	valid_fname = true;
-}
-
-if(lname!=&apos;&apos;){
-	valid_lname = true;
-}
-
-if(title!=&apos;&apos;){
-	valid_title = true;
-}
-</jsScript_script>
-      </jsScript>    </jsScripts>    <fields>      <field>        <name>valid_id_card</name>
-        <rename>valid_id_card</rename>
-        <type>Boolean</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>      <field>        <name>valid_member_tel</name>
-        <rename>valid_member_tel</rename>
-        <type>Boolean</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>      <field>        <name>valid_fname</name>
-        <rename>valid_fname</rename>
-        <type>Boolean</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>      <field>        <name>valid_lname</name>
-        <rename>valid_lname</rename>
-        <type>Boolean</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>      <field>        <name>valid_title</name>
-        <rename>valid_title</rename>
-        <type>Boolean</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>    </fields>     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>807</xloc>
-      <yloc>113</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>Text file input</name>
+    <name>read csv</name>
     <type>TextFileInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -757,10 +510,10 @@ if(title!=&apos;&apos;){
            <method>none</method>
            <schema_name/>
            </partitioning>
-    <accept_filenames>N</accept_filenames>
+    <accept_filenames>Y</accept_filenames>
     <passing_through_fields>N</passing_through_fields>
-    <accept_field/>
-    <accept_stepname/>
+    <accept_field>memberfile</accept_field>
+    <accept_stepname>Switch &#47; Case</accept_stepname>
     <separator>,</separator>
     <enclosure>&quot;</enclosure>
     <enclosure_breaks>N</enclosure_breaks>
@@ -973,8 +726,206 @@ if(title!=&apos;&apos;){
     <sizeFieldName/>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>42</xloc>
-      <yloc>5</yloc>
+      <xloc>236</xloc>
+      <yloc>17</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>remove unused fields</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <fields>      <field>        <name>id_card</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>member_no</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>member_28</name>
+        <rename>member_tel</rename>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>member_fname</name>
+        <rename>title</rename>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>fname</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>lname</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>address</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>        <select_unspecified>N</select_unspecified>
+    </fields>     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>769</xloc>
+      <yloc>112</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>spilt member_name and group address</name>
+    <type>ScriptValueMod</type>
+    <description/>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>      <jsScript>        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>&#47;&#47;Script here
+var fname= &apos;&apos;;
+var lname= &apos;&apos;;
+&#47;&#47;member_name!=null &amp;&amp; member_name!=&apos;&apos; &amp;&amp; member_name!=undefined
+if(member_name){
+	var index = indexOf(member_name,&quot; &quot;);
+	fname = trim(member_name.substring(0, index));
+	lname = trim(member_name.substring(index, member_name.length));
+}
+
+var address = (member_add2?member_add2:&apos;&apos;)+&apos; &apos;+(member_add3?member_add3:&apos;&apos;)+&apos; &apos;+(member_po?member_po:&apos; &apos;)+&apos; &apos;+(member_zip?member_zip:&apos;&apos;);
+address = trim(address);
+</jsScript_script>
+      </jsScript>      <jsScript>        <jsScript_type>-1</jsScript_type>
+        <jsScript_name>substr_Sample</jsScript_name>
+        <jsScript_script>&#47;&#47; Perform the substring function
+&#47;&#47; 
+&#47;&#47; Usage:
+&#47;&#47; substr(var, from);
+&#47;&#47; substr(var, from, to);
+&#47;&#47;
+&#47;&#47; 2007-01-25
+&#47;&#47;
+var str1= &quot;Hello Pentaho!&quot;;
+var str2= substr(str1, 6);
+var str3= substr(str1, 6, 7);
+Alert(&quot;Input : &quot; + str1);
+Alert(&quot;From position 6: &quot; + str2);
+Alert(&quot;From position 6 for 7 long : &quot; + str3);
+</jsScript_script>
+      </jsScript>    </jsScripts>    <fields>      <field>        <name>fname</name>
+        <rename>fname</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>      <field>        <name>lname</name>
+        <rename>lname</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>      <field>        <name>address</name>
+        <rename>address</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>    </fields>     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>336</xloc>
+      <yloc>112</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>validate fields</name>
+    <type>ScriptValueMod</type>
+    <description/>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>      <jsScript>        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>&#47;&#47;Script here
+var valid_title = false;
+var valid_id_card = false;
+var valid_member_tel = false;
+var valid_fname = false;
+var valid_lname = false;
+
+
+if(id_card!=&apos;&apos; &amp;&amp; id_card!=undefined){
+	if(id_card.length==13)
+		valid_id_card = true;
+}
+
+if(member_tel!=&apos;&apos; &amp;&amp; member_tel!=undefined){
+	valid_member_tel = true;
+}
+
+if(fname!=&apos;&apos;){
+	valid_fname = true;
+}
+
+if(lname!=&apos;&apos;){
+	valid_lname = true;
+}
+
+if(title!=&apos;&apos;){
+	valid_title = true;
+}
+</jsScript_script>
+      </jsScript>    </jsScripts>    <fields>      <field>        <name>valid_id_card</name>
+        <rename>valid_id_card</rename>
+        <type>Boolean</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>      <field>        <name>valid_member_tel</name>
+        <rename>valid_member_tel</rename>
+        <type>Boolean</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>      <field>        <name>valid_fname</name>
+        <rename>valid_fname</rename>
+        <type>Boolean</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>      <field>        <name>valid_lname</name>
+        <rename>valid_lname</rename>
+        <type>Boolean</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>      <field>        <name>valid_title</name>
+        <rename>valid_title</rename>
+        <type>Boolean</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>    </fields>     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>913</xloc>
+      <yloc>112</yloc>
       <draw>Y</draw>
       </GUI>
     </step>

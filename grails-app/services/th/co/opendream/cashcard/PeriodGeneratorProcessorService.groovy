@@ -43,7 +43,7 @@ class PeriodGeneratorProcessorService {
         }
     }
 
-    def expressCash01(amount, numberOfPeriod, intRatePerYear) {
+    def expresscash01(amount, numberOfPeriod, intRatePerYear) {
         def interestPerMonth = interestProcessorService.calculateInterestInMonthUnit(amount, intRatePerYear, 1),
             overallInterest = interestProcessorService.calculateInterestInMonthUnit(amount, intRatePerYear, numberOfPeriod)
 

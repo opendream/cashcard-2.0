@@ -1235,4 +1235,83 @@ class PeriodProcessorServiceTests {
         assert contract.loanBalance == 2000.00
     }
 
+    void testExpressCash01Process() {
+        setUpPeriod()
+
+        def contract = Contract.get(1)
+        contract.loanAmount = 2000.00
+        contract.loanBalance = 2000.00
+        contract.interestRate = 12.00
+        contract.maxInterestRate = 18.00
+        contract.periodProcessor = 'expressCash01'
+        contract.save()
+
+        def p1 = Period.get(1)
+        p1.amount = 686.00
+        p1.outstanding = 686.00
+        p1.interestAmount = 20.00
+        p1.interestOutstanding = 20.00
+        p1.interestPaid = false
+        p1.save()
+
+        def expect = [
+            // period_id, date, จ่าย, ตัดต้น, ดอกเหมา, ดอกเหลือ, จ่ายดอกครบ, ดอกจริง, ดอกกฎ, fee, เงินงวดเหลือ, ต้นเหลือ, ส่วนต่าง
+            [1, "2012-04-11",  100.00,       80.00, 20.00, 0.00, true, 6.557377, 6.557377, 0, 586.00,     1920.00, 13.442623],
+            [1, "2012-04-16",  100.00,   96.852459,     0, 0.00, true, 3.147541, 3.147541, 0, 486.00, 1823.147541,         0],
+            [1, "2012-04-21", 1827.00, 1823.147541,     0, 0.00, true, 2.988766, 2.988766, 0,      0,           0,  0.863693],
+        ]
+
+        def interest
+        service.interestProcessorService = [
+            process: { p, d ->
+                interest
+            }
+        ]
+
+        def round = 0
+        expect.each {
+            println "Round ${++round} : "
+            interest = [
+                actualInterest: it[7],
+                effectedInterest: it[8],
+                fee: it[9]
+            ]
+            service.expresscash01(p1, it[2], 0.00, false, Date.parse("yyyy-MM-dd", it[1]))
+
+            def c = Contract.get(1)
+            assert c.loanBalance == it[11]
+
+            def p = Period.get(it[0])
+            p.beforeUpdate()
+            assert p.outstanding == it[10]
+            assert p.interestOutstanding == it[5]
+            assert p.interestPaid == it[6]
+
+            def r = ReceiveTransaction.get(round)
+            assert r.amount == it[2]
+            assert r.balancePaid == it[3]
+            assert r.interestPaid == it[8]
+            assert r.fee == it[9]
+            assert r.differential == it[12]
+
+            if (round == 3) {
+                // 1.Check that remaining period must be cancelled.
+                def p2 = Period.get(2)
+                assert p2.status == false
+                assert p2.payoffStatus == false
+                assert p2.cancelledDueToDebtClearance == true
+                def p3 = Period.get(3)
+                assert p3.status == false
+                assert p3.payoffStatus == false
+                assert p3.cancelledDueToDebtClearance == true
+                // 2.Check that current period is marked as paid.
+                assert p.interestPaid == it[6]
+                assert p.payoffStatus == true
+                // 3.Check different amount
+                assert r.differential == it[12]
+            }
+            println "===> pass"
+        }
+    }
+
 }

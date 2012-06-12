@@ -144,7 +144,7 @@ class PeriodGeneratorProcessorServiceTests {
     }
 
     void testGeneratePeriodExpressCash01() {
-        def periodList = service.expressCash01(1000.00, 3, 24.00)
+        def periodList = service.expresscash01(1000.00, 3, 24.00)
 
         assert periodList[0].amount == 353
         assert periodList[1].amount == 353
@@ -160,7 +160,7 @@ class PeriodGeneratorProcessorServiceTests {
         assert periodList[2].interestPaid == false
         assert periodList.size() == 3
 
-        periodList = service.expressCash01(1000.00, 6, 24.00)
+        periodList = service.expresscash01(1000.00, 6, 24.00)
 
         assert periodList[0].amount == 186
         assert periodList[1].amount == 186

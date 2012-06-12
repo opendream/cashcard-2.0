@@ -246,4 +246,90 @@ class PeriodProcessorService {
 
         receiveTx
     }
+
+    def expresscash01(Period period, amount, fine, isShareCapital, date) {
+        def actualPaymentAmount = amount
+        def periodInterest = interestProcessorService.process(period, date)
+        def diff = 0.00
+
+        def receiveTx = new ReceiveTransaction()
+
+        if (actualPaymentAmount >= period.outstanding) {
+            period.outstanding = 0.00
+        }
+
+        if (! period.interestPaid) {
+            if (amount >= period.interestOutstanding) {
+                amount -= period.interestOutstanding
+                diff = period.interestOutstanding - periodInterest.actualInterest
+                period.interestOutstanding = 0.00
+                period.interestPaid = true
+            }
+            else {
+                throw new RuntimeException("Must pay at least ${period.interestOutstanding} for this payment.")
+            }
+        }
+        else {
+            if (amount >= periodInterest.actualInterest) {
+                amount -= periodInterest.actualInterest
+            }
+            else {
+                throw new RuntimeException("Must pay at least ${periodInterest.actualInterest} for this payment.")
+            }
+        }
+
+        receiveTx.amount = actualPaymentAmount
+        receiveTx.sign = 1
+        receiveTx.period = period
+        receiveTx.balanceForward = period.contract.loanBalance
+        receiveTx.interestRate = period.contract.interestRate
+        receiveTx.interestPaid = periodInterest.effectedInterest
+        receiveTx.fee = periodInterest.fee
+        receiveTx.fine = fine
+        receiveTx.isShareCapital = isShareCapital
+        receiveTx.paymentDate = date
+
+        period.payoffDate = date
+        period.payAmount = actualPaymentAmount
+        period.save()
+
+        def contract = period.contract
+        if (amount > 0.00) {
+            if (contract.loanBalance >= amount) {
+                receiveTx.balancePaid = amount
+                contract.loanBalance -= receiveTx.balancePaid
+                amount = 0.00
+            }
+            else {
+                amount -= contract.loanBalance
+                receiveTx.balancePaid = contract.loanBalance
+                contract.loanBalance = 0.00
+
+                // First make current period as paid.
+                period.payoffStatus = true
+                period.save()
+
+                // Make remain period disabled.
+                def c = Period.createCriteria()
+                def periodList = c.list() {
+                    gt("no", period.no)
+                    eq("contract", contract)
+                    eq("interestPaid", false)
+                    eq("payoffStatus", false)
+                    eq("status", true)
+                }
+
+                periodList.each {
+                    it.status = false
+                    it.cancelledDueToDebtClearance = true
+                    it.save()
+                }
+            }
+        }
+        receiveTx.differential = amount + diff
+        receiveTx.save()
+        contract.save()
+
+        receiveTx
+    }
 }

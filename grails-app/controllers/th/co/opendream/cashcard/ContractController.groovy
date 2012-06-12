@@ -10,7 +10,8 @@ class ContractController {
         periodProcessorService,
         periodGeneratorProcessorService,
         interestProcessorService,
-        messageService
+        messageService,
+        contractService
 
     def create() {
         def member = Member.get(params.memberId)
@@ -23,10 +24,8 @@ class ContractController {
             def signedDate = params.signedDate ?: new Date()
 
             def contract = new Contract(params)
-            contract.processor = loanType.processor
+            contractService.copyLoanProperties(contract, loanType)
             contract.signedDate = signedDate
-            contract.interestRate = loanType.interestRate
-            contract.maxInterestRate = loanType.maxInterestRate
             contract.loanBalance = contract.loanAmount as BigDecimal
 
             def numberOfPeriod = (params.numberOfPeriod ?: 0) as Integer

@@ -19,8 +19,10 @@ class BootStrap {
         }
 
     	def m1 = new Member(identificationNumber:"1159900100015", firstname:"สมหญิง", lastname: "รักเรียน", telNo: "0818526122", gender: "MALE", address: "Opendream")
+        def m2 = new Member(identificationNumber:"3710600357102", firstname:"สม", lastname: "ขำคม", telNo: "0818526122", gender: "MALE", address: "Opendream")
 
     	m1.save()
+        m2.save()
 
         def user = new Users(username:'admin', password:'password',
                                 , enabled:true, accountExpired:false, accountLocked:false, passwordExpired:false).save()
@@ -39,11 +41,11 @@ class BootStrap {
         //generateContract(m1, LoanType.get(1))
 
         //asign roport realPath to system
-        
+
         def reports= grailsApplication.config.jasper.dir.reports
         def realPath =  servletContext.getRealPath(reports)
         println "realPath $realPath"
-        grailsApplication.config.jasper.dir.reports = realPath 
+        grailsApplication.config.jasper.dir.reports = realPath
     }
     def destroy = {
 

@@ -6,6 +6,8 @@ import grails.test.mixin.*
 import grails.test.mixin.support.*
 import org.junit.*
 
+import grails.converters.JSON
+
 
 import th.co.opendream.cashcard.Member.Gender
 import th.co.opendream.cashcard.Member.Status
@@ -179,5 +181,19 @@ class MemberControllerTests {
     void testToString() {
         def m1 = Member.get(1)
         assert m1.toString() == "${m1.firstname} ${m1.lastname}"
+    }
+
+    void testAjaxSearch() {
+        def output = [ [id: 1, name: "สมหญิง"], [id: 2, name: "สมชาย"]]
+
+        params.name = "สม"
+        controller.memberService = [
+            search: { name -> output }
+        ]
+
+        def result = controller.ajaxSearch()
+
+        def json_output = output as JSON
+        assert json_output.toString() == response.text
     }
 }

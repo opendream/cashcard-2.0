@@ -1,10 +1,11 @@
 package th.co.opendream.cashcard
 
 import org.springframework.dao.DataIntegrityViolationException
+import grails.converters.JSON
 
 class MemberController {
 
-    def utilService, periodService, kettleService
+    def utilService, periodService, memberService, kettleService
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
@@ -168,5 +169,9 @@ class MemberController {
             flash.error = message(code: 'errors.extractMembersNotComplete')
         }      
         render view: "uploadMembers"
+
+    def ajaxSearch() {
+        def result = memberService.search(params.name)
+        render result as JSON
     }
 }

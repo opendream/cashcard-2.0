@@ -10,7 +10,8 @@ class ContractController {
         periodProcessorService,
         periodGeneratorProcessorService,
         interestProcessorService,
-        messageService
+        messageService,
+        contractService
 
     def create() {
         def member = Member.get(params.memberId)
@@ -23,10 +24,8 @@ class ContractController {
             def signedDate = params.signedDate ?: new Date()
 
             def contract = new Contract(params)
-            contract.processor = loanType.processor
+            contractService.copyLoanProperties(contract, loanType)
             contract.signedDate = signedDate
-            contract.interestRate = loanType.interestRate
-            contract.maxInterestRate = loanType.maxInterestRate
             contract.loanBalance = contract.loanAmount as BigDecimal
 
             def numberOfPeriod = (params.numberOfPeriod ?: 0) as Integer
@@ -242,8 +241,13 @@ class ContractController {
             def member = contract.member
             def receiveTx = new ReceiveTransaction()
             receiveTx.paymentDate = new Date()
+            // TODO:  Integrate With Model
+            // MOCKED DATA
+            contract.metaClass.currentInterest = 300;
+            contract.metaClass.totalDebt= contract.currentInterest + contract.loanAmount;
+            // END MOCK
             if (contract && contract.approvalStatus && contract.loanReceiveStatus) {
-                render view: 'payoff', model: [member: member, period: period, receiveTx: receiveTx]
+                render view: 'payoff', model: [member: member, period: period, receiveTx: receiveTx, contract: contract]
             }
             else {
                 redirect url: '/error'

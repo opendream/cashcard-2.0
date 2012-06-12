@@ -60,6 +60,12 @@ class ContractControllerTests {
         params.numberOfPeriod = '3'
 
         Contract.metaClass.save = { delegate.id = 1; delegate }
+
+        controller.contractService = [
+            copyLoanProperties: {c, l ->
+                // pass
+            }
+        ]
         controller.create()
         assert response.redirectedUrl == "/member/show/1"
     }
@@ -71,6 +77,12 @@ class ContractControllerTests {
         params.numberOfPeriod = '3'
 
         Contract.metaClass.save = { null }
+
+        controller.contractService = [
+            copyLoanProperties: {c, l ->
+                // pass
+            }
+        ]
         controller.create()
         assert view == '/contract/sign'
     }

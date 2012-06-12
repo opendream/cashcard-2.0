@@ -19,8 +19,10 @@ class BootStrap {
         }
 
     	def m1 = new Member(identificationNumber:"1159900100015", firstname:"สมหญิง", lastname: "รักเรียน", telNo: "0818526122", gender: "MALE", address: "Opendream")
+        def m2 = new Member(identificationNumber:"3710600357102", firstname:"สม", lastname: "ขำคม", telNo: "0818526122", gender: "MALE", address: "Opendream")
 
     	m1.save()
+        m2.save()
 
         def user = new Users(username:'admin', password:'password',
                                 , enabled:true, accountExpired:false, accountLocked:false, passwordExpired:false).save()
@@ -39,10 +41,10 @@ class BootStrap {
         //generateContract(m1, LoanType.get(1))
 
         //asign roport realPath to system
-        
+
         def reports = grailsApplication.config.jasper.dir.reports
         def realPath =  servletContext.getRealPath(reports)
-        grailsApplication.config.jasper.dir.reports = realPath 
+        grailsApplication.config.jasper.dir.reports = realPath
 
         def kettle = grailsApplication.config.kettle.repository.path
         grailsApplication.config.kettle.repository.path = servletContext.getRealPath(kettle)
@@ -77,42 +79,56 @@ class BootStrap {
     	new LoanType(
             name: "เงินกู้สามัญ", processor: "Effective", interestRate: 12.00,
             maxInterestRate: 18.00, mustKeepAdvancedInterest: false,
-            numberOfPeriod: 3
+            numberOfPeriod: 3, interestProcessor: "Effective", periodProcessor: "Effective",
+            periodGeneratorProcessor: "Effective"
         ).save()
     	new LoanType(
             name: "เงินกู้เพื่อการศึกษา", processor: "Effective", interestRate: 6.00,
             maxInterestRate: 18.00, mustKeepAdvancedInterest: false,
-            numberOfPeriod: 3
+            numberOfPeriod: 3, interestProcessor: "Effective", periodProcessor: "Effective",
+            periodGeneratorProcessor: "Effective"
         ).save()
     	new LoanType(
             name: "เงินกู้ซื้อยานพาหนะ", processor: "Flat", interestRate: 12.00,
             maxInterestRate: 18.00, mustKeepAdvancedInterest: true,
-            numberOfPeriod: 24
+            numberOfPeriod: 24, interestProcessor: "Flat", periodProcessor: "Flat",
+            periodGeneratorProcessor: "Flat"
         ).save()
     	new LoanType(
             name: "เงินกู้ซื้อทอง", processor: "Effective", interestRate: 12.00,
             maxInterestRate: 18.00, mustKeepAdvancedInterest: false,
-            numberOfPeriod: 3
+            numberOfPeriod: 3, interestProcessor: "Effective", periodProcessor: "Effective",
+            periodGeneratorProcessor: "Effective"
         ).save()
     	new LoanType(
             name: "เงินกู้ซื้อเครื่องใช้ไฟฟ้า", processor: "Effective", interestRate: 12.00,
             maxInterestRate: 18.00, mustKeepAdvancedInterest: false,
-            numberOfPeriod: 3
+            numberOfPeriod: 3, interestProcessor: "Effective", periodProcessor: "Effective",
+            periodGeneratorProcessor: "Effective"
         ).save()
     	new LoanType(
             name: "เงินกู้โดยอสังหาริมทรัพย์", processor: "Commission",interestRate: 24.00,
             maxInterestRate: 18.00, mustKeepAdvancedInterest: true,
-            numberOfPeriod: 24
+            numberOfPeriod: 24, interestProcessor: "Commission", periodProcessor: "Commission",
+            periodGeneratorProcessor: "Commission"
         ).save()
     	new LoanType(
             name: "เงินกู้โดยใช้ทรัพย์สินจำนอง", processor: "Commission", interestRate: 36.00,
             maxInterestRate: 18.00, mustKeepAdvancedInterest: false,
-            numberOfPeriod: 24
+            numberOfPeriod: 24, interestProcessor: "Commission", periodProcessor: "Commission",
+            periodGeneratorProcessor: "Commission"
         ).save()
         new LoanType(
             name: "เงินกู้ด่วน", processor: "Effective", interestRate: 18.00,
             maxInterestRate: 18.00, mustKeepAdvancedInterest: false,
-            numberOfPeriod: 3
+            numberOfPeriod: 3, interestProcessor: "Effective", periodProcessor: "Effective",
+            periodGeneratorProcessor: "Effective"
+        ).save()
+        new LoanType(
+            name: "เงินกู้ด่วน (ปรับปรุงใหม่)", processor: "Effective", interestRate: 12.00,
+            maxInterestRate: 18.00, mustKeepAdvancedInterest: false,
+            numberOfPeriod: 3, interestProcessor: "Effective", periodProcessor: "ExpressCash01",
+            periodGeneratorProcessor: "ExpressCash01"
         ).save()
     }
 

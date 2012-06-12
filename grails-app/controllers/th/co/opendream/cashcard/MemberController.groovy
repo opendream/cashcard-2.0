@@ -1,10 +1,11 @@
 package th.co.opendream.cashcard
 
 import org.springframework.dao.DataIntegrityViolationException
+import grails.converters.JSON
 
 class MemberController {
 
-    def utilService, periodService
+    def utilService, periodService, memberService
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
@@ -144,5 +145,10 @@ class MemberController {
         else {
             render(view: 'verifyCard')
         }
+    }
+
+    def ajaxSearch() {
+        def result = memberService.search(params.name)
+        render result as JSON
     }
 }

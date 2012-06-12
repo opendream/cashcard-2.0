@@ -1,6 +1,7 @@
 package th.co.opendream.cashcard
 
 import groovy.time.TimeCategory
+import grails.converters.JSON
 
 class ContractController {
 
@@ -241,13 +242,19 @@ class ContractController {
             def member = contract.member
             def receiveTx = new ReceiveTransaction()
             receiveTx.paymentDate = new Date()
-            // TODO:  Integrate With Model
-            // MOCKED DATA
-            contract.metaClass.currentInterest = 300;
-            contract.metaClass.totalDebt= contract.currentInterest + contract.loanAmount;
-            // END MOCK
+
+            def interestAmount = contractService.getInterestAmountOnCloseContract(period, receiveTx.paymentDate)
+            def periodInterest = interestProcessorService.process(period, receiveTx.paymentDate)
+
+            def currentInterest = utilService.moneyRoundUp(interestAmount.callInterest)
+            def totalDebt = utilService.moneyRoundUp(interestAmount.totalDebt)
+
             if (contract && contract.approvalStatus && contract.loanReceiveStatus) {
-                render view: 'payoff', model: [member: member, period: period, receiveTx: receiveTx, contract: contract]
+                render view: 'payoff', model: [
+                    member: member, period: period, receiveTx: receiveTx,
+                    contract: contract, currentInterest: currentInterest,
+                    totalDebt: totalDebt
+                ]
             }
             else {
                 redirect url: '/error'
@@ -286,7 +293,16 @@ class ContractController {
             else {
                 redirect url: '/error'
             }
+        }.invalidToken {
+            redirect url: '/error'
         }
+    }
+
+    def getInterestAmountOnCloseContract() {
+        def period = Period.get(params.id),
+            date = Date.parse("yyyy-MM-dd", params.date)
+
+        render (contractService.getInterestAmountOnCloseContract(period, date) as JSON)
     }
 
 }

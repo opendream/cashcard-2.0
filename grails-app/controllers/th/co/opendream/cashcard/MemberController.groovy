@@ -4,7 +4,7 @@ import org.springframework.dao.DataIntegrityViolationException
 
 class MemberController {
 
-    def utilService, periodService
+    def utilService, periodService, kettleService
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
@@ -144,5 +144,29 @@ class MemberController {
         else {
             render(view: 'verifyCard')
         }
+    }
+
+    def uploadMembers() {
+        render view: "uploadMembers"
+    }
+
+    def doUploadMembers() {
+        try {
+            def kettlePath = grailsApplication.config.kettle.repository.path
+            def f = request.getFile('members') 
+                  
+            if (f.empty) {
+                flash.error = 'file cannot be empty'
+                render(view: 'uploadMembers')
+                return
+            } 
+            
+            f.transferTo(new File("${kettlePath}/fileupload/${f.originalFilename}"))        
+            def result = kettleService.extractMember(f.originalFilename, f.contentType)            
+        } catch (e) {
+            log.error(e)
+            flash.error = message(code: 'errors.extractMembersNotComplete')
+        }      
+        render view: "uploadMembers"
     }
 }

@@ -20,7 +20,7 @@ class UtilService {
 			step4 -= 10
 		}
 
-		if (step4 == check_digit) {
+		if (step4 == check_digit && id.size() == 13) {
 			true
 		}
 		else {

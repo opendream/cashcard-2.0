@@ -14,16 +14,16 @@
 			</g:if></h1>
 	</header>
 
-	
-		
+
+
 		<g:hasErrors bean="${contract}">
 			<div id="errors" class="alert alert-error">
 				<g:renderErrors bean="${contract}" as="list"></g:renderErrors>
 			</div><!-- /errors -->
 		</g:hasErrors>
-			
 
-				
+
+
 		<g:jasperForm controller="report"
 		    action="doPaymentReport"
 		    id="1498"
@@ -43,7 +43,8 @@
 					<g:datePicker name="toDate" precision="day"  />
 				</div>
 			</div>
-			
+
+			<g:hiddenField id="paymenttype" name="paymenttype" value="${params.paymenttype}"/>
 			<g:hiddenField id="file" name="file" value="${type}"/>
 			<g:hiddenField id="name" name="name" value="${type}"/>
 			<g:hiddenField id="format" name="format" value="PDF"/>
@@ -53,8 +54,8 @@
 					</button>
 			</div>
 		</g:jasperForm>
-				
 
-	
+
+
 </body>
 </html>

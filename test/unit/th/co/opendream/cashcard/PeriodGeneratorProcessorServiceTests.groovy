@@ -18,11 +18,39 @@ class PeriodGeneratorProcessorServiceTests {
         loanType = new LoanType(
             name: 'Common',
             processor: 'Effective',
+            interestProcessor: 'Effective',
+            periodProcessor: 'Effective',
+            periodGeneratorProcessor: 'Effective',
             interestRate: 24.00,
             numberOfPeriod: 3
         ).save()
 
         service.interestProcessorService = new InterestProcessorService()
+    }
+
+    void testProcess() {
+        def loanType = LoanType.get(1)
+
+        def effectiveCounter = 0
+        service.metaClass.effective = { l, a, n ->
+            effectiveCounter++
+        }
+
+        loanType.periodGeneratorProcessor = 'Effective'
+        loanType.save()
+        service.generate(loanType, 2, 3)
+        assert effectiveCounter == 1
+
+        def flatCounter = 0
+        service.metaClass.flat = { l, a, n ->
+            flatCounter++
+        }
+
+        loanType.periodGeneratorProcessor = 'Flat'
+        loanType.save()
+        service.generate(loanType, 2, 3)
+        assert effectiveCounter == 1
+        assert flatCounter == 1
     }
 
     void testEffective() {
@@ -59,15 +87,14 @@ class PeriodGeneratorProcessorServiceTests {
     }
 
     void testGeneratePeriodEffective() {
-
-        def periodList = service.generate(1, 1000.00, 3)
+        def periodList = service.effective(1000.00, 3, 24.00)
 
         assert periodList[0].amount == 353
         assert periodList[1].amount == 353
         assert periodList[2].amount == 353
         assert periodList.size() == 3
 
-        periodList = service.generate(1, 1000.00, 6)
+        periodList = service.effective(1000.00, 6, 24.00)
 
         assert periodList[0].amount == 186
         assert periodList[1].amount == 186
@@ -79,18 +106,14 @@ class PeriodGeneratorProcessorServiceTests {
     }
 
     void testGeneratePeriodCommission() {
-        def loanType = LoanType.get(1)
-        loanType.processor = 'Commission'
-        loanType.save()
-
-        def periodList = service.generate(1, 1000.00, 3)
+        def periodList = service.commission(1000.00, 3, 24.00)
 
         assert periodList[0].amount == 353
         assert periodList[1].amount == 353
         assert periodList[2].amount == 353
         assert periodList.size() == 3
 
-        periodList = service.generate(1, 1000.00, 6)
+        periodList = service.commission(1000.00, 6, 24.00)
 
         assert periodList[0].amount == 186
         assert periodList[1].amount == 186
@@ -102,18 +125,14 @@ class PeriodGeneratorProcessorServiceTests {
     }
 
     void testGeneratePeriodFlat() {
-        def loanType = LoanType.get(1)
-        loanType.processor = 'Flat'
-        loanType.save()
-
-        def periodList = service.generate(1, 1000.00, 3)
+        def periodList = service.flat(1000.00, 3, 24.00)
 
         assert periodList[0].amount == 333
         assert periodList[1].amount == 333
         assert periodList[2].amount == 333
         assert periodList.size() == 3
 
-        periodList = service.generate(1, 1000.00, 6)
+        periodList = service.flat(1000.00, 6, 24.00)
 
         assert periodList[0].amount == 166
         assert periodList[1].amount == 166

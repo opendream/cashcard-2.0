@@ -16,7 +16,7 @@ class PeriodProcessorServiceTests {
      * Effective
      **********************************/
     void setUpPeriod(type='Effective') {
-        def loanType = new LoanType(name: 'Common', processor: type)
+        def loanType = new LoanType(name: 'Common', processor: type, interestProcessor: type, periodProcessor: type, periodGeneratorProcessor: type)
         loanType.save()
 
         def member = new Member(identificationNumber:"1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")
@@ -29,6 +29,9 @@ class PeriodProcessorServiceTests {
             id: 1,
             code: "ก.55-1000-20",
             processor: type,
+            interestProcessor: loanType.interestProcessor,
+            periodProcessor: loanType.periodProcessor,
+            periodGeneratorProcessor: loanType.periodGeneratorProcessor,
             member: member,
             loanType: loanType,
             loanAmount: 2000.00,
@@ -54,7 +57,7 @@ class PeriodProcessorServiceTests {
     }
 
     def setUpMockForPeriodPayoff(type='Effective') {
-        def loanType = new LoanType(name: 'Common', processor: type)
+        def loanType = new LoanType(name: 'Common', processor: type, interestProcessor: type, periodProcessor: type, periodGeneratorProcessor: type)
         loanType.save()
 
         def member = new Member(identificationNumber:"1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")
@@ -68,6 +71,9 @@ class PeriodProcessorServiceTests {
             member: member,
             loanType: loanType,
             processor: type,
+            interestProcessor: loanType.interestProcessor,
+            periodProcessor: loanType.periodProcessor,
+            periodGeneratorProcessor: loanType.periodGeneratorProcessor,
             cooperativeShare: 0.75,
             loanAmount: 2000.00,
             interestRate: 24.00,
@@ -85,15 +91,15 @@ class PeriodProcessorServiceTests {
         mockDomain(Period, [
             [contract: contract, amount: 706.00, no: 1,
              dueDate: Date.parse("yyyy-MM-dd", "2012-04-01"),
-             status: true, payoffStatus: false
+             status: true, payoffStatus: false, outstanding: 706.00
             ],
             [contract: contract, amount: 706.00, no: 2,
              dueDate: Date.parse("yyyy-MM-dd", "2012-05-01"),
-             status: true, payoffStatus: false
+             status: true, payoffStatus: false, outstanding: 706.00
             ],
             [contract: contract, amount: 708.00, no: 3,
              dueDate: Date.parse("yyyy-MM-dd", "2012-06-01"),
-             status: true, payoffStatus: false
+             status: true, payoffStatus: false, outstanding: 708.00
             ]
         ])
 
@@ -105,7 +111,8 @@ class PeriodProcessorServiceTests {
      **********************************/
 
     def setUpMockForFlatPeriodPayoff(principle, interestRate, numberOfPeriod, keep, date) {
-        def loanType = new LoanType(name: 'Common', processor: 'Flat')
+        def type = 'Flat'
+        def loanType = new LoanType(name: 'A', processor: type, interestProcessor: type, periodProcessor: type, periodGeneratorProcessor: type)
         loanType.save()
 
         def member = new Member(identificationNumber:"1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")
@@ -119,6 +126,9 @@ class PeriodProcessorServiceTests {
             member: member,
             loanType: loanType,
             processor: 'Flat',
+            interestProcessor: loanType.interestProcessor,
+            periodProcessor: loanType.periodProcessor,
+            periodGeneratorProcessor: loanType.periodGeneratorProcessor,
             cooperativeShare: 0.75,
             loanAmount: principle,
             interestRate: interestRate,
@@ -142,7 +152,7 @@ class PeriodProcessorServiceTests {
      * Effective
      **********************************/
     def setUpMockForPeriodPayoff_12Months(type='Effective') {
-        def loanType = new LoanType(name: 'Common', processor: type)
+        def loanType = new LoanType(name: 'A', processor: type, interestProcessor: type, periodProcessor: type, periodGeneratorProcessor: type)
         loanType.save()
 
         def member = new Member(identificationNumber:"1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")
@@ -156,6 +166,9 @@ class PeriodProcessorServiceTests {
             member: member,
             loanType: loanType,
             processor: type,
+            interestProcessor: loanType.interestProcessor,
+            periodProcessor: loanType.periodProcessor,
+            periodGeneratorProcessor: loanType.periodGeneratorProcessor,
             cooperativeShare: 0.75,
             loanAmount: 2000.00,
             interestRate: 24.00,
@@ -173,55 +186,91 @@ class PeriodProcessorServiceTests {
         mockDomain(Period, [
             [contract: contract, amount: 206.00, no: 1,
              dueDate: Date.parse("yyyy-MM-dd", "2012-04-01"),
-             status: true, payoffStatus: false
+             status: true, payoffStatus: false, outstanding: 206.00
             ],
             [contract: contract, amount: 206.00, no: 2,
              dueDate: Date.parse("yyyy-MM-dd", "2012-05-01"),
-             status: true, payoffStatus: false
+             status: true, payoffStatus: false, outstanding: 206.00
             ],
             [contract: contract, amount: 206.00, no: 3,
              dueDate: Date.parse("yyyy-MM-dd", "2012-06-01"),
-             status: true, payoffStatus: false
+             status: true, payoffStatus: false, outstanding: 206.00
             ],
             [contract: contract, amount: 206.00, no: 4,
              dueDate: Date.parse("yyyy-MM-dd", "2012-07-01"),
-             status: true, payoffStatus: false
+             status: true, payoffStatus: false, outstanding: 206.00
             ],
             [contract: contract, amount: 206.00, no: 5,
              dueDate: Date.parse("yyyy-MM-dd", "2012-08-01"),
-             status: true, payoffStatus: false
+             status: true, payoffStatus: false, outstanding: 206.00
             ],
             [contract: contract, amount: 206.00, no: 6,
              dueDate: Date.parse("yyyy-MM-dd", "2012-09-01"),
-             status: true, payoffStatus: false
+             status: true, payoffStatus: false, outstanding: 206.00
             ],
             [contract: contract, amount: 206.00, no: 7,
              dueDate: Date.parse("yyyy-MM-dd", "2012-10-01"),
-             status: true, payoffStatus: false
+             status: true, payoffStatus: false, outstanding: 206.00
             ],
             [contract: contract, amount: 206.00, no: 8,
              dueDate: Date.parse("yyyy-MM-dd", "2012-11-01"),
-             status: true, payoffStatus: false
+             status: true, payoffStatus: false, outstanding: 206.00
             ],
             [contract: contract, amount: 206.00, no: 9,
              dueDate: Date.parse("yyyy-MM-dd", "2012-12-01"),
-             status: true, payoffStatus: false
+             status: true, payoffStatus: false, outstanding: 206.00
             ],
             [contract: contract, amount: 206.00, no: 10,
              dueDate: Date.parse("yyyy-MM-dd", "2012-01-01"),
-             status: true, payoffStatus: false
+             status: true, payoffStatus: false, outstanding: 206.00
             ],
             [contract: contract, amount: 206.00, no: 11,
              dueDate: Date.parse("yyyy-MM-dd", "2012-02-01"),
-             status: true, payoffStatus: false
+             status: true, payoffStatus: false, outstanding: 206.00
             ],
             [contract: contract, amount: 214.00, no: 12,
              dueDate: Date.parse("yyyy-MM-dd", "2012-03-01"),
-             status: true, payoffStatus: false
+             status: true, payoffStatus: false, outstanding: 214.00
             ]
         ])
 
         contract
+    }
+
+    void testProcess() {
+        setUpPeriod()
+
+        def contract = Contract.get(1),
+            period = Period.get(1),
+            date = new Date()
+
+        def effectiveCounter = 0
+        service.metaClass.effective = { Period p, o1, o2, o3, o4 ->
+            effectiveCounter++
+        }
+        // Make sure contract.interestProcessor will effect the process
+        // selection.
+        contract.periodProcessor = 'effective'
+        contract.save()
+
+        // Reload period after contract is saved.
+        period = Period.get(period.id)
+        service.process(period, 1, 2, 3, 4)
+        assert effectiveCounter == 1
+
+        // Trick it! make periodProcessor not the same as Loan type.
+        def flatCounter = 0
+        service.metaClass.flat = { Period p, o1, o2, o3, o4 ->
+            flatCounter++
+        }
+        contract.periodProcessor = 'flat'
+        contract.save()
+
+        // Reload period after contract is saved.
+        period = Period.get(period.id)
+        service.process(period, 1, 2, 3, 4)
+        assert effectiveCounter == 1
+        assert flatCounter == 1
     }
 
     void testProcessPeriodPayoff() {
@@ -243,7 +292,7 @@ class PeriodProcessorServiceTests {
         } ] as InterestProcessorService
 
         /************************** Verify money ******************************/
-        service.process(p1, 706.00, 0.00, false, p1.dueDate)
+        service.effective(p1, 706.00, 0.00, false, p1.dueDate)
         assert ReceiveTransaction.list().size() == 1
 
         p1 = Period.get(1) // Reload data
@@ -266,7 +315,7 @@ class PeriodProcessorServiceTests {
         /*********************** /END Verify money ****************************/
 
         /************************** Verify money ******************************/
-        service.process(p2, 706.00, 0.00, false, p2.dueDate)
+        service.effective(p2, 706.00, 0.00, false, p2.dueDate)
         assert ReceiveTransaction.list().size() == 2
 
         p2 = Period.get(2) // Reload data
@@ -289,7 +338,7 @@ class PeriodProcessorServiceTests {
         /*********************** /END Verify money ****************************/
 
         /************************** Verify money ******************************/
-        service.process(p3, 708.00, 0.00, false, p3.dueDate)
+        service.effective(p3, 708.00, 0.00, false, p3.dueDate)
         assert ReceiveTransaction.list().size() == 3
 
         p3 = Period.get(3) // Reload data
@@ -808,7 +857,8 @@ class PeriodProcessorServiceTests {
         def periodList = sample_period.collect {
             def p = new Period(
                 contract: contract, no: it[0], amount: it[1],
-                dueDate: getDate(it[2]), status: true, payoffStatus: false
+                dueDate: getDate(it[2]), status: true, payoffStatus: false,
+                outstanding: it[1]
             )
             p.save()
             return p
@@ -931,7 +981,7 @@ class PeriodProcessorServiceTests {
 
         contract.processor = "MockyMocky"
         contract.save()
-        
+
         def rtx1 = new ReceiveTransaction(period: p1)
 
         rtx1.amount = 100
@@ -972,7 +1022,7 @@ class PeriodProcessorServiceTests {
 
         def contract = Contract.get(1),
             p1 = Period.get(1)
-        
+
         def rtx1 = new ReceiveTransaction(period: p1)
 
         rtx1.amount = 100
@@ -1091,7 +1141,7 @@ class PeriodProcessorServiceTests {
             dueDate: getDate("2012-04-01"), status: true, payoffStatus: false
         )
         p1.save()
-        
+
         def receiveTx = new ReceiveTransaction(period: p1)
 
         receiveTx.amount = 1200.00
@@ -1114,7 +1164,7 @@ class PeriodProcessorServiceTests {
         p1.payoffStatus = true
         p1.payAmount = receiveTx.amount
         p1.outstanding = 1300.00
-        p1.save()       
+        p1.save()
 
         contract.loanBalance = 57500.00
         contract.advancedInterestBalance = 13900.00

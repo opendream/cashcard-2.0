@@ -27,6 +27,9 @@ class ContractController {
             contractService.copyLoanProperties(contract, loanType)
             contract.signedDate = signedDate
             contract.loanBalance = contract.loanAmount as BigDecimal
+            contract._guarantor1 = Member.get(params._guarantor1)
+            contract._guarantor2 = Member.get(params._guarantor2)
+
 
             def numberOfPeriod = (params.numberOfPeriod ?: 0) as Integer
             def interest = interestProcessorService.calculateInterestInMonthUnit(loanType.id, contract.loanAmount, contract.numberOfPeriod)

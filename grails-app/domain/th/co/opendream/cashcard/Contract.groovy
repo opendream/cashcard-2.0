@@ -25,7 +25,7 @@ class Contract {
     Date dateCreated
     Date lastUpdated
 
-    static belongsTo = [member: Member]
+    static belongsTo = [member: Member, _guarantor1: Member, _guarantor2: Member]
 
     def beforeInsert = {
         cooperativeShare = loanType.cooperativeShare
@@ -39,5 +39,7 @@ class Contract {
         interestProcessor nullable: false, blank: false
         periodProcessor nullable: false, blank: false
         periodGeneratorProcessor nullable: false, blank: false
+        _guarantor1 blank: true, nullable: true
+        _guarantor2 blank: true, nullable: true
     }
 }

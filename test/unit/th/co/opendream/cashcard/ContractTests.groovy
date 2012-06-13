@@ -10,7 +10,7 @@ import org.junit.*
  */
 @TestFor(Contract)
 @Mock([Member, LoanType])
-class ContractTests {
+class ContractTests extends DomainTestTemplate {
 
     def commonLoan
 
@@ -19,37 +19,8 @@ class ContractTests {
         commonLoan = new LoanType(name: "Common")
     }
 
-    def generateValidContract(type='Effective') {
-        def member = new Member(identificationNumber:"1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")
-        assert LoanType.count() == 0
-        def loanType = new LoanType(name: "Commission", processor: "Commission", numberOfPeriod: 3)
-        loanType.cooperativeShare = 0.80
-        loanType.save()
-
-        def contract = new Contract(
-            code: "ก.55-1000-20",
-            member: member,
-            loanType: commonLoan,
-            processor: "Effective",
-			interestProcessor: "Effective",
-			periodProcessor: "Effective",
-			periodGeneratorProcessor: "Effective",
-            loanAmount: 2000.00,
-            interestRate: 2.00,
-            loanBalance: 0.00,
-            approvalStatus: false,
-            loanReceiveStatus: false,
-            guarantor1: "Keng",
-            guarantor2: "Neung",
-            numberOfPeriod: 3,
-            approvalDate: null
-        )
-
-        return contract
-    }
-
     void testBeforeInsert() {
-        def contract = generateValidContract()
+        def contract = generateValidContract().contract()
 		contract.cooperativeShare = 1.5
         assert contract.cooperativeShare != contract.loanType.cooperativeShare
         contract.beforeInsert.call()
@@ -92,20 +63,20 @@ class ContractTests {
         assert 0 == missing_properties.size(),
             "Domain class is missing some required properties => ${missing_properties}"
     }
-	
+
 	void testProcessor() {
 		mockForConstraintsTests(Contract)
-		
+
 		def contract = new Contract()
 
 		verifyNotNull(contract, 'interestProcessor')
 		contract.interestProcessor = ''
 		verifyNotBlank(contract, 'interestProcessor')
-		
+
 		verifyNotNull(contract, 'periodProcessor')
 		contract.periodProcessor = ''
 		verifyNotBlank(contract, 'periodProcessor')
-		
+
 		verifyNotNull(contract, 'periodGeneratorProcessor')
 		contract.periodGeneratorProcessor = ''
 		verifyNotBlank(contract, 'periodGeneratorProcessor')

@@ -9,20 +9,7 @@ import org.junit.*
  * @see {@link grails.test.mixin.domain.DomainClassUnitTestMixin}
  */
 @TestFor(Member)
-class MemberTests {
-
-    Member generateValidMember() {
-        new Member(
-            identificationNumber:'1411900088198',
-            firstname: 'Siriwat',
-            lastname: 'Uamngamsup',
-            gender: Member.Gender.MALE,
-            telNo: '0841291342',
-            address: "299/99 Areeya Mandarina\nSuthisarn Vinijchai Rd.\nSamsen Nok Huaykwang\nBangkok 10310",
-            balance: 0.000000,
-            status: Member.Status.ACTIVE
-        )
-    }
+class MemberTests extends DomainTestTemplate {
 
     void testProperties() {
         def requireProperties = [

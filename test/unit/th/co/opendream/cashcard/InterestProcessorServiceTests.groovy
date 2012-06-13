@@ -10,85 +10,13 @@ import org.junit.*
  */
 @TestFor(InterestProcessorService)
 @Mock([LoanType, Contract, Period, Member, ReceiveTransaction])
-class InterestProcessorServiceTests {
+class InterestProcessorServiceTests extends DomainTestTemplate {
 
     @Before
     void setUp() {
         new LoanType(name: 'A', processor: 'Effective', interestProcessor: 'Effective', periodProcessor: 'Effective', periodGeneratorProcessor: 'Effective').save()
         new LoanType(name: 'B', processor: 'Hybrid', interestProcessor: 'Hybrid', periodProcessor: 'Hybrid', periodGeneratorProcessor: 'Hybrid').save()
         new LoanType(name: 'C', processor: 'Flat', interestProcessor: 'Flat', periodProcessor: 'Flat', periodGeneratorProcessor: 'Flat').save()
-    }
-
-    void setUpPeriod(type='Effective') {
-        def loanType = new LoanType(name: 'A', processor: type, interestProcessor: type, periodProcessor: type, periodGeneratorProcessor: type)
-        loanType.save()
-
-        def member = new Member(identificationNumber:"1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")
-        member.utilService = [
-            check_id_card: { id -> true }
-        ]
-        member.save()
-
-        def contract = new Contract(
-            id: 1,
-            code: "ก.55-1000-20",
-            member: member,
-            loanType: loanType,
-            processor: type,
-            interestProcessor: loanType.interestProcessor,
-            periodProcessor: loanType.periodProcessor,
-            periodGeneratorProcessor: loanType.periodGeneratorProcessor,
-            loanAmount: 2000.00,
-            interestRate: 24.00,
-            cooperativeShare: 0.75, // For Commission
-            loanBalance: 2000.00,
-            approvalStatus: false,
-            loanReceiveStatus: false,
-            guarantor1: "Keng",
-            guarantor2: "Neung",
-            numberOfPeriod: 3
-        )
-        contract.save()
-
-        mockDomain(Period, [
-            [id: 1, contract: contract, amount: 706.00, no: 1,
-             dueDate: new Date().plus(10), status: true, payoffStatus: true],
-            [id: 2, contract: contract, amount: 706.00, no: 2,
-             dueDate: new Date().plus(20), status: true, payoffStatus: false],
-            [id: 3, contract: contract, amount: 708.00, no: 3,
-             dueDate: new Date().plus(30), status: true, payoffStatus: false]
-        ])
-    }
-
-    void setUpPeriodFlat() {
-        def loanType = new LoanType(name: 'Common', processor: 'Flat', interestProcessor: 'Flat', periodProcessor: 'Flat', periodGeneratorProcessor: 'Flat')
-        loanType.save()
-
-        def member = new Member(identificationNumber:"1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")
-        member.utilService = [
-            check_id_card: { id -> true }
-        ]
-        member.save()
-
-        def contract = new Contract(
-            id: 1,
-            code: "ก.55-1000-20",
-            member: member,
-            loanType: loanType,
-            processor: "Flat",
-            interestProcessor: "Flat",
-            periodProcessor: "Flat",
-            periodGeneratorProcessor: "Flat",
-            loanAmount: 2000.00,
-            interestRate: 24.00,
-            loanBalance: 2000.00,
-            approvalStatus: false,
-            loanReceiveStatus: false,
-            guarantor1: "Keng",
-            guarantor2: "Neung",
-            numberOfPeriod: 3
-        )
-        contract.save()
     }
 
     def setUpMockForPeriodPayoff() {
@@ -137,7 +65,12 @@ class InterestProcessorServiceTests {
         contract
     }
 
+    void testProperties() {
+        //override
+    }
+
     void testProcess() {
+
         setUpPeriod()
 
         def contract = Contract.get(1),

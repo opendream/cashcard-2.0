@@ -269,14 +269,6 @@ class PeriodProcessorService {
                 throw new RuntimeException("Must pay at least ${period.interestOutstanding} for this payment.")
             }
         }
-        else {
-            if (amount >= periodInterest.actualInterest) {
-                amount -= periodInterest.actualInterest
-            }
-            else {
-                throw new RuntimeException("Must pay at least ${periodInterest.actualInterest} for this payment.")
-            }
-        }
 
         receiveTx.amount = actualPaymentAmount
         receiveTx.sign = 1
@@ -295,7 +287,7 @@ class PeriodProcessorService {
 
         def contract = period.contract
         if (amount > 0.00) {
-            if (contract.loanBalance >= amount) {
+            if (contract.loanBalance > amount) {
                 receiveTx.balancePaid = amount
                 contract.loanBalance -= receiveTx.balancePaid
                 amount = 0.00

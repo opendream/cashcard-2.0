@@ -153,17 +153,13 @@ class MemberController {
 
     def doUploadMembers() {
         try {
-            def kettlePath = grailsApplication.config.kettle.repository.path
             def f = request.getFile('members')
-
             if (f.empty) {
                 flash.error = 'file cannot be empty'
                 render(view: 'uploadMembers')
                 return
             }
-
-            f.transferTo(new File("${kettlePath}/fileupload/${f.originalFilename}"))
-            def result = kettleService.extractMember(f.originalFilename, f.contentType)
+            def result = kettleService.extractMember(f)
         } catch (e) {
             log.error(e)
             flash.error = message(code: 'errors.extractMembersNotComplete')

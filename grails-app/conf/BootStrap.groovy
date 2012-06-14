@@ -165,19 +165,22 @@ class BootStrap {
         new Period(
             id: 1, contract: contract, amount: 686.00, no: 1,
             dueDate: Date.parse("yyyy-MM-dd", "2012-04-01"), status: true,
-            payoffStatus: false, interestAmount: 20.00, interestOutstanding: 20.00
+            payoffStatus: false, interestAmount: 20.00, interestOutstanding: 20.00,
+            outstanding: 686.00
         ).save()
 
         new Period(
             id: 2, contract: contract, amount: 686.00, no: 2,
             dueDate: Date.parse("yyyy-MM-dd", "2012-05-01"), status: true,
-            payoffStatus: false, interestAmount: 20.00, interestOutstanding: 20.00
+            payoffStatus: false, interestAmount: 20.00, interestOutstanding: 20.00,
+            outstanding: 686.00
         ).save()
 
         new Period(
             id: 3, contract: contract, amount: 686.00, no: 3,
             dueDate: Date.parse("yyyy-MM-dd", "2012-06-01"), status: true,
-            payoffStatus: false, interestAmount: 20.00, interestOutstanding: 20.00
+            payoffStatus: false, interestAmount: 20.00, interestOutstanding: 20.00,
+            outstanding: 686.00
         ).save()
     }
 }

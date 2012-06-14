@@ -131,10 +131,10 @@ class ContractServiceTests {
         ]
 
         interestAmount = service.getInterestAmountOnCloseContract(period, paymentDate.plus(5))
-        assert interestAmount.totalDebt == 1923.147541
+        assert interestAmount.totalDebt == 1920.00
         assert interestAmount.loanBalance == 1920.00
         assert interestAmount.goalInterest == 0.00
         assert interestAmount.realInterest == 3.147541
-        assert interestAmount.callInterest == 3.147541
+        assert interestAmount.callInterest == 0.00
     }
 }

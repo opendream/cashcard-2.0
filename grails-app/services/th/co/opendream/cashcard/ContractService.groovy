@@ -20,20 +20,14 @@ class ContractService {
     def getInterestAmountOnCloseContract(period, paymentDate) {
         def periodInterest = interestProcessorService.process(period, paymentDate)
 
-        def currentInterest
-        if (! period.interestPaid) {
-            currentInterest = period.interestOutstanding
-        }
-        else {
-            currentInterest = periodInterest.actualInterest
-        }
+        def callInterest = period.interestOutstanding
 
         return [
-            totalDebt: period.contract.loanBalance + currentInterest,
+            totalDebt: period.contract.loanBalance + callInterest,
             loanBalance: period.contract.loanBalance,
             goalInterest: period.interestOutstanding,
             realInterest: periodInterest.actualInterest,
-            callInterest: currentInterest
+            callInterest: callInterest
         ]
     }
 }

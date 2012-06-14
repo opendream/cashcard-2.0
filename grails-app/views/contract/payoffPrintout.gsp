@@ -8,10 +8,10 @@
 		<link rel="apple-touch-icon" href="${resource(dir: 'images', file: 'credit-union-logo.png')}">
 		<link rel="apple-touch-icon" sizes="114x114" href="${resource(dir: 'images', file: 'credit-union-logo.png')}">
 
-    	
-    	<link rel="stylesheet" href="${resource(dir: 'css', file: 'cashcard.css')}" media="screen"/>		
+
+    	<link rel="stylesheet" href="${resource(dir: 'css', file: 'cashcard.css')}" media="screen"/>
     	<link rel="stylesheet" href="${resource(dir: 'css', file: 'print.css')}" type="text/css" media="print">
-		
+
 	</head>
 	<body class="printoutbody">
 		<div>
@@ -29,35 +29,35 @@
 		 			<td></td>
 		 			<td></td>
 		 			<td class="stringlabel"><label>วันที่</label></td>
-		 			<td class="string"><label>${formatDate(date: printout.paymentDate, format: 'dd/MM/yyyy')}</label>		
+		 			<td class="string"><label>${formatDate(date: printout.paymentDate, format: 'dd/MM/yyyy')}</label>
 		 			</td>
-		 		</tr>		 		
+		 		</tr>
 		 		<tr class="title">
 		 			<td class="stringlabel">ได้รับเงินจาก</td>
 		 			<td class="string"><label>${printout.member}</label></td>
-		 			<td class="stringlabel"><label>member code</label></td>
+		 			<td class="stringlabel"><label>หมายเลขสมาชิก</label></td>
 		 			<td class="string"><label>${printout.identificationNumber}</label></td>
-		 			
+
 		 			<td></td>
 		 		</tr>
 		 		<tr class="subtitle">
-		 			<td class="stringlabel"><label>loan type</label></td>
+		 			<td class="stringlabel"><label>ประเภทเงินกู้</label></td>
 		 			<td class="string"><label>${printout.loanType}</label>
-		 			<td class="stringlabel"><label>contact code</label></td>
-		 			<td class="string"><label>${printout.contractCode}</label></td>	 			
+		 			<td class="stringlabel"><label>หมายเลขสัญญา</label></td>
+		 			<td class="string"><label>${printout.contractCode}</label></td>
 		 			</td>
 		 			<td></td>
 		 		</tr>
 		 		<tr class="subtitle">
-		 			<td class="stringlabel"><label>period</label></td>
+		 			<td class="stringlabel"><label>งวด</label></td>
 		 			<td class="string"><label>${printout.periodNo}</label>
-		 			<td class="stringlabel"><label>period amount</label></td>
-		 			<td class="string"><label>${printout.periodAmount}</label></td>	 			
+		 			<td class="stringlabel"><label>จำนวนเงิน</label></td>
+		 			<td class="string"><label>${printout.periodAmount}</label></td>
 		 			</td>
 		 			<td></td>
 		 		</tr>
 		 		<tr>
-		 			<td class="stringlabel"><label>payoff amount</label></td>
+		 			<td class="stringlabel"><label>ชำระ</label></td>
 		 			<td class="number"><label>${formatNumber(number: printout.amount, format: '#,##0.00')}</label>
 		 			</td>
 		 			<td></td>
@@ -65,7 +65,7 @@
 		 			<td></td>
 		 		</tr>
 		 		<tr>
-		 			<td class="stringlabel"><label>payoff fine</label></td>
+		 			<td class="stringlabel"><label>ค่าปรับ</label></td>
 		 			<td class="number"><label>${formatNumber(number: printout?.find, format: '#,##0.00')}</label>
 		 			</td>
 		 			<td></td>
@@ -73,7 +73,7 @@
 		 			<td></td>
 		 		</tr>
 		 		<tr>
-		 			<td class="stringlabel"><label>total payoff</label></td>
+		 			<td class="stringlabel"><label></label></td>
 		 			<td class="number"><label>${formatNumber(number: printout?.totalamount, format: '#,##0.00')}</label>
 		 			</td>
 		 			<td></td>
@@ -82,7 +82,7 @@
 		 		</tr>
 		 		<tr>
 		 			<td class="stringlabel"><label>ผู้ทำรายการ</label></td>
-		 			<td class="string"><label>(${printout.username})</label></td>	 			
+		 			<td class="string"><label>(${printout.username})</label></td>
 		 			<td class="stringlabel"><label>ผู้ชำระเงิน</label></td>
 		 			<td class="string"></td>
 		 			<td></td>

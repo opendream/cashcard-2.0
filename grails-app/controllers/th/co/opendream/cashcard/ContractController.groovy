@@ -246,8 +246,8 @@ class ContractController {
             receiveTx.paymentDate = new Date()
             // TODO:  Integrate With Model
             // MOCKED DATA
-            contract.metaClass.currentInterest = 300;
-            contract.metaClass.totalDebt= contract.currentInterest + contract.loanAmount;
+            contract?.metaClass?.currentInterest = 300;
+            contract?.metaClass?.totalDebt= contract.currentInterest + contract.loanAmount;
             // END MOCK
             if (contract && contract.approvalStatus && contract.loanReceiveStatus) {
                 render view: 'payoff', model: [member: member, period: period, receiveTx: receiveTx, contract: contract]

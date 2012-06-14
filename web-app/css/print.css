@@ -1,0 +1,23 @@
+body {
+   background: white;
+   font-size: 12pt;
+}
+
+table.printout {
+  width: 10 cm;
+}
+
+.printoutbody {
+  /*background-color: #ffffff;
+  background-image: url(../images/logo_creditunion_bg.gif);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;*/
+  display: list-item;
+  list-style-image: url(../images/logo_creditunion_bg.gif);
+  list-style-position: inside;
+}
+
+.noprint {
+		display:none;
+}

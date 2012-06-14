@@ -14,7 +14,9 @@ class ContractController {
         periodGeneratorProcessorService,
         interestProcessorService,
         messageService,
-        contractService
+        contractService,
+        printoutService,
+        springSecurityService
 
     def create() {
         def member = Member.get(params.memberId)
@@ -328,4 +330,10 @@ class ContractController {
         render (contractService.getInterestAmountOnCloseContract(period, date) as JSON)
     }
 
+    def payoffPrintout() {
+        def username = springSecurityService.principal?.username
+        def printout = printoutService.getPayoffPrintout(params.receiveTxId)
+        printout.username = username
+        render view: 'payoffPrintout', model: [printout: printout]
+    }
 }

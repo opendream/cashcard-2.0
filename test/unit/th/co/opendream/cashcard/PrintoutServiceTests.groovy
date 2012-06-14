@@ -81,9 +81,11 @@ class PrintoutServiceTests {
 
         def printout = service.getPayoffPrintout(receiveTx.id)
         assert printout.identificationNumber == '1159900100015'
-        assert printout.memberName == "Nat Weerawan"
+        assert printout.member == "Nat Weerawan"
         assert printout.paymentDate == p1.dueDate
         assert printout.loanType == 'Common'
+        assert printout.code == receiveTx.id // hove to change to code
+        assert printout.periodAmount == p1.amount
         assert printout.amount == 706.00
         assert printout.peroidNo == 1
         assert printout.peroidBalance == 0.00

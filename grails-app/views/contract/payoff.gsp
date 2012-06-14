@@ -100,11 +100,23 @@
                             </div>
                         </div>
 
+                        <div class="control-group">
+                            <label class="control-label">
+                                <g:message code="contract.payoff.form.sendsms.label" />
+                            </label>
+                            <div class="controls">
+                                <label class="checkbox sendsms">
+                                    <g:field type="checkbox" id="sendsms" name="sendsms" checked="false" />
+                                    <g:message code="contract.payoff.form.sendsms.checkbox.label" />
+                                </label>
+                            </div>
+                        </div>
+
                         <div class="form-actions">
                             <button class="btn btn-primary" type="submit">
-                                <i class="icon-ok icon-white"></i> <g:message code="default.button.ok.label"></g:message>
+                                <i class="icon-ok icon-white"></i>
+                                <g:message code="default.button.ok.label"></g:message>
                             </button>
-
                             <g:link action="show" controller="member" id="${member?.id}">
                                 <g:message code="default.button.cancel.label"></g:message>
                             </g:link>

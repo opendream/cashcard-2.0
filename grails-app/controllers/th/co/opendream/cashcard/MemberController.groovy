@@ -1,10 +1,11 @@
 package th.co.opendream.cashcard
 
 import org.springframework.dao.DataIntegrityViolationException
+import grails.converters.JSON
 
 class MemberController {
 
-    def utilService, periodService
+    def utilService, periodService, memberService, kettleService
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
@@ -146,5 +147,30 @@ class MemberController {
         else {
             render(view: 'verifyCard')
         }
+    }
+
+    def uploadMembers() {
+        render view: "uploadMembers"
+    }
+
+    def doUploadMembers() {
+        try {
+            def f = request.getFile('members')
+            if (f.empty) {
+                flash.error = 'file cannot be empty'
+                render(view: 'uploadMembers')
+                return
+            }
+            def result = kettleService.extractMember(f)
+        } catch (e) {
+            log.error(e)
+            flash.error = message(code: 'errors.extractMembersNotComplete')
+        }
+        render view: "uploadMembers"
+    }
+
+    def ajaxSearch() {
+        def result = memberService.search(params.name)
+        render result as JSON
     }
 }

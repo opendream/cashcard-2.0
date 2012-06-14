@@ -79,6 +79,7 @@ environments {
 
         //path to Kettle home
         kettle.engine.path='/home/cashcard/data-integration'
+        //kettle.engine.path='/home/boyone/data-integration'
     }
     production {
         grails.logging.jul.usebridge = false
@@ -140,6 +141,13 @@ grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'th.co.opendre
 grails.plugins.springsecurity.authority.className = 'th.co.opendream.cashcard.Role'
 grails.plugins.springsecurity.requestMap.className = 'th.co.opendream.cashcard.RequestMap'
 grails.plugins.springsecurity.securityConfigType = 'Requestmap'
+grails.plugins.springsecurity.useBasicAuth = true
+grails.plugins.springsecurity.basic.realmName = "Cash Card"
+grails.plugins.springsecurity.filterChain.chainMap = [
+   '/api**': 'JOINED_FILTERS,-exceptionTranslationFilter',
+   '/api/**': 'JOINED_FILTERS,-exceptionTranslationFilter',
+   '/**': 'JOINED_FILTERS,-basicAuthenticationFilter,-basicExceptionTranslationFilter'
+]
 
 jasper.dir.reports = '/reports'
 

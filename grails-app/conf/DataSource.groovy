@@ -13,8 +13,12 @@ hibernate {
 environments {
     development {
         dataSource {
-            dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
-            url = "jdbc:h2:mem:devDb;MVCC=TRUE"
+            driverClassName = "org.postgresql.Driver"
+            dialect = net.sf.hibernate.dialect.PostgreSQLDialect
+            dbCreate = "create-drop"
+            url="jdbc:postgresql://localhost:5432/cashcard_alpha"
+            username = "postgres"
+            password = "postgres"
         }
     }
     test {
@@ -27,7 +31,7 @@ environments {
         dataSource {
             driverClassName = "org.postgresql.Driver"
             dialect = net.sf.hibernate.dialect.PostgreSQLDialect
-            dbCreate = "update" 
+            dbCreate = "update"
             url="jdbc:postgresql://localhost:5432/cashcard_alpha"
             username = "cashcard_alpha"
             password = "openpubyesroti!"

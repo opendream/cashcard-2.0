@@ -128,7 +128,7 @@
 	<section id="period">
 		<h2>
 			<g:message code="contract.show.period.header" />
-			
+
 	        <g:if test="${contract.currentPeriod}">
                 <g:if test="${contract.loanReceiveStatus}">
                     <g:link controller="contract" action="payoff" id="${contract.currentPeriod?.id}" class="btn btn-danger">
@@ -179,7 +179,7 @@
 						</td>
 						<g:if test="${contract.approvalStatus}">
 							<td><g:formatDate date="${period.dueDate}" format="EEEE d MMMM yyyy" /></td>
-							<td>${period.payoffStatusText}</td>
+							<td class="date">${period.payoffStatusText}</td>
 							<td>
 								<g:if test="${period.payoffStatus}">
 									<g:formatDate date="${period.payoffDate}" format="EEEE dd MMMM yyyy" />
@@ -188,7 +188,7 @@
 							</td>
 						</g:if>
 					</tr>
-					
+
 					<g:if test="${contract.loanReceiveStatus}">
 						<tr class="period-transaction-row">
 							<td colspan="5">
@@ -219,12 +219,12 @@
 									                </td>
 												</tr>
 												</g:each>
-											</g:if>		
+											</g:if>
 											<g:else>
 												<tr>
 													<td colspan="3"><g:message code="contract.show.receiveTx.noTransaction" /></td>
 												</tr>
-											</g:else>						
+											</g:else>
 										</tbody>
 									</table>
 								</div>
@@ -255,7 +255,7 @@
 		});
 
 		$('.btn', context).hide();
-		$('.btn:last', context).show();
+		$('.btn', context).eq(-1).show();
 
 		// Bind cancel btn
 		$('.cancel-btn').click(function (e) {

@@ -112,14 +112,22 @@ class ContractController {
                 def code
                 if (!period.payoffStatus && period.dueDate < new Date()) {
                     code = 'late'
-                    totalDebt += period.outstanding
+                    if (!period.cancelledDueToDebtClearance) {
+                        totalDebt += period.outstanding
+                    }
                 }
                 else if (!period.payoffStatus) {
                     code = 'due'
-                    totalDebt += period.outstanding
+                    if (!period.cancelledDueToDebtClearance) {
+                        totalDebt += period.outstanding
+                    }
                 }
                 else if (period.payoffStatus) {
                     code = 'paid'
+                }
+
+                if (period.cancelledDueToDebtClearance) {
+                    code = 'cancelledDueToDebtClearance'
                 }
 
                 period.metaClass.payoffStatusText = message(code: "contract.show.period.tbody.payoffStatus.${code}")

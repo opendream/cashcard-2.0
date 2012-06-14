@@ -20,6 +20,8 @@
         <g:form class="form-horizontal" action="create" controller="contract">
             <g:hiddenField name="memberId" value="${member.id}" />
             <g:hiddenField name="loanType" value="${loanType.id}" />
+            <g:hiddenField name="_guarantor1" value="0" />
+            <g:hiddenField name="_guarantor2" value="0" />
 
             <div class="control-group">
                 <label class="control-label">
@@ -74,7 +76,7 @@
                         <label for="guarantor2">
                             <g:message code="contract.sign.form.guarantor2.label" />
                         </label>
-                        <input type="text" id="guarantor1" name="guarantor2" value="${contract.guarantor2}" />
+                        <input type="text" id="guarantor2" name="guarantor2" value="${contract.guarantor2}" />
                     </div>
                 </div>
             </div>
@@ -126,7 +128,9 @@
                     });
                 },
                 onselect: function(member) {
-                    console.log(member)
+                    var guarantorId = this.$element.attr('id');
+                    console.log('set ', member['id'])
+                    $('#_' + guarantorId).val(member['id']);
                 }
             });
         });

@@ -53,7 +53,7 @@
                             </label>
                             <div class="controls">
                                 <label class="checkbox payAll">
-                                    <g:field type="checkbox" id="payAll" name="payAll" value="${receiveTx?.isShareCapital}" />
+                                    <g:field type="checkbox" id="payAll" name="payAll" value="${receiveTx?.isShareCapital}" value="1" />
                                     <g:message code="contract.payoff.form.payAll.checkbox.label" />
                                 </label>
                                 <span class="help-block"><g:message code="contract.payoff.form.totalDebt.help" /></span>

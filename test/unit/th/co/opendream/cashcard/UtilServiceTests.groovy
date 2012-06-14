@@ -18,7 +18,7 @@ class UtilServiceTests {
         assertFalse service.check_id_card("1111111111")
         assertFalse service.check_id_card("11111111111")
         assertFalse service.check_id_card("111111111111")
-        // Special case 
+        // Special case
         assertTrue service.check_id_card("1411900088180")
         assertTrue service.check_id_card("1411900088091")
     }
@@ -33,5 +33,13 @@ class UtilServiceTests {
 
     	contract = [id: 1, approvalStatus: true] as Contract
     	assertTrue service.isPayable(contract)
+    }
+
+    void testMoneyRoundUp() {
+        assert service.moneyRoundUp(0.00) == 0.00
+        assert service.moneyRoundUp(100.20) == 100.25
+        assert service.moneyRoundUp(100.34) == 100.50
+        assert service.moneyRoundUp(100.73) == 100.75
+        assert service.moneyRoundUp(100.84) == 101.00
     }
 }

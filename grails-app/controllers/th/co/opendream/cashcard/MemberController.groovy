@@ -76,7 +76,9 @@ class MemberController {
             def totalDebt = 0.00
             periodList.each { p ->
                 if (!p.payoffStatus) {
-                    totalDebt += p.outstanding
+                    if (!p.cancelledDueToDebtClearance) {
+                        totalDebt += p.outstanding
+                    }
                 }
             }
             contract.metaClass.totalDebt = totalDebt

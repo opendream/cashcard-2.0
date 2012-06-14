@@ -1,6 +1,9 @@
 package th.co.opendream.cashcard
 
 import groovy.time.TimeCategory
+import grails.converters.JSON
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class ContractController {
 
@@ -109,14 +112,22 @@ class ContractController {
                 def code
                 if (!period.payoffStatus && period.dueDate < new Date()) {
                     code = 'late'
-                    totalDebt += period.outstanding
+                    if (!period.cancelledDueToDebtClearance) {
+                        totalDebt += period.outstanding
+                    }
                 }
                 else if (!period.payoffStatus) {
                     code = 'due'
-                    totalDebt += period.outstanding
+                    if (!period.cancelledDueToDebtClearance) {
+                        totalDebt += period.outstanding
+                    }
                 }
                 else if (period.payoffStatus) {
                     code = 'paid'
+                }
+
+                if (period.cancelledDueToDebtClearance) {
+                    code = 'cancelledDueToDebtClearance'
                 }
 
                 period.metaClass.payoffStatusText = message(code: "contract.show.period.tbody.payoffStatus.${code}")
@@ -241,8 +252,19 @@ class ContractController {
             def member = contract.member
             def receiveTx = new ReceiveTransaction()
             receiveTx.paymentDate = new Date()
+
+            def interestAmount = contractService.getInterestAmountOnCloseContract(period, receiveTx.paymentDate)
+            def periodInterest = interestProcessorService.process(period, receiveTx.paymentDate)
+
+            def currentInterest = interestAmount.callInterest.setScale(2, BigDecimal.ROUND_HALF_UP)
+            def totalDebt = utilService.moneyRoundUp(interestAmount.totalDebt)
+
             if (contract && contract.approvalStatus && contract.loanReceiveStatus) {
-                render view: 'payoff', model: [member: member, period: period, receiveTx: receiveTx]
+                render view: 'payoff', model: [
+                    member: member, period: period, receiveTx: receiveTx,
+                    contract: contract, currentInterest: currentInterest,
+                    totalDebt: totalDebt
+                ]
             }
             else {
                 redirect url: '/error'
@@ -260,6 +282,7 @@ class ContractController {
             def fine           = (params.fine           ?: '0.00') as BigDecimal
             def isShareCapital = params.isShareCapital ?: false
             def paymentDate    = params.paymentDate ?: new Date()
+            def isPayAll       = params.payAll ? true : false
 
             if (period) {
                 def contract = period.contract,
@@ -267,21 +290,30 @@ class ContractController {
                     receiveTx
 
                 try {
-                    receiveTx = periodProcessorService.process(period, payAmount, fine, isShareCapital, paymentDate)
+                    receiveTx = periodProcessorService.process(period, payAmount, fine, isShareCapital, paymentDate, isPayAll)
                     messageService.sendPayoff(receiveTx)
 
                     redirect url: "/member/show/${period.contract.member.id}"
                 }
                 catch (e) {
                     println e
-                    flash.error = e.message
+                    flash.error = message(code: "errors.runtimeErrorMessagePrefix", args: [e.message])
                     render view: '/contract/payoff', model: [receiveTx: receiveTx, member: member, contract: contract, period: period, amount: payAmount, fine: fine, isShareCapital: isShareCapital]
                 }
             }
             else {
                 redirect url: '/error'
             }
+        }.invalidToken {
+            redirect url: '/error'
         }
+    }
+
+    def getInterestAmountOnCloseContract() {
+        def period = Period.get(params.id),
+            date = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(params.date)
+
+        render (contractService.getInterestAmountOnCloseContract(period, date) as JSON)
     }
 
 }

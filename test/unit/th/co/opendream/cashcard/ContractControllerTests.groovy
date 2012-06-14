@@ -325,6 +325,32 @@ class ContractControllerTests {
             id == '1' ? [id: id, contract: contract] : null
         }
 
+        controller.utilService.metaClass.moneyRoundUp = { m ->
+            m
+        }
+        controller.interestProcessorService = [
+            process: { p, d ->
+                [
+                    actualInterest: 20.55,
+                    effectedInterest: 19.05,
+                    fee: 1.50
+                ]
+            }
+        ]
+        controller.contractService = [
+            getInterestAmountOnCloseContract: { p,d ->
+                counter++
+                [
+                    totalDebt: 2020.00,
+                    loanBalance: 2000.00,
+                    goalInterest: 20.50,
+                    realInterest: 6.55,
+                    callInterest: 20.50
+                ]
+            }
+        ]
+
+
         params.id = '1'
         controller.payoff()
         assert view == '/contract/payoff'
@@ -354,7 +380,7 @@ class ContractControllerTests {
         params.isShareCapital = ''
 
         controller.periodProcessorService = [
-            process: { period, amount, fine, isShareCapital, date -> true }
+            process: { period, amount, fine, isShareCapital, date, Object... args -> true }
         ] as PeriodProcessorService
 
         Period.metaClass.static.get = { Serializable pid ->
@@ -393,7 +419,30 @@ class ContractControllerTests {
         params.id = 1
 
         controller.doPayoff()
-        response.redirectedUrl == '/error'
+        assert response.redirectedUrl == '/error'
+    }
+
+    void testGetInterestAmountOnCloseContract() {
+        params.id = '1'
+        params.date = '2012-04-01'
+
+        // Mock service
+        def counter = 0
+        controller.contractService = [
+            getInterestAmountOnCloseContract: { p,d ->
+                counter++
+                [
+                    totalDebt: 2020.00,
+                    loanBalance: 2000.00,
+                    goalInterest: 20.50,
+                    realInterest: 6.55
+                ]
+            }
+        ]
+
+        controller.getInterestAmountOnCloseContract()
+        assert counter == 1
+        assert response.text == '{"totalDebt":2020,"loanBalance":2000,"goalInterest":20.5,"realInterest":6.55}'
     }
 
 }

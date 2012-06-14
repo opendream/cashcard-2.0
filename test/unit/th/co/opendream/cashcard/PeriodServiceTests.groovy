@@ -117,4 +117,50 @@ class PeriodServiceTests {
         assert service.getCurrentPeriod(contract) == null
     }
 
+    void testBeforeInsert() {
+        def period = [id: 1, outstanding: 0.00, amount: 234.56]
+
+        period = service.beforeInsert(period)
+        assert period.outstanding == 234.56
+    }
+
+    void testBeforeUpdateNoPartialPayoff() {
+        def period = [id: 1, outstanding: 200.00, amount: 200.00, payoffStatus: false, partialPayoff: null]
+
+        period.payAmount = 200.00
+        period = service.beforeUpdate(period)
+
+        assert period.partialPayoff == false
+        assert period.payoffStatus == true
+    }
+
+    void testBeforeUpdatePartialPayoff() {
+        def period = [id: 1, outstanding: 200.00, amount: 200.00, payoffStatus: false, partialPayoff: null]
+
+        // 1st Partial
+        period.payAmount = 100.00
+        period = service.beforeUpdate(period)
+
+        assert period.partialPayoff == true
+        assert period.payoffStatus == false
+        assert period.outstanding == 100.00
+
+
+        // 2nd Partial
+        period.payAmount = 50.00
+        period = service.beforeUpdate(period)
+
+        assert period.partialPayoff == true
+        assert period.payoffStatus == false
+        assert period.outstanding == 50.00
+
+        // Last Partial
+        period.payAmount = 50.00
+        period = service.beforeUpdate(period)
+
+        assert period.partialPayoff == false
+        assert period.payoffStatus == true
+        assert period.outstanding == 0.00
+    }
+
 }

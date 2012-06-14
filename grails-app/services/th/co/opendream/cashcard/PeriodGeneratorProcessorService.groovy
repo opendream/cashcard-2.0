@@ -1,7 +1,8 @@
 package th.co.opendream.cashcard
 
 class PeriodGeneratorProcessorService {
-    def interestProcessorService
+    def interestProcessorService,
+        periodService
 
     def generate(loanType, amount, numberOfPeriod) {
         if (loanType instanceof Integer) {
@@ -18,7 +19,7 @@ class PeriodGeneratorProcessorService {
             remain = ((int)amount) % numberOfPeriod
 
         (0..<numberOfPeriod).collect { id ->
-            new Period(amount: amountPerPeriod, no: id + 1)
+            periodService.beforeInsert(new Period(amount: amountPerPeriod, no: id + 1))
         }
     }
 
@@ -29,7 +30,7 @@ class PeriodGeneratorProcessorService {
             remain = ((int)amount) % numberOfPeriod
 
         (0..<numberOfPeriod).collect { id ->
-            new Period(amount: amountPerPeriod, no: id + 1)
+            periodService.beforeInsert(new Period(amount: amountPerPeriod, no: id + 1))
         }
     }
 
@@ -39,7 +40,7 @@ class PeriodGeneratorProcessorService {
             remain = ((int)amount) % numberOfPeriod
 
         (0..<numberOfPeriod).collect { id ->
-            new Period(amount: amountPerPeriod, no: id + 1)
+            periodService.beforeInsert(new Period(amount: amountPerPeriod, no: id + 1))
         }
     }
 
@@ -53,7 +54,7 @@ class PeriodGeneratorProcessorService {
             remain = ((int)amount) % numberOfPeriod
 
         (0..<numberOfPeriod).collect { id ->
-            new Period(amount: amountPerPeriod, no: id + 1, interestAmount: interestPerMonth, interestOutstanding: interestPerMonth, interestPaid: false)
+            periodService.beforeInsert(new Period(amount: amountPerPeriod, no: id + 1, interestAmount: interestPerMonth, interestOutstanding: interestPerMonth, interestPaid: false))
         }
     }
 

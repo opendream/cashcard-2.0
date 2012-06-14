@@ -10,6 +10,7 @@ import grails.util.Environment
 
 import th.co.opendream.cashcard.LoanType
 import th.co.opendream.cashcard.Contract
+import th.co.opendream.cashcard.Period
 
 class BootStrap {
     def grailsApplication
@@ -46,6 +47,13 @@ class BootStrap {
 
         def kettle = grailsApplication.config.kettle.repository.path
         grailsApplication.config.kettle.repository.path = servletContext.getRealPath(kettle)
+
+        development {
+            def contract = generateContract(m1, LoanType.findByName("เงินกู้ด่วน (ปรับปรุงใหม่)"))
+            contract.save()
+
+            generatePeriod(contract)
+        }
     }
     def destroy = {
 
@@ -131,20 +139,48 @@ class BootStrap {
     }
 
     def generateContract(member, loanType) {
-        /*
         new Contract(
+            id: 1,
             code: "ก.55-1000-20",
+            processor: "Express",
+            interestProcessor: loanType.interestProcessor,
+            periodProcessor: loanType.periodProcessor,
+            periodGeneratorProcessor: loanType.periodGeneratorProcessor,
             member: member,
             loanType: loanType,
             loanAmount: 2000.00,
-            interestRate: 2.00,
+            interestRate: 12.00,
+            maxInterestRate: 18.00,
             loanBalance: 2000.00,
             approvalStatus: false,
             loanReceiveStatus: false,
             guarantor1: "Keng",
             guarantor2: "Neung",
-            numberOfPeriod: 3
+            numberOfPeriod: 3,
+            signedDate: Date.parse("yyyy-MM-dd", "2012-03-01")
+        )
+    }
+
+    def generatePeriod(contract) {
+        new Period(
+            id: 1, contract: contract, amount: 686.00, no: 1,
+            dueDate: Date.parse("yyyy-MM-dd", "2012-04-01"), status: true,
+            payoffStatus: false, interestAmount: 20.00, interestOutstanding: 20.00,
+            outstanding: 686.00
         ).save()
-        */
+
+        new Period(
+            id: 2, contract: contract, amount: 686.00, no: 2,
+            dueDate: Date.parse("yyyy-MM-dd", "2012-05-01"), status: true,
+            payoffStatus: false, interestAmount: 20.00, interestOutstanding: 20.00,
+            outstanding: 686.00
+        ).save()
+
+        new Period(
+            id: 3, contract: contract, amount: 686.00, no: 3,
+            dueDate: Date.parse("yyyy-MM-dd", "2012-06-01"), status: true,
+            payoffStatus: false, interestAmount: 20.00, interestOutstanding: 20.00,
+            outstanding: 686.00
+        ).save()
     }
 }

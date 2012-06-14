@@ -26,6 +26,13 @@ class PeriodGeneratorProcessorServiceTests {
         ).save()
 
         service.interestProcessorService = new InterestProcessorService()
+        service.periodService = [
+            beforeInsert: { p ->
+                p.outstanding = p.amount
+
+                p
+            }
+        ]
     }
 
     void testProcess() {
@@ -92,6 +99,9 @@ class PeriodGeneratorProcessorServiceTests {
         assert periodList[0].amount == 353
         assert periodList[1].amount == 353
         assert periodList[2].amount == 353
+        assert periodList[0].outstanding == 353
+        assert periodList[1].outstanding == 353
+        assert periodList[2].outstanding == 353
         assert periodList.size() == 3
 
         periodList = service.effective(1000.00, 6, 24.00)
@@ -102,6 +112,12 @@ class PeriodGeneratorProcessorServiceTests {
         assert periodList[3].amount == 186
         assert periodList[4].amount == 186
         assert periodList[5].amount == 186
+        assert periodList[0].outstanding == 186
+        assert periodList[1].outstanding == 186
+        assert periodList[2].outstanding == 186
+        assert periodList[3].outstanding == 186
+        assert periodList[4].outstanding == 186
+        assert periodList[5].outstanding == 186
         assert periodList.size() == 6
     }
 
@@ -111,6 +127,9 @@ class PeriodGeneratorProcessorServiceTests {
         assert periodList[0].amount == 353
         assert periodList[1].amount == 353
         assert periodList[2].amount == 353
+        assert periodList[0].outstanding == 353
+        assert periodList[1].outstanding == 353
+        assert periodList[2].outstanding == 353
         assert periodList.size() == 3
 
         periodList = service.commission(1000.00, 6, 24.00)
@@ -121,6 +140,12 @@ class PeriodGeneratorProcessorServiceTests {
         assert periodList[3].amount == 186
         assert periodList[4].amount == 186
         assert periodList[5].amount == 186
+        assert periodList[0].outstanding == 186
+        assert periodList[1].outstanding == 186
+        assert periodList[2].outstanding == 186
+        assert periodList[3].outstanding == 186
+        assert periodList[4].outstanding == 186
+        assert periodList[5].outstanding == 186
         assert periodList.size() == 6
     }
 
@@ -130,6 +155,9 @@ class PeriodGeneratorProcessorServiceTests {
         assert periodList[0].amount == 333
         assert periodList[1].amount == 333
         assert periodList[2].amount == 333
+        assert periodList[0].outstanding == 333
+        assert periodList[1].outstanding == 333
+        assert periodList[2].outstanding == 333
         assert periodList.size() == 3
 
         periodList = service.flat(1000.00, 6, 24.00)
@@ -140,6 +168,12 @@ class PeriodGeneratorProcessorServiceTests {
         assert periodList[3].amount == 166
         assert periodList[4].amount == 166
         assert periodList[5].amount == 166
+        assert periodList[0].outstanding == 166
+        assert periodList[1].outstanding == 166
+        assert periodList[2].outstanding == 166
+        assert periodList[3].outstanding == 166
+        assert periodList[4].outstanding == 166
+        assert periodList[5].outstanding == 166
         assert periodList.size() == 6
     }
 
@@ -149,6 +183,9 @@ class PeriodGeneratorProcessorServiceTests {
         assert periodList[0].amount == 353
         assert periodList[1].amount == 353
         assert periodList[2].amount == 353
+        assert periodList[0].outstanding == 353
+        assert periodList[1].outstanding == 353
+        assert periodList[2].outstanding == 353
         assert periodList[0].interestAmount == 20
         assert periodList[1].interestAmount == 20
         assert periodList[2].interestAmount == 20
@@ -168,6 +205,12 @@ class PeriodGeneratorProcessorServiceTests {
         assert periodList[3].amount == 186
         assert periodList[4].amount == 186
         assert periodList[5].amount == 186
+        assert periodList[0].outstanding == 186
+        assert periodList[1].outstanding == 186
+        assert periodList[2].outstanding == 186
+        assert periodList[3].outstanding == 186
+        assert periodList[4].outstanding == 186
+        assert periodList[5].outstanding == 186
         assert periodList[0].interestAmount == 20
         assert periodList[1].interestAmount == 20
         assert periodList[2].interestAmount == 20

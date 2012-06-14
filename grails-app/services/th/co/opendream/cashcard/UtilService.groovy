@@ -31,4 +31,8 @@ class UtilService {
     def isPayable(contract) {
     	contract.approvalStatus && !contract.loanReceiveStatus
     }
+
+    def moneyRoundUp(amount) {
+		[0.00, 0.25, 0.50, 0.75, 1.00].collect { it + (amount as BigInteger) }.find { it >= amount }
+	}
 }

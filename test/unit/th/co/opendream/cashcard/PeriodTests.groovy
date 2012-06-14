@@ -153,59 +153,6 @@ class PeriodTests extends DomainTestTemplate  {
         )
     }
 
-    void testBeforeSaveNoPartialPayoff() {
-        def period = generateValidPeriod()
-
-        assert period.outstanding == 0.00
-        assert period.payoffStatus == false
-        assert period.partialPayoff == null
-
-        period.beforeInsert.call()
-
-
-        period.payAmount = 200
-        period.beforeUpdate.call()
-
-        assert period.partialPayoff == false
-        assert period.payoffStatus == true
-    }
-
-    void testBeforeSavePartialPayoff() {
-        def period = generateValidPeriod()
-
-        assert period.outstanding == 0.00
-        assert period.payoffStatus == false
-        assert period.partialPayoff == null
-
-        // 1st Partial
-        period.payAmount = 100.00
-        period.beforeInsert.call()
-        period.beforeUpdate.call()
-
-        assert period.partialPayoff == true
-        assert period.payoffStatus == false
-        assert period.outstanding == 100.00
-
-
-        // 2nd Partial
-        period.payAmount = 50.00
-        period.beforeUpdate.call()
-
-        assert period.partialPayoff == true
-        assert period.payoffStatus == false
-        assert period.outstanding == 50.00
-
-        // Last Partial
-        period.payAmount = 50.00
-        period.beforeUpdate.call()
-
-        assert period.partialPayoff == false
-        assert period.payoffStatus == true
-        assert period.outstanding == 0.00
-    }
-
-
-
     void verifyNotNull(instance, field) {
         instance.validate([field])
         assertEquals "${field} must fail null validation.",

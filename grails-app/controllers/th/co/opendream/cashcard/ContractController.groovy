@@ -274,7 +274,7 @@ class ContractController {
             def fine           = (params.fine           ?: '0.00') as BigDecimal
             def isShareCapital = params.isShareCapital ?: false
             def paymentDate    = params.paymentDate ?: new Date()
-            def isPayAll       = params.payAll ? true :false
+            def isPayAll       = params.payAll ? true : false
 
             if (period) {
                 def contract = period.contract,

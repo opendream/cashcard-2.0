@@ -12,6 +12,30 @@ import org.junit.*
 @Mock([Member, Contract, Period, LoanType, ReceiveTransaction])
 class PeriodProcessorServiceTests {
 
+    @Before
+    void setUp() {
+        service.periodService = [
+            beforeUpdate: { p ->
+                p.with {
+                    def remaining = outstanding - payAmount
+
+                    if (remaining > 0) {
+                        partialPayoff = true
+                        payoffStatus = false
+                        outstanding = remaining
+                    }
+                    else if (remaining <= 0) {
+                        partialPayoff = false
+                        payoffStatus = true
+                        outstanding = 0.00
+                    }
+                }
+
+                p
+            }
+        ]
+    }
+
     /***********************************
      * Effective
      **********************************/
@@ -271,6 +295,24 @@ class PeriodProcessorServiceTests {
         service.process(period, 1, 2, 3, 4)
         assert effectiveCounter == 1
         assert flatCounter == 1
+
+        // Test variable arguments
+        def flatExtendCounter = 0
+        def foundO5 = 0, foundO6 = 0
+        service.metaClass.flatextend = { Period p, o1, o2, o3, o4, args ->
+            if (args[0]) foundO5++
+            if (args[1]) foundO6++
+            flatExtendCounter++
+        }
+        contract.periodProcessor = 'flatextend'
+        contract.save()
+
+        // Reload period after contract is saved.
+        period = Period.get(period.id)
+        service.process(period, 1, 2, 3, 4, 5, 6)
+        assert flatExtendCounter == 1
+        assert foundO5 == 1
+        assert foundO6 == 1
     }
 
     void testProcessPeriodPayoff() {
@@ -377,7 +419,6 @@ class PeriodProcessorServiceTests {
         assert ReceiveTransaction.list().size() == 1
 
         p1 = Period.get(1) // Reload data
-        p1.beforeUpdate()
         assert p1.payoffDate == p1.dueDate
         assert p1.partialPayoff == true
         assert p1.outstanding == 606.00
@@ -608,7 +649,6 @@ class PeriodProcessorServiceTests {
         assert ReceiveTransaction.list().size() == 1
 
         p1 = Period.get(1) // Reload data
-        p1.beforeUpdate()
         assert p1.payoffDate == p1.dueDate
         assert p1.partialPayoff == true
         assert p1.outstanding == 606.00
@@ -928,9 +968,9 @@ class PeriodProcessorServiceTests {
         def periodList = sample_period.collect {
             def p = new Period(
                 contract: contract, no: it[0], amount: it[1],
-                dueDate: getDate(it[2]), status: true, payoffStatus: false
+                dueDate: getDate(it[2]), status: true, payoffStatus: false,
+                outstanding: it[1]
             )
-            p.beforeInsert()
             p.save()
             return p
         }
@@ -942,7 +982,6 @@ class PeriodProcessorServiceTests {
         assert ReceiveTransaction.list().size() == 1
 
         period = Period.get(period.id) // Reload data
-        period.beforeUpdate()
         assert period.partialPayoff == true
         assert period.payoffDate == period.dueDate.minus(5)
         assert period.payoffStatus == false
@@ -1268,6 +1307,17 @@ class PeriodProcessorServiceTests {
             }
         ]
 
+        def results = [
+            [totalDebt: 1820.00],
+            [totalDebt: 1920.00],
+            [totalDebt: 2020.00]
+        ]
+        service.contractService = [
+            getInterestAmountOnCloseContract: { p, d ->
+                results.pop()
+            }
+        ]
+
         def round = 0
         expect.each {
             println "Round ${++round} : "
@@ -1282,13 +1332,101 @@ class PeriodProcessorServiceTests {
             assert c.loanBalance == it[11]
 
             def p = Period.get(it[0])
-            p.beforeUpdate()
             assert p.outstanding == it[10]
             assert p.interestOutstanding == it[5]
             assert p.interestPaid == it[6]
 
             def r = ReceiveTransaction.get(round)
             assert r.amount == it[2]
+            assert r.balancePaid == it[3]
+            assert r.interestPaid == it[8]
+            assert r.fee == it[9]
+            assert r.differential == it[12]
+
+            if (round == 3) {
+                // 1.Check that remaining period must be cancelled.
+                def p2 = Period.get(2)
+                assert p2.status == false
+                assert p2.payoffStatus == false
+                assert p2.cancelledDueToDebtClearance == true
+                def p3 = Period.get(3)
+                assert p3.status == false
+                assert p3.payoffStatus == false
+                assert p3.cancelledDueToDebtClearance == true
+                // 2.Check that current period is marked as paid.
+                assert p.interestPaid == it[6]
+                assert p.payoffStatus == true
+                // 3.Check different amount
+                assert r.differential == it[12]
+            }
+            println "===> pass"
+        }
+    }
+
+    void testExpressCash01ProcessPayAll() {
+        setUpPeriod()
+
+        def contract = Contract.get(1)
+        contract.loanAmount = 2000.00
+        contract.loanBalance = 2000.00
+        contract.interestRate = 12.00
+        contract.maxInterestRate = 18.00
+        contract.periodProcessor = 'expressCash01'
+        contract.save()
+
+        def p1 = Period.get(1)
+        p1.amount = 686.00
+        p1.outstanding = 686.00
+        p1.interestAmount = 20.00
+        p1.interestOutstanding = 20.00
+        p1.interestPaid = false
+        p1.save()
+
+        def expect = [
+            // period_id, date, จ่าย, ตัดต้น, ดอกเหมา, ดอกเหลือ, จ่ายดอกครบ, ดอกจริง, ดอกกฎ, fee, เงินงวดเหลือ, ต้นเหลือ, ส่วนต่าง, จ่ายจริง, จ่ายหมด
+            [1, "2012-04-11",  100.00,       80.00, 20.00, 0.00, true, 6.557377, 6.557377, 0, 586.00,     1920.00, 13.442623, 100.00, false],
+            [1, "2012-04-16",  100.00,      100.00,     0, 0.00, true, 3.147541, 3.147541, 0, 486.00,     1820.00,         0, 100.00, false],
+            [1, "2012-04-21",  400.00,     1820.00,     0, 0.00, true, 2.988766, 2.988766, 0,      0,           0,         0, 1820.00, true],
+        ]
+
+        def interest
+        service.interestProcessorService = [
+            process: { p, d ->
+                interest
+            }
+        ]
+
+        def results = [
+            [totalDebt: 1820.00],
+            [totalDebt: 1920.00],
+            [totalDebt: 2020.00]
+        ]
+        service.contractService = [
+            getInterestAmountOnCloseContract: { p, d ->
+                results.pop()
+            }
+        ]
+
+        def round = 0
+        expect.each {
+            println "Round ${++round} : "
+            interest = [
+                actualInterest: it[7],
+                effectedInterest: it[8],
+                fee: it[9]
+            ]
+            service.expresscash01(p1, it[2], 0.00, false, Date.parse("yyyy-MM-dd", it[1]), it[14])
+
+            def c = Contract.get(1)
+            assert c.loanBalance == it[11]
+
+            def p = Period.get(it[0])
+            assert p.outstanding == it[10]
+            assert p.interestOutstanding == it[5]
+            assert p.interestPaid == it[6]
+
+            def r = ReceiveTransaction.get(round)
+            assert r.amount == it[13]
             assert r.balancePaid == it[3]
             assert r.interestPaid == it[8]
             assert r.fee == it[9]

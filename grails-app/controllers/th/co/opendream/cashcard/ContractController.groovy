@@ -2,6 +2,8 @@ package th.co.opendream.cashcard
 
 import groovy.time.TimeCategory
 import grails.converters.JSON
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class ContractController {
 
@@ -246,7 +248,7 @@ class ContractController {
             def interestAmount = contractService.getInterestAmountOnCloseContract(period, receiveTx.paymentDate)
             def periodInterest = interestProcessorService.process(period, receiveTx.paymentDate)
 
-            def currentInterest = utilService.moneyRoundUp(interestAmount.callInterest)
+            def currentInterest = interestAmount.callInterest.setScale(2, BigDecimal.ROUND_HALF_UP)
             def totalDebt = utilService.moneyRoundUp(interestAmount.totalDebt)
 
             if (contract && contract.approvalStatus && contract.loanReceiveStatus) {
@@ -272,6 +274,7 @@ class ContractController {
             def fine           = (params.fine           ?: '0.00') as BigDecimal
             def isShareCapital = params.isShareCapital ?: false
             def paymentDate    = params.paymentDate ?: new Date()
+            def isPayAll       = params.payAll ? true :false
 
             if (period) {
                 def contract = period.contract,
@@ -279,14 +282,14 @@ class ContractController {
                     receiveTx
 
                 try {
-                    receiveTx = periodProcessorService.process(period, payAmount, fine, isShareCapital, paymentDate)
+                    receiveTx = periodProcessorService.process(period, payAmount, fine, isShareCapital, paymentDate, isPayAll)
                     messageService.sendPayoff(receiveTx)
 
                     redirect url: "/member/show/${period.contract.member.id}"
                 }
                 catch (e) {
                     println e
-                    flash.error = e.message
+                    flash.error = message(code: "errors.runtimeErrorMessagePrefix", args: [e.message])
                     render view: '/contract/payoff', model: [receiveTx: receiveTx, member: member, contract: contract, period: period, amount: payAmount, fine: fine, isShareCapital: isShareCapital]
                 }
             }
@@ -300,7 +303,7 @@ class ContractController {
 
     def getInterestAmountOnCloseContract() {
         def period = Period.get(params.id),
-            date = Date.parse("yyyy-MM-dd", params.date)
+            date = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(params.date)
 
         render (contractService.getInterestAmountOnCloseContract(period, date) as JSON)
     }

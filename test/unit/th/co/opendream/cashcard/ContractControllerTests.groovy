@@ -344,7 +344,8 @@ class ContractControllerTests {
                     totalDebt: 2020.00,
                     loanBalance: 2000.00,
                     goalInterest: 20.50,
-                    realInterest: 6.55
+                    realInterest: 6.55,
+                    callInterest: 20.50
                 ]
             }
         ]
@@ -379,7 +380,7 @@ class ContractControllerTests {
         params.isShareCapital = ''
 
         controller.periodProcessorService = [
-            process: { period, amount, fine, isShareCapital, date -> true }
+            process: { period, amount, fine, isShareCapital, date, Object... args -> true }
         ] as PeriodProcessorService
 
         Period.metaClass.static.get = { Serializable pid ->

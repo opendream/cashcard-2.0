@@ -4,11 +4,19 @@ import org.springframework.context.i18n.LocaleContextHolder as LCH
 
 class PeriodProcessorService {
 	def interestProcessorService,
-        messageSource
+        messageSource,
+        contractService,
+        periodService
 
-    def process(Period period, amount, fine, isShareCapital, date) {
+    def process(Period period, amount, fine, isShareCapital, date, Object... args) {
         def processorName = period.contract.periodProcessor.toLowerCase()
-        this."$processorName"(period, amount, fine, isShareCapital, date)
+        try {
+            this."$processorName"(period, amount, fine, isShareCapital, date, args)
+        }
+        catch (e) {
+            log.info "${processorName} is not supported for variable arguments, use simple approach instead."
+            this."$processorName"(period, amount, fine, isShareCapital, date)
+        }
     }
 
     def cancelReceiveTransaction(receiveTx) {
@@ -111,6 +119,7 @@ class PeriodProcessorService {
 
         period.payoffDate = date
         period.payAmount = actualPaymentAmount
+        period = periodService.beforeUpdate(period)
         period.save()
 
         def contract = period.contract
@@ -164,6 +173,7 @@ class PeriodProcessorService {
         period.payoffDate = date
         period.cooperativeInterest = periodInterest.cooperativeInterest
         period.payAmount = actualPaymentAmount
+        period = periodService.beforeUpdate(period)
         period.save()
 
         def contract = period.contract
@@ -238,6 +248,7 @@ class PeriodProcessorService {
 
         period.payoffDate = date
         period.payAmount = amount
+        period = periodService.beforeUpdate(period)
         period.save()
 
         contract.loanBalance -= balancePaid
@@ -247,16 +258,21 @@ class PeriodProcessorService {
         receiveTx
     }
 
-    def expresscash01(Period period, amount, fine, isShareCapital, date) {
+    def expresscash01(Period period, amount, fine, isShareCapital, date, Object... args) {
+        // Make default arguments.
+        def isPayAll
+        if (args.size()) {
+            isPayAll = args[0] ? true : false
+        }
+        def interestAmount = contractService.getInterestAmountOnCloseContract(period, date)
+        if (isPayAll || amount >= interestAmount.totalDebt) {
+            amount = interestAmount.totalDebt
+        }
         def actualPaymentAmount = amount
         def periodInterest = interestProcessorService.process(period, date)
         def diff = 0.00
 
         def receiveTx = new ReceiveTransaction()
-
-        if (actualPaymentAmount >= period.outstanding) {
-            period.outstanding = 0.00
-        }
 
         if (! period.interestPaid) {
             if (amount >= period.interestOutstanding) {
@@ -283,6 +299,7 @@ class PeriodProcessorService {
 
         period.payoffDate = date
         period.payAmount = actualPaymentAmount
+        period = periodService.beforeUpdate(period)
         period.save()
 
         def contract = period.contract

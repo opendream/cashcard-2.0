@@ -41,7 +41,7 @@
                             <label class="control-label">
                                 <g:message code="contract.payoff.form.paymentDate.label" />
                             </label>
-                            <div class="controls">
+                            <div class="controls" id="payment-date-control">
                                 <g:datePicker name="paymentDate" precision="day"  value="${receiveTx?.paymentDate}"  />
                             </div>
                         </div>
@@ -56,6 +56,7 @@
                                     <g:field type="checkbox" id="payAll" name="payAll" value="${receiveTx?.isShareCapital}" />
                                     <g:message code="contract.payoff.form.payAll.checkbox.label" />
                                 </label>
+                                <span class="help-block"><g:message code="contract.payoff.form.totalDebt.help" /></span>
                             </div>
                         </div>
 
@@ -65,18 +66,6 @@
                             </label>
                             <div class="controls payAmount">
                                 <g:field type="text" id="payAmount" name="payAmount" required="true" pattern="\\d*(\\.\\d\\d)?" value="${formatNumber(number: period.outstanding, format: '0.00')}" />
-                                <span class="input-xlarge uneditable-input payAmount" style="display:none;">
-                                    ${contract.loanAmount}
-                                </span>
-                            </div>
-                        </div>
-
-                        <div style="display:none" class="control-group interest ${hasErrors(bean:period,field:'fine', 'error')}">
-                            <label class="control-label">
-                                <g:message code="contract.payoff.form.interest.label" />
-                            </label>
-                            <div class="controls">
-                                <span class="input-xlarge uneditable-input">${contract.currentInterest}</span>
                             </div>
                         </div>
 
@@ -85,7 +74,7 @@
                                 <g:message code="contract.payoff.form.totalDebt.label" />
                             </label>
                             <div class="controls">
-                                <span class="input-xlarge uneditable-input">${contract.totalDebt}</span>
+                                <span class="input-xlarge uneditable-input">${totalDebt}</span>
                             </div>
                         </div>
 
@@ -140,12 +129,10 @@
 
                       // DisAppear
                       labelLoanAmount.text(msg);
-                      inputBox.hide();
                       labelLoanAmount.hide();
+                      inputBox.parents('.control-group').eq(0).hide();
 
                       // WillDidAppear
-                      innerSpan.fadeIn();
-                      labelLoanAmount.fadeIn();
                       controlGroup.slideDown();
 
                     },
@@ -161,6 +148,7 @@
                       inputBox.fadeIn();
                       labelLoanAmount.fadeIn();
                       controlGroup.slideUp();
+                      inputBox.parents('.control-group').eq(0).show();
                     }
                   };
                 }());
@@ -177,7 +165,8 @@
                         options.labelMsg = '<g:message code="contract.payoff.form.amount.label" />';
                         elementControl.showPeriodPayForm(options);
                     }
-                });
+                })
+                .change();
             });
         </script>
     </body>

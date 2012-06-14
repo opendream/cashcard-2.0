@@ -201,11 +201,24 @@ class ContractControllerTests {
             sendApproved: { c -> ++sendCounter }
         ]
 
+        // Not check in the box
         params.id = 1
         generateContractMethods(params.id).call()
         controller.doApprove()
         assert response.redirectedUrl == "/member/show/1"
+        assert sendCounter == 0
+
+
+
+        // Check in the box
+        response.reset()
+        params.id = 1
+        params.sendsms = 'send'
+        generateContractMethods(params.id).call()
+        controller.doApprove()
+        assert response.redirectedUrl == "/member/show/1"
         assert sendCounter == 1
+
 
         response.reset()
 
@@ -371,9 +384,23 @@ class ContractControllerTests {
             sendPayoff: { c -> ++sendCounter }
         ]
 
+        // untick the box
+        controller.doPayoff()
+        assert response.redirectUrl == '/member/show/1'
+        assert sendCounter == 0
+        response.reset()
+
+        // tick the box
+        token = SynchronizerTokensHolder.store(session)
+        params[SynchronizerTokensHolder.TOKEN_URI] = '/member/show/1'
+        params[SynchronizerTokensHolder.TOKEN_KEY] = token.generateToken(params[SynchronizerTokensHolder.TOKEN_URI])
+
+        params.sendsms = 'send'
         controller.doPayoff()
         assert response.redirectUrl == '/member/show/1'
         assert sendCounter == 1
+
+        response.reset()
 
         controller.periodProcessorService = [
             process: { -> throw new Exception ('Just throw') }

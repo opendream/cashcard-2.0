@@ -27,6 +27,7 @@ class ContractController {
             contractService.copyLoanProperties(contract, loanType)
             contract.signedDate = signedDate
             contract.loanBalance = contract.loanAmount as BigDecimal
+
             contract._guarantor1 = Member.get(params._guarantor1)
             contract._guarantor2 = Member.get(params._guarantor2)
 
@@ -184,7 +185,11 @@ class ContractController {
                 }
             }
 
-            messageService.sendApproved(existsContract)
+            def sendsms = params.sendsms?: false
+
+            if (sendsms) {
+                messageService.sendApproved(existsContract)
+            }
 
             redirect action: 'show', controller: 'member', id: existsContract.member.id
         }
@@ -275,9 +280,11 @@ class ContractController {
                     receiveTx
 
                 try {
+                    def sendsms = params.sendsms?: false
                     receiveTx = periodProcessorService.process(period, payAmount, fine, isShareCapital, paymentDate)
-                    messageService.sendPayoff(receiveTx)
-
+                    if (sendsms) {
+                        messageService.sendPayoff(receiveTx)
+                    }
                     redirect url: "/member/show/${period.contract.member.id}"
                 }
                 catch (e) {

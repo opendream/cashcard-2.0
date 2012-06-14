@@ -30,7 +30,7 @@
                             </label>
                             <div class="controls">
                                 <label class="checkbox sendsms">
-                                    <g:field type="checkbox" id="sendsms" name="sendsms" checked="false" />
+                                    <g:field type="checkbox" id="sendsms" name="sendsms" checked="false" value="send"/>
                                     <g:message code="contract.payoff.form.sendsms.checkbox.label" />
                                 </label>
                             </div>

@@ -5,11 +5,13 @@ package th.co.opendream.cashcard
 class KettleService {
 	def grailsApplication
 	
-    def extractMember(def filename, def extension) {
+    def extractMember(def file) {
     	def kettle = grailsApplication.config.kettle.engine.path
     	def reposPath = grailsApplication.config.kettle.repository.path
 
-    	def process = "${kettle}/pan.sh -file:${reposPath}/extract_member.ktr -param:memberfile=${reposPath}/fileupload/${filename} -param:extension=${extension}".execute()
+    	file.transferTo(new File("${reposPath}/fileupload/${file.originalFilename}"))
+
+    	def process = "${kettle}/pan.sh -file:${reposPath}/extract_member.ktr -param:memberfile=${reposPath}/fileupload/${file.originalFilename} -param:extension=${file.contentType}".execute()
 		def result = process.text
 		if(result.contains('ERROR')) {
 			throw new RuntimeException(message:"ExtractMembersNotComplete")

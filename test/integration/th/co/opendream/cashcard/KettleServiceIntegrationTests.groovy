@@ -2,24 +2,28 @@ package th.co.opendream.cashcard
 
 import static org.junit.Assert.*
 import org.junit.*
+//import org.springframework.web.multipart.commons.CommonsMultipartFile
 
 class KettleServiceIntegrationTests extends GroovyTestCase {
     def kettleService
+    def file
+
     @Before
     void setUp() {
-        // Setup logic here
+        
+        file = new Object()
+        file.metaClass.transferTo = { File f -> 'do nothing'}
     }
 
     @After
-    void tearDown() {
-        // Tear down logic here
+    void tearDown() {        
     }
 
     @Test
     void testExtractMemberCsv() {
-        def filename = 'member.csv'
-        def extension = 'text/csv'
-        def result = kettleService.extractMember(filename, extension)
+        file.metaClass.originalFilename = 'member.csv'
+        file.metaClass.contentType = 'text/csv'
+        def result = kettleService.extractMember(file)
 
         assert false == result.contains('ERROR')
         println result
@@ -27,19 +31,20 @@ class KettleServiceIntegrationTests extends GroovyTestCase {
 
     @Test
     void testExtractMemberCsvFails() {
-        def filename = 'member2xx.csv'
-        def extension = 'text/csv'
+        file.metaClass.originalFilename = 'member2xx.csv'
+        file.metaClass.contentType = 'text/csv'
 
         shouldFail(RuntimeException) {
-            def result = kettleService.extractMember(filename, extension)
+            def result = kettleService.extractMember(file)
         }
     }
 
     @Test
     void testExtractMemberJson() {
-        def filename = 'member.json'
-        def extension = 'application/json'
-        def result = kettleService.extractMember(filename, extension)
+        file.metaClass.originalFilename = 'member.json'
+        file.metaClass.contentType = "application/json"
+
+        def result = kettleService.extractMember(file)
 
         assert false == result.contains('ERROR')
         println result
@@ -47,21 +52,21 @@ class KettleServiceIntegrationTests extends GroovyTestCase {
 
     @Test
     void testExtractMemberJsonFails() {
-        def filename = 'member2.json'
-        def extension = 'application/json'
+        file.metaClass.originalFilename = 'member2.json'
+        file.metaClass.contentType = 'application/json'
         
         shouldFail(RuntimeException) {
-            def result = kettleService.extractMember(filename, extension)  
+            def result = kettleService.extractMember(file)
         }
     }
 
     @Test
     void testExtractMemberTypeMismatchFails() {
-        def filename = 'member.xls'
-        def extension = 'application/json'
+        file.metaClass.originalFilename = 'member.xls'
+        file.metaClass.contentType = 'application/json'
         
         shouldFail(RuntimeException) {
-            def result = kettleService.extractMember(filename, extension)              
+            def result = kettleService.extractMember(file)
         }
     }
 }

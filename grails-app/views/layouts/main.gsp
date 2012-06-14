@@ -64,6 +64,9 @@
     								<li><a href="${createLink(controller:'member', action:'create')}">${message(code: 'main.menu.register', default: 'Register')}</a></li>
     								<li><a href="${createLink(controller:'member', action:'verifyCard')}">${message(code: 'main.menu.verifyCard', default: 'Verify Card')}</a></li>
     								<li><a href="${createLink(controller:'member', action:'list')}">${message(code: 'main.menu.listMember', default: 'List')}</a></li>
+                    <sec:ifAnyGranted roles="ROLE_ADMIN">
+                      <li><a href="${createLink(controller:'member', action:'uploadMembers')}">${message(code: 'member.uploadMembers.title', default: 'Upload Members')}</a></li>
+                    </sec:ifAnyGranted>
     							</ul>
                 </li>
                 <li class="dropdown">

@@ -145,7 +145,7 @@ class BootStrap {
             maxInterestRate: 18.00, mustKeepAdvancedInterest: false,
             numberOfPeriod: 3, interestProcessor: "Effective", periodProcessor: "ExpressCash01",
             periodGeneratorProcessor: "ExpressCash01"
-        ).save()
+        ).save(flush: true) // FIXME: Don't know why it must use flush:true with postgres
     }
 
     def generateContract(member, loanType) {

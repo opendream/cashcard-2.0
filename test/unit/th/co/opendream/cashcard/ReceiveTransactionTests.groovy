@@ -15,7 +15,8 @@ class ReceiveTransactionTests extends DomainTestTemplate {
         ['amount',          'balanceForward',        'balancePaid',
          'interestRate',    'interestPaid',          'fee',
          'period',          'fine',                  'isShareCapital',
-         'differential',    'paymentDate',           'status'
+         'differential',    'paymentDate',           'status',
+         'isAdvancedInterest', 'periodAmountPaid',   'periodVirtualInterestPaid'
         ]
     }
 
@@ -29,15 +30,37 @@ class ReceiveTransactionTests extends DomainTestTemplate {
     	assertTrue receiveTx.instanceOf(Transaction)
     }
 
+    void testIsAdvancedInterest() {
+        mockForConstraintsTests(ReceiveTransaction)
+
+        def instance = new ReceiveTransaction(),
+            field = 'isAdvancedInterest'
+
+        assertTrue instance.validate([field])
+    }
+
+    void testPeriodAmountPaid() {
+        mockForConstraintsTests(ReceiveTransaction)
+
+        def instance = new ReceiveTransaction(),
+            field = 'periodAmountPaid'
+
+        assertTrue instance.validate([field])
+
+        instance[field] = 20.00
+        assertTrue instance.validate([field])
+    }
+
+
     void testPeriod() {
     	mockForConstraintsTests(ReceiveTransaction)
 
     	def instance = new ReceiveTransaction(),
-            field = 'period'
+            field = 'periodVirtualInterestPaid'
 
-    	verifyNotNull(instance, field)
+    	assertTrue instance.validate([field])
 
-    	instance[field] = [id: 1]
+    	instance[field] = 20.00
     	assertTrue instance.validate([field])
     }
 

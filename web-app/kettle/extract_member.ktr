@@ -11,12 +11,12 @@
     <parameters>
         <parameter>
             <name>extension</name>
-            <default_value/>
+            <default_value>text&#47;csv</default_value>
             <description/>
         </parameter>
         <parameter>
             <name>memberfile</name>
-            <default_value/>
+            <default_value>&#47;home&#47;boyone&#47;workspace&#47;opendreamspace&#47;docs&#47;creditUnion&#47;memberformat&#47;member.csv</default_value>
             <description/>
         </parameter>
     </parameters>
@@ -79,8 +79,51 @@
   </info>
   <notepads>
   </notepads>
+  <connection>
+    <name>cashcard</name>
+    <server>localhost</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>cashcard_alpha</database>
+    <port>5432</port>
+    <username>postgres</username>
+    <password>Encrypted 2be98afc86aa7f2e4bb16bd64d980aac9</password>
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
+    <attributes>
+      <attribute><code>FORCE_IDENTIFIERS_TO_LOWERCASE</code><attribute>N</attribute></attribute>
+      <attribute><code>FORCE_IDENTIFIERS_TO_UPPERCASE</code><attribute>N</attribute></attribute>
+      <attribute><code>IS_CLUSTERED</code><attribute>N</attribute></attribute>
+      <attribute><code>PORT_NUMBER</code><attribute>5432</attribute></attribute>
+      <attribute><code>QUOTE_ALL_FIELDS</code><attribute>N</attribute></attribute>
+      <attribute><code>SUPPORTS_BOOLEAN_DATA_TYPE</code><attribute>Y</attribute></attribute>
+      <attribute><code>USE_POOLING</code><attribute>N</attribute></attribute>
+    </attributes>
+  </connection>
   <order>
-  <hop> <from>remove unused fields</from><to>validate fields</to><enabled>Y</enabled> </hop>  <hop> <from>Filter title</from><to>remove unused fields</to><enabled>Y</enabled> </hop>  <hop> <from>Filter title</from><to>lookup title</to><enabled>Y</enabled> </hop>  <hop> <from>read Json</from><to>spilt member_name and group address</to><enabled>Y</enabled> </hop>  <hop> <from>lookup title</from><to>Select title and fname</to><enabled>Y</enabled> </hop>  <hop> <from>Select title and fname</from><to>validate fields</to><enabled>Y</enabled> </hop>  <hop> <from>spilt member_name and group address</from><to>Replace &apos;-&apos; with &apos;&apos;</to><enabled>Y</enabled> </hop>  <hop> <from>Replace &apos;-&apos; with &apos;&apos;</from><to>Filter title</to><enabled>Y</enabled> </hop>  <hop> <from>read csv</from><to>spilt member_name and group address</to><enabled>Y</enabled> </hop>  <hop> <from>Get Variables</from><to>Switch &#47; Case</to><enabled>Y</enabled> </hop>  <hop> <from>Switch &#47; Case</from><to>read csv</to><enabled>Y</enabled> </hop>  <hop> <from>Switch &#47; Case</from><to>read Json</to><enabled>Y</enabled> </hop>  <hop> <from>Switch &#47; Case</from><to>Abort</to><enabled>Y</enabled> </hop>  </order>
+  <hop> <from>remove unused fields</from><to>validate fields</to><enabled>Y</enabled> </hop>  <hop> <from>Filter title</from><to>remove unused fields</to><enabled>Y</enabled> </hop>  <hop> <from>Filter title</from><to>lookup title</to><enabled>Y</enabled> </hop>  <hop> <from>read Json</from><to>spilt member_name and group address</to><enabled>Y</enabled> </hop>  <hop> <from>lookup title</from><to>Select title and fname</to><enabled>Y</enabled> </hop>  <hop> <from>Select title and fname</from><to>validate fields</to><enabled>Y</enabled> </hop>  <hop> <from>spilt member_name and group address</from><to>Replace &apos;-&apos; with &apos;&apos;</to><enabled>Y</enabled> </hop>  <hop> <from>Replace &apos;-&apos; with &apos;&apos;</from><to>Filter title</to><enabled>Y</enabled> </hop>  <hop> <from>read csv</from><to>spilt member_name and group address</to><enabled>Y</enabled> </hop>  <hop> <from>Get Variables</from><to>Switch &#47; Case</to><enabled>Y</enabled> </hop>  <hop> <from>Switch &#47; Case</from><to>read csv</to><enabled>Y</enabled> </hop>  <hop> <from>Switch &#47; Case</from><to>read Json</to><enabled>Y</enabled> </hop>  <hop> <from>Switch &#47; Case</from><to>Abort</to><enabled>Y</enabled> </hop>  <hop> <from>check credit union member id</from><to>insert to temp table</to><enabled>Y</enabled> </hop>  <hop> <from>lookup gender</from><to>lookup firstname</to><enabled>Y</enabled> </hop>  <hop> <from>lookup firstname</from><to>lookup lastname</to><enabled>Y</enabled> </hop>  <hop> <from>lookup lastname</from><to>lookup address</to><enabled>Y</enabled> </hop>  <hop> <from>lookup address</from><to>check credit union member id</to><enabled>Y</enabled> </hop>  <hop> <from>lookup identification number</from><to>lookup credit union member no</to><enabled>Y</enabled> </hop>  <hop> <from>lookup credit union member no</from><to>lookup gender</to><enabled>Y</enabled> </hop>  <hop> <from>validate fields</from><to>lookup credit union member id</to><enabled>Y</enabled> </hop>  <hop> <from>lookup credit union member id</from><to>lookup identification number</to><enabled>Y</enabled> </hop>  </order>
+  <step>
+    <name>Abort</name>
+    <type>Abort</type>
+    <description/>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+      <row_threshold>0</row_threshold>
+      <message>unknow extension</message>
+      <always_log_rows>Y</always_log_rows>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>138</xloc>
+      <yloc>262</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
   <step>
     <name>Filter title</name>
     <type>FilterRows</type>
@@ -203,7 +246,11 @@
            <method>none</method>
            <schema_name/>
            </partitioning>
-    <fields>      <field>        <name>id_card</name>
+    <fields>      <field>        <name>member_id</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>id_card</name>
         <rename/>
         <length>-2</length>
         <precision>-2</precision>
@@ -267,6 +314,547 @@
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
       <xloc>134</xloc>
       <yloc>112</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>check credit union member id</name>
+    <type>ScriptValueMod</type>
+    <description/>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>      <jsScript>        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>&#47;&#47;Script here
+
+var valid_credit_union_member_id = false;
+var valid_identification_number = false;
+var valid_credit_union_member_no = false;
+var valid_gender = false;
+var valid_firstname = false;
+var valid_lastname = false;
+var valid_address = false;
+var valid = false;
+
+
+if(has_id &gt; 0) {
+	valid_credit_union_member_id = true;
+} 
+
+if(has_identification_number &gt; 0 || valid_id_card == true) {
+	valid_identification_number = true;
+}
+
+if(has_member_no &gt; 0) {
+	valid_credit_union_member_no = true;
+}
+
+if(has_gender &gt; 0) {
+	valid_gender = true;
+}
+
+if(has_firstname &gt; 0) {
+	valid_firstname = true;
+}
+
+if(has_lastname &gt; 0) {
+	valid_lastname = true;
+}
+
+if(has_address &gt; 0) {
+	valid_address = true;
+}
+
+if(valid_member_tel &amp;&amp; valid_identification_number &amp;&amp; valid_credit_union_member_no &amp;&amp; valid_gender &amp;&amp; valid_firstname &amp;&amp; valid_lastname &amp;&amp; valid_address) {
+	valid = true;
+}</jsScript_script>
+      </jsScript>    </jsScripts>    <fields>      <field>        <name>valid_credit_union_member_id</name>
+        <rename>valid_credit_union_member_id</rename>
+        <type>Boolean</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>      <field>        <name>valid_identification_number</name>
+        <rename>valid_identification_number</rename>
+        <type>Boolean</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>      <field>        <name>valid_credit_union_member_no</name>
+        <rename>valid_credit_union_member_no</rename>
+        <type>Boolean</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>      <field>        <name>valid_gender</name>
+        <rename>valid_gender</rename>
+        <type>Boolean</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>      <field>        <name>valid_firstname</name>
+        <rename>valid_firstname</rename>
+        <type>Boolean</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>      <field>        <name>valid_lastname</name>
+        <rename>valid_lastname</rename>
+        <type>Boolean</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>      <field>        <name>valid_address</name>
+        <rename>valid_address</rename>
+        <type>Boolean</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>      <field>        <name>valid</name>
+        <rename>valid</rename>
+        <type>Boolean</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>    </fields>     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>72</xloc>
+      <yloc>351</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>insert to temp table</name>
+    <type>TableOutput</type>
+    <description/>
+    <distribute>N</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <connection>cashcard</connection>
+    <schema>public</schema>
+    <table>temp_member</table>
+    <commit>1000</commit>
+    <truncate>Y</truncate>
+    <ignore_errors>N</ignore_errors>
+    <use_batch>Y</use_batch>
+    <specify_fields>Y</specify_fields>
+    <partitioning_enabled>N</partitioning_enabled>
+    <partitioning_field/>
+    <partitioning_daily>N</partitioning_daily>
+    <partitioning_monthly>Y</partitioning_monthly>
+    <tablename_in_field>N</tablename_in_field>
+    <tablename_field/>
+    <tablename_in_table>Y</tablename_in_table>
+    <return_keys>N</return_keys>
+    <return_field/>
+    <fields>
+        <field>
+          <column_name>credit_union_member_id</column_name>
+          <stream_name>member_id</stream_name>
+        </field>
+        <field>
+          <column_name>identification_number</column_name>
+          <stream_name>id_card</stream_name>
+        </field>
+        <field>
+          <column_name>credit_union_member_no</column_name>
+          <stream_name>member_no</stream_name>
+        </field>
+        <field>
+          <column_name>tel_no</column_name>
+          <stream_name>member_tel</stream_name>
+        </field>
+        <field>
+          <column_name>gender</column_name>
+          <stream_name>gender</stream_name>
+        </field>
+        <field>
+          <column_name>firstname</column_name>
+          <stream_name>fname</stream_name>
+        </field>
+        <field>
+          <column_name>lastname</column_name>
+          <stream_name>lname</stream_name>
+        </field>
+        <field>
+          <column_name>address</column_name>
+          <stream_name>address</stream_name>
+        </field>
+        <field>
+          <column_name>valid</column_name>
+          <stream_name>valid</stream_name>
+        </field>
+        <field>
+          <column_name>valid_identification_number</column_name>
+          <stream_name>valid_identification_number</stream_name>
+        </field>
+        <field>
+          <column_name>valid_tel_no</column_name>
+          <stream_name>valid_member_tel</stream_name>
+        </field>
+        <field>
+          <column_name>valid_credit_union_member_id</column_name>
+          <stream_name>valid_credit_union_member_id</stream_name>
+        </field>
+        <field>
+          <column_name>valid_firstname</column_name>
+          <stream_name>valid_firstname</stream_name>
+        </field>
+        <field>
+          <column_name>valid_lastname</column_name>
+          <stream_name>valid_lastname</stream_name>
+        </field>
+        <field>
+          <column_name>valid_address</column_name>
+          <stream_name>valid_address</stream_name>
+        </field>
+        <field>
+          <column_name>valid_gender</column_name>
+          <stream_name>valid_gender</stream_name>
+        </field>
+        <field>
+          <column_name>valid_credit_union_member_no</column_name>
+          <stream_name>valid_credit_union_member_no</stream_name>
+        </field>
+    </fields>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>73</xloc>
+      <yloc>481</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>lookup address</name>
+    <type>DBLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <connection>cashcard</connection>
+    <cache>Y</cache>
+    <cache_load_all>N</cache_load_all>
+    <cache_size>0</cache_size>
+    <lookup>
+      <schema/>
+      <table>member</table>
+      <orderby/>
+      <fail_on_multiple>N</fail_on_multiple>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <key>
+        <name>member_id</name>
+        <field>credit_union_member_id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>address</name>
+        <field>address</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>id</name>
+        <rename>has_address</rename>
+        <default>0</default>
+        <type>Integer</type>
+      </value>
+    </lookup>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>216</xloc>
+      <yloc>352</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>lookup credit union member id</name>
+    <type>DBLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <connection>cashcard</connection>
+    <cache>Y</cache>
+    <cache_load_all>N</cache_load_all>
+    <cache_size>0</cache_size>
+    <lookup>
+      <schema>public</schema>
+      <table>member</table>
+      <orderby/>
+      <fail_on_multiple>N</fail_on_multiple>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <key>
+        <name>member_id</name>
+        <field>credit_union_member_id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>id</name>
+        <rename>has_id</rename>
+        <default>0</default>
+        <type>Integer</type>
+      </value>
+    </lookup>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>918</xloc>
+      <yloc>225</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>lookup credit union member no</name>
+    <type>DBLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <connection>cashcard</connection>
+    <cache>Y</cache>
+    <cache_load_all>N</cache_load_all>
+    <cache_size>0</cache_size>
+    <lookup>
+      <schema/>
+      <table>member</table>
+      <orderby/>
+      <fail_on_multiple>N</fail_on_multiple>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <key>
+        <name>member_id</name>
+        <field>credit_union_member_id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>member_no</name>
+        <field>credit_union_member_no</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>id</name>
+        <rename>has_member_no</rename>
+        <default>0</default>
+        <type>Integer</type>
+      </value>
+    </lookup>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>737</xloc>
+      <yloc>352</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>lookup firstname</name>
+    <type>DBLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <connection>cashcard</connection>
+    <cache>Y</cache>
+    <cache_load_all>N</cache_load_all>
+    <cache_size>0</cache_size>
+    <lookup>
+      <schema/>
+      <table>member</table>
+      <orderby/>
+      <fail_on_multiple>N</fail_on_multiple>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <key>
+        <name>member_id</name>
+        <field>credit_union_member_id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>fname</name>
+        <field>firstname</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>id</name>
+        <rename>has_firstname</rename>
+        <default>0</default>
+        <type>Integer</type>
+      </value>
+    </lookup>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>474</xloc>
+      <yloc>352</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>lookup gender</name>
+    <type>DBLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <connection>cashcard</connection>
+    <cache>Y</cache>
+    <cache_load_all>N</cache_load_all>
+    <cache_size>0</cache_size>
+    <lookup>
+      <schema/>
+      <table>member</table>
+      <orderby/>
+      <fail_on_multiple>N</fail_on_multiple>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <key>
+        <name>member_id</name>
+        <field>credit_union_member_id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>gender</name>
+        <field>gender</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>id</name>
+        <rename>has_gender</rename>
+        <default>0</default>
+        <type>Integer</type>
+      </value>
+    </lookup>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>598</xloc>
+      <yloc>352</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>lookup identification number</name>
+    <type>DBLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <connection>cashcard</connection>
+    <cache>Y</cache>
+    <cache_load_all>N</cache_load_all>
+    <cache_size>0</cache_size>
+    <lookup>
+      <schema/>
+      <table>member</table>
+      <orderby/>
+      <fail_on_multiple>N</fail_on_multiple>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <key>
+        <name>member_id</name>
+        <field>credit_union_member_id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>id_card</name>
+        <field>identification_number</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>id</name>
+        <rename>has_identification_number</rename>
+        <default>0</default>
+        <type>Integer</type>
+      </value>
+    </lookup>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>919</xloc>
+      <yloc>352</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>lookup lastname</name>
+    <type>DBLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <connection>cashcard</connection>
+    <cache>Y</cache>
+    <cache_load_all>N</cache_load_all>
+    <cache_size>0</cache_size>
+    <lookup>
+      <schema/>
+      <table>member</table>
+      <orderby/>
+      <fail_on_multiple>N</fail_on_multiple>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <key>
+        <name>member_id</name>
+        <field>credit_union_member_id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>lname</name>
+        <field>lastname</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>id</name>
+        <rename>has_lastname</rename>
+        <default>0</default>
+        <type>Integer</type>
+      </value>
+    </lookup>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>347</xloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -744,7 +1332,11 @@ if(fname!=undefined &amp;&amp; fname!=&apos;&apos;) {
            <method>none</method>
            <schema_name/>
            </partitioning>
-    <fields>      <field>        <name>id_card</name>
+    <fields>      <field>        <name>member_id</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>id_card</name>
         <rename/>
         <length>-2</length>
         <precision>-2</precision>
@@ -808,23 +1400,6 @@ if(member_name){
 var address = (member_add2?member_add2:&apos;&apos;)+&apos; &apos;+(member_add3?member_add3:&apos;&apos;)+&apos; &apos;+(member_po?member_po:&apos; &apos;)+&apos; &apos;+(member_zip?member_zip:&apos;&apos;);
 address = trim(address);
 </jsScript_script>
-      </jsScript>      <jsScript>        <jsScript_type>-1</jsScript_type>
-        <jsScript_name>substr_Sample</jsScript_name>
-        <jsScript_script>&#47;&#47; Perform the substring function
-&#47;&#47; 
-&#47;&#47; Usage:
-&#47;&#47; substr(var, from);
-&#47;&#47; substr(var, from, to);
-&#47;&#47;
-&#47;&#47; 2007-01-25
-&#47;&#47;
-var str1= &quot;Hello Pentaho!&quot;;
-var str2= substr(str1, 6);
-var str3= substr(str1, 6, 7);
-Alert(&quot;Input : &quot; + str1);
-Alert(&quot;From position 6: &quot; + str2);
-Alert(&quot;From position 6 for 7 long : &quot; + str3);
-</jsScript_script>
       </jsScript>    </jsScripts>    <fields>      <field>        <name>fname</name>
         <rename>fname</rename>
         <type>String</type>
@@ -866,12 +1441,11 @@ Alert(&quot;From position 6 for 7 long : &quot; + str3);
     <jsScripts>      <jsScript>        <jsScript_type>0</jsScript_type>
         <jsScript_name>Script 1</jsScript_name>
         <jsScript_script>&#47;&#47;Script here
+var gender = &apos;&apos;;
+var valid = false;
 var valid_title = false;
 var valid_id_card = false;
 var valid_member_tel = false;
-var valid_fname = false;
-var valid_lname = false;
-
 
 if(id_card!=&apos;&apos; &amp;&amp; id_card!=undefined){
 	if(id_card.length==13)
@@ -882,18 +1456,22 @@ if(member_tel!=&apos;&apos; &amp;&amp; member_tel!=undefined){
 	valid_member_tel = true;
 }
 
-if(fname!=&apos;&apos;){
-	valid_fname = true;
-}
-
-if(lname!=&apos;&apos;){
-	valid_lname = true;
-}
-
 if(title!=&apos;&apos;){
 	valid_title = true;
+	&#47;&#47; &apos;นาย&apos;, &apos;นางสาว&apos;, &apos;นาง&apos;
+	if(title==&apos;นาย&apos;) {
+		gender = &apos;MALE&apos;;
+	} else {
+		gender = &apos;FEMALE&apos;;
+	}
 }
-</jsScript_script>
+
+
+&#47;&#47;var memberfile = getVariable(&apos;memberfile&apos;, &apos;&apos;);
+
+&#47;*if(valid_title &amp;&amp; valid_id_card &amp;&amp; valid_member_tel &amp;&amp; valid_fname &amp;&amp; valid_lname &amp;&amp; valid_member_no) {
+	valid = true;
+}*&#47;</jsScript_script>
       </jsScript>    </jsScripts>    <fields>      <field>        <name>valid_id_card</name>
         <rename>valid_id_card</rename>
         <type>Boolean</type>
@@ -906,54 +1484,51 @@ if(title!=&apos;&apos;){
         <length>-1</length>
         <precision>-1</precision>
         <replace>N</replace>
-      </field>      <field>        <name>valid_fname</name>
-        <rename>valid_fname</rename>
-        <type>Boolean</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>      <field>        <name>valid_lname</name>
-        <rename>valid_lname</rename>
-        <type>Boolean</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
       </field>      <field>        <name>valid_title</name>
         <rename>valid_title</rename>
         <type>Boolean</type>
         <length>-1</length>
         <precision>-1</precision>
         <replace>N</replace>
+      </field>      <field>        <name>gender</name>
+        <rename>gender</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
       </field>    </fields>     <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>899</xloc>
-      <yloc>112</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>Abort</name>
-    <type>Abort</type>
-    <description/>
-    <distribute>Y</distribute>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-      <row_threshold>0</row_threshold>
-      <message>unknow extension</message>
-      <always_log_rows>Y</always_log_rows>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>138</xloc>
-      <yloc>262</yloc>
+      <xloc>915</xloc>
+      <yloc>113</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
 
   <step_error_handling>
+      <error>
+        <source_step>check credit union member id</source_step>
+        <target_step/>
+        <is_enabled>Y</is_enabled>
+        <nr_valuename/>
+        <descriptions_valuename/>
+        <fields_valuename/>
+        <codes_valuename/>
+        <max_errors/>
+        <max_pct_errors/>
+        <min_pct_rows/>
+      </error>
+      <error>
+        <source_step>insert to temp table</source_step>
+        <target_step/>
+        <is_enabled>Y</is_enabled>
+        <nr_valuename/>
+        <descriptions_valuename/>
+        <fields_valuename/>
+        <codes_valuename/>
+        <max_errors/>
+        <max_pct_errors/>
+        <min_pct_rows/>
+      </error>
   </step_error_handling>
    <slave-step-copy-partition-distribution>
 </slave-step-copy-partition-distribution>

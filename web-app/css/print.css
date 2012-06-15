@@ -1,6 +1,12 @@
 body {
    background: white;
-   font-size: 12pt;
+   font-size: 10pt;
+   margin-left: 2cm;
+}
+
+.counter {
+  padding-top: 4cm;
+
 }
 
 table.printout {

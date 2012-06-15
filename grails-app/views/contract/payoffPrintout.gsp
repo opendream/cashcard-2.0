@@ -80,6 +80,7 @@
                     <td></td>
                     <td></td>
                 </tr>
+                <tr class="counter"><td colspan=5>&nbsp;</td></tr>
                 <tr>
                     <td class="stringlabel"><label>ผู้ทำรายการ</label></td>
                     <td class="string"><label>(${printout.username})</label></td>

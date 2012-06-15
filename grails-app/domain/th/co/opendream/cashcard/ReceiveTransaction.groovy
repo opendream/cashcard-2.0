@@ -12,6 +12,9 @@ class ReceiveTransaction extends Transaction {
 	Boolean isShareCapital
 	Date paymentDate = new Date()
 	Boolean status = true
+	Boolean isAdvancedInterest = false
+	BigDecimal periodAmountPaid = 0.00
+	BigDecimal periodVirtualInterestPaid = 0.00
 
     static constraints = {
     }

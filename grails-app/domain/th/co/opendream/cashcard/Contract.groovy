@@ -17,6 +17,7 @@ class Contract {
     BigDecimal advancedInterestBalance = 0.000000
     Boolean approvalStatus = false
     Boolean loanReceiveStatus = false
+    Boolean canPayAllDebt
     String guarantor1
     String guarantor2
     Integer numberOfPeriod
@@ -41,5 +42,6 @@ class Contract {
         periodGeneratorProcessor nullable: false, blank: false
         _guarantor1 blank: true, nullable: true
         _guarantor2 blank: true, nullable: true
+        canPayAllDebt nullable: true, blank: true
     }
 }

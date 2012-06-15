@@ -11,6 +11,7 @@ class LoanType {
 	BigDecimal maxInterestRate = 18.00
 	Boolean mustKeepAdvancedInterest = false
 	Integer numberOfPeriod
+	Boolean canPayAllDebt
 
 
     static constraints = {
@@ -19,5 +20,6 @@ class LoanType {
 		interestProcessor blank: false
 		periodProcessor blank: false
 		periodGeneratorProcessor blank: false
+		canPayAllDebt blank: true, nullable: true
     }
 }

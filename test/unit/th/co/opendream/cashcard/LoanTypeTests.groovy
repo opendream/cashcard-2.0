@@ -15,7 +15,7 @@ class LoanTypeTests extends DomainTestTemplate {
         [
             'name', 'processor', 'interestRate', 'maxInterestRate',
             'mustKeepAdvancedInterest', 'numberOfPeriod', 'interestProcessor',
-			'periodProcessor', 'periodGeneratorProcessor'
+			'periodProcessor', 'periodGeneratorProcessor', 'canPayAllDebt'
         ]
     }
 
@@ -31,20 +31,20 @@ class LoanTypeTests extends DomainTestTemplate {
 			periodProcessor: processor, periodGeneratorProcessor: processor
         )
     }
-	
+
 	void testProcessor() {
 		mockForConstraintsTests(LoanType)
-		
+
 		def loanType = new LoanType()
 
 		verifyNotNull(loanType, 'interestProcessor')
 		loanType.interestProcessor = ''
 		verifyNotBlank(loanType, 'interestProcessor')
-		
+
 		verifyNotNull(loanType, 'periodProcessor')
 		loanType.periodProcessor = ''
 		verifyNotBlank(loanType, 'periodProcessor')
-		
+
 		verifyNotNull(loanType, 'periodGeneratorProcessor')
 		loanType.periodGeneratorProcessor = ''
 		verifyNotBlank(loanType, 'periodGeneratorProcessor')
@@ -88,7 +88,7 @@ class LoanTypeTests extends DomainTestTemplate {
         def loanType = new LoanType(),
             field = 'mustKeepAdvancedInterest'
 
-        loanType[field] = true 
+        loanType[field] = true
         assertTrue "Name ${loanType.name} must pass all validations.",
             loanType.validate([field])
     }

@@ -56,6 +56,7 @@ class ContractServiceTests {
         loanType.periodGeneratorProcessor = "commission"
         loanType.interestRate = 17.00
         loanType.maxInterestRate = 21.00
+        loanType.canPayAllDebt = true
 
         service.copyLoanProperties(contract, loanType)
         assert contract.interestProcessor == "flat"
@@ -63,6 +64,7 @@ class ContractServiceTests {
         assert contract.periodGeneratorProcessor == "commission"
         assert contract.interestRate == 17.00
         assert contract.maxInterestRate == 21.00
+        assert contract.canPayAllDebt == true
     }
 
     void testGetInterestAmountJSON() {

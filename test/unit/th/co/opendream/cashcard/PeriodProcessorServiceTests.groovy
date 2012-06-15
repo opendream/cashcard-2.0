@@ -1294,10 +1294,10 @@ class PeriodProcessorServiceTests {
         p1.save()
 
         def expect = [
-            // period_id, date, จ่าย, ตัดต้น, ดอกเหมา, ดอกเหลือ, จ่ายดอกครบ, ดอกจริง, ดอกกฎ, fee, เงินงวดเหลือ, ต้นเหลือ, ส่วนต่าง
-            [1, "2012-04-11",  100.00,       80.00, 20.00, 0.00, true, 6.557377, 6.557377, 0, 586.00,     1920.00, 13.442623],
-            [1, "2012-04-16",  100.00,      100.00,     0, 0.00, true, 3.147541, 3.147541, 0, 486.00,     1820.00,         0],
-            [1, "2012-04-21", 1820.00,     1820.00,     0, 0.00, true, 2.988766, 2.988766, 0,      0,           0,         0],
+            // period_id, date, จ่าย, ตัดต้น, ดอกเหมา, ดอกเหลือ, จ่ายดอกครบ, ดอกจริง, ดอกกฎ, fee, เงินงวดเหลือ, ต้นเหลือ, ส่วนต่าง, r_adv_int, r_p_amount, r_vir_int
+            [1, "2012-04-11",  100.00,       80.00, 20.00, 0.00, true, 6.557377, 6.557377, 0, 586.00,     1920.00, 13.442623, false, 100.00, 20.00],
+            [1, "2012-04-16",  100.00,      100.00,     0, 0.00, true, 3.147541, 3.147541, 0, 486.00,     1820.00,         0, true, 100.00, 0.00],
+            [1, "2012-04-21", 1820.00,     1820.00,     0, 0.00, true, 2.988766, 2.988766, 0,      0,           0,         0, true, 486, 0.00],
         ]
 
         def interest
@@ -1342,6 +1342,9 @@ class PeriodProcessorServiceTests {
             assert r.interestPaid == it[8]
             assert r.fee == it[9]
             assert r.differential == it[12]
+            assert r.isAdvancedInterest == it[13]
+            assert r.periodAmountPaid == it[14]
+            assert r.periodVirtualInterestPaid == it[15]
 
             if (round == 3) {
                 // 1.Check that remaining period must be cancelled.
@@ -1531,8 +1534,20 @@ class PeriodProcessorServiceTests {
             contract[pos] = c
         }
 
+        def tmp_p
+
         // Pass 0:
         println "Pass 0: testing ..."
+        // Make upcoming period cancelled.
+        tmp_p = Period.get(2)
+        tmp_p.status = false
+        tmp_p.cancelledDueToDebtClearance = true
+        tmp_p.save()
+        tmp_p = Period.get(3)
+        tmp_p.status = false
+        tmp_p.cancelledDueToDebtClearance = true
+        tmp_p.save()
+
         service.cancelReceiveTransaction rTx[2]
         rTx[2] = ReceiveTransaction.get rTx[2].id
         assert rTx[2].status == false
@@ -1544,8 +1559,17 @@ class PeriodProcessorServiceTests {
         assert period[2].interestOutstanding == 0.00
         assert period[2].interestPaid == true
 
+        // Confirm that cancelled-period must be enabled again.
+        tmp_p = Period.get(2)
+        assert tmp_p.status == true
+        assert tmp_p.cancelledDueToDebtClearance == false
+        tmp_p = Period.get(3)
+        assert tmp_p.status == true
+        assert tmp_p.cancelledDueToDebtClearance == false
+
         contract[2] = Contract.get contract[2].id
         assert contract[2].loanBalance == 1820.00
+
         println "===> pass"
         // End Pass 0.
 

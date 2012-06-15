@@ -114,6 +114,19 @@ class PeriodProcessorService {
 
         period.save()
 
+        // Re-enable cancelled-period
+        def c = Period.createCriteria()
+        def periodList = c.list() {
+            eq("contract", contract)
+            eq("status", false)
+            eq("cancelledDueToDebtClearance", true)
+            gt("no", period.no)
+        }
+        periodList.each { p ->
+            p.status = true
+            p.cancelledDueToDebtClearance = false
+        }
+
         contract.loanBalance += receiveTx.balancePaid
         contract.save()
     }
@@ -289,13 +302,14 @@ class PeriodProcessorService {
 
     def expresscash01(Period period, amount, fine, isShareCapital, date, Object... args) {
         // Make default arguments.
-        def isPayAll
+        def isPayAll, periodAmountPaid = amount
         if (args.size()) {
             isPayAll = args[0] ? true : false
         }
         def interestAmount = contractService.getInterestAmountOnCloseContract(period, date)
         if (isPayAll || amount >= interestAmount.totalDebt) {
             amount = interestAmount.totalDebt
+            periodAmountPaid = period.outstanding
         }
         def actualPaymentAmount = amount
         def periodInterest = interestProcessorService.process(period, date)
@@ -305,14 +319,21 @@ class PeriodProcessorService {
 
         if (! period.interestPaid) {
             if (amount >= period.interestOutstanding) {
+                receiveTx.periodVirtualInterestPaid = period.interestOutstanding
+
                 amount -= period.interestOutstanding
                 diff = period.interestOutstanding - periodInterest.actualInterest
                 period.interestOutstanding = 0.00
                 period.interestPaid = true
+
+                receiveTx.isAdvancedInterest = false
             }
             else {
                 throw new RuntimeException("Must pay at least ${period.interestOutstanding} for this payment.")
             }
+        }
+        else {
+            receiveTx.isAdvancedInterest = true
         }
 
         receiveTx.amount = actualPaymentAmount
@@ -325,6 +346,7 @@ class PeriodProcessorService {
         receiveTx.fine = fine
         receiveTx.isShareCapital = isShareCapital
         receiveTx.paymentDate = date
+        receiveTx.periodAmountPaid = periodAmountPaid
 
         period.payoffDate = date
         period.payAmount = actualPaymentAmount

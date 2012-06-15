@@ -15,15 +15,14 @@ import th.co.opendream.cashcard.Period
 class BootStrap {
     def grailsApplication
     def init = { servletContext ->
-        if (Users.count() != 0) {
+
+        def currentEnv = Environment.current
+
+        if (currentEnv == Environment.PRODUCTION && Users.count() != 0) {
             return
         }
 
-    	def m1 = new Member(identificationNumber:"1159900100015", firstname:"สมหญิง", lastname: "รักเรียน", telNo: "0818526122", gender: "MALE", address: "Opendream")
-        def m2 = new Member(identificationNumber:"3710600357102", firstname:"สม", lastname: "ขำคม", telNo: "0818526122", gender: "MALE", address: "Opendream")
-
-    	m1.save()
-        m2.save()
+        def (m1, m2) = generateMember()
 
         def user = new Users(username:'admin', password:'password',
                                 , enabled:true, accountExpired:false, accountLocked:false, passwordExpired:false).save()
@@ -38,8 +37,7 @@ class BootStrap {
         */
         createRequestMaps();
 
-    	generateLoanType()
-        //generateContract(m1, LoanType.get(1))
+        generateLoanType()
 
         //asign roport realPath to system
 
@@ -51,7 +49,7 @@ class BootStrap {
         grailsApplication.config.kettle.repository.path = servletContext.getRealPath(kettle)
 
         development {
-            def contract = generateContract(m1, LoanType.findByName("เงินกู้ด่วน (ปรับปรุงใหม่)"))
+            def contract = generateContract(m1, LoanType.list().last())
             contract.save()
 
             generatePeriod(contract)
@@ -81,6 +79,16 @@ class BootStrap {
         new RequestMap(url: '/interestRate/**', configAttribute: 'ROLE_USER,ROLE_COUNTER').save()
         new RequestMap(url: '/report/**', configAttribute: 'ROLE_USER,ROLE_COUNTER').save()
         new RequestMap(url: '/console/**', configAttribute: 'ROLE_ADMIN').save()
+    }
+
+    def generateMember() {
+        def m1 = new Member(identificationNumber:"1159900100015", firstname:"สมหญิง", lastname: "รักเรียน", telNo: "0818526122", gender: "MALE", address: "Opendream")
+        def m2 = new Member(identificationNumber:"3710600357102", firstname:"สม", lastname: "ขำคม", telNo: "0818526122", gender: "MALE", address: "Opendream")
+
+        m1.save()
+        m2.save()
+
+        [m1, m2]
     }
 
     def generateLoanType() {

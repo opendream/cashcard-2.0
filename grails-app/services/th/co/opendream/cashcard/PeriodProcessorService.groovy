@@ -35,7 +35,7 @@ class PeriodProcessorService {
             throw new Exception("Receive Transaction must be the latest to cancel.");
         }
 
-        def processorName = receiveTx.period.contract.processor
+        def processorName = receiveTx.period.contract.periodProcessor.capitalize()
         this."cancelReceiveTransaction$processorName"(receiveTx)
     }
 
@@ -83,6 +83,35 @@ class PeriodProcessorService {
         period.payAmount -= receiveTx.amount
         period.outstanding += receiveTx.amount
         period.cooperativeInterest = 0.00
+        period.save()
+
+        contract.loanBalance += receiveTx.balancePaid
+        contract.save()
+    }
+
+    def cancelReceiveTransactionExpressCash01(receiveTx) {
+        def period = receiveTx.period,
+            contract = period.contract
+
+        receiveTx.status = false
+        receiveTx.save()
+
+        period.outstanding += receiveTx.periodAmountPaid
+
+        if (receiveTx.periodVirtualInterestPaid > 0.00) {
+            period.interestOutstanding = receiveTx.periodVirtualInterestPaid
+            period.interestPaid = false
+        }
+
+        if (period.outstanding > 0.00) {
+            period.partialPayoff = true
+            period.payoffStatus = false
+        }
+
+        if (period.outstanding == period.amount) {
+            period.partialPayoff = false
+        }
+
         period.save()
 
         contract.loanBalance += receiveTx.balancePaid

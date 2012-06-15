@@ -1018,7 +1018,7 @@ class PeriodProcessorServiceTests {
         def contract = Contract.get(1),
             p1 = Period.get(1)
 
-        contract.processor = "MockyMocky"
+        contract.periodProcessor = "mockyMocky"
         contract.save()
 
         def rtx1 = new ReceiveTransaction(period: p1)
@@ -1224,7 +1224,7 @@ class PeriodProcessorServiceTests {
     }
 
     void testCancelReceiveTransactionCommission() {
-        setUpPeriod()
+        setUpPeriod("Commission")
 
         def contract = Contract.get(1),
             loanType = contract.loanType,
@@ -1450,6 +1450,140 @@ class PeriodProcessorServiceTests {
             }
             println "===> pass"
         }
+    }
+
+    void testCancelReceiveTransactionExpressCash01Simple() {
+
+        /* Preparation */
+        def prepareContractAndPeriod = { ->
+            def c = Contract.get(1),
+                p = Period.get(1)
+
+            c.periodGeneratorProcessor = 'ExpressCash01'
+            c.periodProcessor = 'ExpressCash01'
+            c.save()
+
+            [c, p]
+        }
+
+        def dataTable = [
+            // run_no, r_p, r_amount, r_b_forward, r_b_paid, r_i_paid, r_pay_date, r_diff, p_amount, p_pay_status, p_partial, p_pay_amount, p_outstanding, r_adv, r_p_amount, r_vir_int_amount, c_balance, p_int_paid
+            [1, 100.00, 2000.00, 80.00, 14.55, "2012-04-11", 5.45, 686.00, false, true, 100.00, 586.00, false, 100.00, 20.00, 1920.00, true],
+            [1, 100.00, 1920.00, 100.00, 3.27, "2012-04-16", 0.00, 686.00, false, true, 100.00, 486.00, true, 100.00, 0.00, 1820.00, true],
+            [1, 1820.00, 1820.00, 1820.00, 2.37, "2012-04-21", 0.00, 686.00, true, false, 100.00, 0.00, true, 486.00, 0.00, 0.00, true]
+        ]
+
+        def prepareReceiveTxAndPeriod = { runNo ->
+            def d = dataTable[runNo]
+            def p = Period.get(d[0])
+            def r = new ReceiveTransaction(period: p)
+
+            r.with {
+                amount = d[1]
+                sign = +1
+                balanceForward = d[2]
+                balancePaid = d[3]
+                interestRate = 12.00
+                interestPaid = d[4]
+                fee = 0.00
+                fine = 0.00
+                isShareCapital = false
+                paymentDate = Date.parse("yyyy-MM-dd", d[5])
+                differential = d[6]
+                status = true
+                isAdvancedInterest = d[12]
+                periodAmountPaid = d[13]
+                periodVirtualInterestPaid = d[14]
+            };
+            r.save()
+            println "ReceiveTx : " + r.errors
+
+            p.with {
+                amount = d[7]
+                payoffStatus = d[8]
+                partialPayoff = d[9]
+                payAmount = d[10]
+                outstanding = d[11]
+                interestPaid = d[16]
+            }
+            p.save()
+            println "Period : " + p.errors
+
+            def c = Contract.get(p.contract.id)
+            c.loanBalance = d[15]
+            c.save()
+
+            [r, p, c]
+        }
+        /* end preparation */
+
+        def contract = [null]* 3,
+            period = [null]* 3,
+            rTx = [null]* 3
+
+        setUpPeriod()
+
+        prepareContractAndPeriod()
+        contract.eachWithIndex { i, pos ->
+            def (r, p, c) = prepareReceiveTxAndPeriod(pos)
+            rTx[pos] = r
+            period[pos] = p
+            contract[pos] = c
+        }
+
+        // Pass 0:
+        println "Pass 0: testing ..."
+        service.cancelReceiveTransaction rTx[2]
+        rTx[2] = ReceiveTransaction.get rTx[2].id
+        assert rTx[2].status == false
+
+        period[2] = Period.get period[2].id
+        assert period[2].payoffStatus == false
+        assert period[2].partialPayoff == true
+        assert period[2].outstanding == 486.00
+        assert period[2].interestOutstanding == 0.00
+        assert period[2].interestPaid == true
+
+        contract[2] = Contract.get contract[2].id
+        assert contract[2].loanBalance == 1820.00
+        println "===> pass"
+        // End Pass 0.
+
+        // Pass 1:
+        println "Pass 1: testing ..."
+        service.cancelReceiveTransaction rTx[1]
+        rTx[1] = ReceiveTransaction.get rTx[1].id
+        assert rTx[1].status == false
+
+        period[1] = Period.get period[1].id
+        assert period[1].payoffStatus == false
+        assert period[1].partialPayoff == true
+        assert period[1].outstanding == 586.00
+        assert period[1].interestOutstanding == 0.00
+        assert period[1].interestPaid == true
+
+        contract[1] = Contract.get contract[1].id
+        assert contract[1].loanBalance == 1920.00
+        println "===> pass"
+        // End Pass 1.
+
+        // Pass 2:
+        println "Pass 1: testing ..."
+        service.cancelReceiveTransaction rTx[0]
+        rTx[0] = ReceiveTransaction.get rTx[0].id
+        assert rTx[0].status == false
+
+        period[0] = Period.get period[0].id
+        assert period[0].payoffStatus == false
+        assert period[0].partialPayoff == false
+        assert period[0].outstanding == 686.00
+        assert period[0].interestOutstanding == 20.00
+        assert period[0].interestPaid == false
+
+        contract[0] = Contract.get contract[0].id
+        assert contract[0].loanBalance == 2000.00
+        println "===> pass"
+        // End Pass 1.
     }
 
 }

@@ -154,6 +154,8 @@ class MemberController {
     }
 
     def doUploadMembers() {
+        def originalname
+        def memberUpload
         try {
             def f = request.getFile('members')
             if (f.empty) {
@@ -161,12 +163,21 @@ class MemberController {
                 render(view: 'uploadMembers')
                 return
             }
-            def result = kettleService.extractMember(f)
+            originalname = f.originalFilename
+            //def result = kettleService.extractMember(f)
+            memberUpload = memberService.findChangedInMemberUpload()   
+             
         } catch (e) {
             log.error(e)
             flash.error = message(code: 'errors.extractMembersNotComplete')
+            render(view: 'uploadMembers')
+            return
         }
-        render view: "uploadMembers"
+        render (view: "uploadMembers", model: [newMembers: memberUpload?.newMembers, updateMembers: memberUpload?.updateMembers, unchangeMembers: memberUpload?.unchangeMembers, disabledMembers: memberUpload?.disabledMembers, fileUpload:originalname])
+    }
+
+    def updateMembers() {
+        def fileUpload = params.fileUpload        
     }
 
     def ajaxSearch() {

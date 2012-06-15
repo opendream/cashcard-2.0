@@ -14,6 +14,8 @@ class Member {
     BigDecimal balance = 0.000000
     Date dateCreated
     Date lastUpdated
+    Long creditUnionMemberId // ref to credit union member id
+    String creditUnionMemberNo // ref to credit union member no
 
     static transients = ["utilService"]
 
@@ -50,5 +52,7 @@ class Member {
         address(nullable: true, blank: true)
         telNo(nullable: true, blank: true, matches: /\d{9,11}/)
         status(nullable: false, blank: false, inList: Status.list())
+        creditUnionMemberId(nullable: true, blank: true)
+        creditUnionMemberNo(nullable: true, blank: true)
     }
 }

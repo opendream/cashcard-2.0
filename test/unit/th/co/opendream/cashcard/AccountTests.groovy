@@ -13,7 +13,7 @@ class AccountTests extends DomainTestTemplate {
 
     def requiredProperties() {
         ['accountNumber', 'balance', 'registeredDate', 'dateCreated',
-        'lastUpdated', 'status']
+        'lastUpdated', 'status', 'createdBy']
     }
 
     def domainClass() {

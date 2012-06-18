@@ -5,6 +5,7 @@ class Account {
 	BigDecimal balance
 	Date registeredDate
 	Boolean status = true
+	Users createdBy
 
 	Date dateCreated
 	Date lastUpdated

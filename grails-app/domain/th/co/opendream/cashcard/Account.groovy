@@ -10,6 +10,8 @@ class Account {
 	Date dateCreated
 	Date lastUpdated
 
+	static belongsTo = [member: Member]
+
     static constraints = {
     	accountNumber blank: false
     }

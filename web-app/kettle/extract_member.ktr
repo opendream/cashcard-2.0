@@ -425,8 +425,8 @@ if(valid_member_tel &amp;&amp; valid_identification_number &amp;&amp; valid_cred
         <replace>N</replace>
       </field>    </fields>     <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>72</xloc>
-      <yloc>351</yloc>
+      <xloc>74</xloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
       </GUI>
     </step>

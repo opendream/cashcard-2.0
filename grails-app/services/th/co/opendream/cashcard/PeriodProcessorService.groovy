@@ -35,7 +35,7 @@ class PeriodProcessorService {
             throw new Exception("Receive Transaction must be the latest to cancel.");
         }
 
-        def processorName = receiveTx.period.contract.processor
+        def processorName = receiveTx.period.contract.periodProcessor.capitalize()
         this."cancelReceiveTransaction$processorName"(receiveTx)
     }
 
@@ -84,6 +84,48 @@ class PeriodProcessorService {
         period.outstanding += receiveTx.amount
         period.cooperativeInterest = 0.00
         period.save()
+
+        contract.loanBalance += receiveTx.balancePaid
+        contract.save()
+    }
+
+    def cancelReceiveTransactionExpressCash01(receiveTx) {
+        def period = receiveTx.period,
+            contract = period.contract
+
+        receiveTx.status = false
+        receiveTx.save()
+
+        period.outstanding += receiveTx.periodAmountPaid
+
+        if (receiveTx.periodVirtualInterestPaid > 0.00) {
+            period.interestOutstanding = receiveTx.periodVirtualInterestPaid
+            period.interestPaid = false
+        }
+
+        if (period.outstanding > 0.00) {
+            period.partialPayoff = true
+            period.payoffStatus = false
+        }
+
+        if (period.outstanding == period.amount) {
+            period.partialPayoff = false
+        }
+
+        period.save()
+
+        // Re-enable cancelled-period
+        def c = Period.createCriteria()
+        def periodList = c.list() {
+            eq("contract", contract)
+            eq("status", false)
+            eq("cancelledDueToDebtClearance", true)
+            gt("no", period.no)
+        }
+        periodList.each { p ->
+            p.status = true
+            p.cancelledDueToDebtClearance = false
+        }
 
         contract.loanBalance += receiveTx.balancePaid
         contract.save()
@@ -260,13 +302,14 @@ class PeriodProcessorService {
 
     def expresscash01(Period period, amount, fine, isShareCapital, date, Object... args) {
         // Make default arguments.
-        def isPayAll
+        def isPayAll, periodAmountPaid = amount
         if (args.size()) {
             isPayAll = args[0] ? true : false
         }
         def interestAmount = contractService.getInterestAmountOnCloseContract(period, date)
         if (isPayAll || amount >= interestAmount.totalDebt) {
             amount = interestAmount.totalDebt
+            periodAmountPaid = period.outstanding
         }
         def actualPaymentAmount = amount
         def periodInterest = interestProcessorService.process(period, date)
@@ -276,14 +319,21 @@ class PeriodProcessorService {
 
         if (! period.interestPaid) {
             if (amount >= period.interestOutstanding) {
+                receiveTx.periodVirtualInterestPaid = period.interestOutstanding
+
                 amount -= period.interestOutstanding
                 diff = period.interestOutstanding - periodInterest.actualInterest
                 period.interestOutstanding = 0.00
                 period.interestPaid = true
+
+                receiveTx.isAdvancedInterest = false
             }
             else {
                 throw new RuntimeException("Must pay at least ${period.interestOutstanding} for this payment.")
             }
+        }
+        else {
+            receiveTx.isAdvancedInterest = true
         }
 
         receiveTx.amount = actualPaymentAmount
@@ -296,6 +346,7 @@ class PeriodProcessorService {
         receiveTx.fine = fine
         receiveTx.isShareCapital = isShareCapital
         receiveTx.paymentDate = date
+        receiveTx.periodAmountPaid = periodAmountPaid
 
         period.payoffDate = date
         period.payAmount = actualPaymentAmount

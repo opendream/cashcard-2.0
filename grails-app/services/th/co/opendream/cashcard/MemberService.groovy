@@ -1,5 +1,7 @@
 package th.co.opendream.cashcard
 
+import th.co.opendream.cashcard.Member.Status
+
 class MemberService {
 
     def search(input) {
@@ -61,5 +63,26 @@ class MemberService {
     def mergeMembers() {
         def members = findChangedInMemberUpload()
 
+        def disableMembers = members.disabledMembers
+        disableMembers.each {
+            def member = Member.findByCreditUnionMemberId(it.creditUnionMemberId)
+            member.status = Status.DELETED
+            member.save()
+        }
+
+        def updateMembers = members.updateMembers
+        updateMembers.each {
+            def member = Member.findByCreditUnionMemberId(it.creditUnionMemberId)
+            member.properties = it.properties
+            member.status = Status.ACTIVE
+            member.save()
+        }
+
+        def newMembers = members.newMembers
+        newMembers.each {
+            def member = new Member()
+            member.properties = it.properties 
+            member.save()
+        }
     }
 }

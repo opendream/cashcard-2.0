@@ -20,7 +20,7 @@ class ShareCapitalAccountController {
 
     	if (member) {
     		def shareCapitalAccount = new ShareCapitalAccount()
-    		shareCapitalAccount.createdBy = Users.get(springSecurityService.principle.id)
+    		shareCapitalAccount.createdBy = Users.get(springSecurityService.principal.id)
     		shareCapitalAccount.member = member
 
     		shareCapitalAccount.balance = params.balance ? params.balance as BigDecimal : 0

@@ -57,7 +57,7 @@ class ShareCapitalAccountControllerTests {
             return pass
         }
 
-        controller.springSecurityService = [principle: [id: 1]]
+        controller.springSecurityService = [principal: [id: 1]]
         controller.doCreate()
         assert response.redirectUrl == '/member/show/1'
         assert count == 1

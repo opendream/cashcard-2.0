@@ -164,7 +164,7 @@ class MemberController {
                 return
             }
             originalname = f.originalFilename
-            //def result = kettleService.extractMember(f)
+            def result = kettleService.extractMember(f)
             memberUpload = memberService.findChangedInMemberUpload()   
              
         } catch (e) {
@@ -177,7 +177,8 @@ class MemberController {
     }
 
     def updateMembers() {
-        def fileUpload = params.fileUpload        
+        def fileUpload = params.fileUpload    
+        memberService.mergeMembers()    
     }
 
     def ajaxSearch() {

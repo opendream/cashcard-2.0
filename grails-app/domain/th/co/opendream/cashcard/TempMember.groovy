@@ -22,6 +22,12 @@ class TempMember {
 	Boolean validCreditUnionMemberId
 	Boolean validAddress
 
+	static transients = ['creditUnionMemberId']
+
+	def getCreditUnionMemberId() {
+		return id
+	}
+
     static constraints = {
     	identificationNumber(nullable: true, blank: true)    	
     	creditUnionMemberNo(nullable: true, blank: true)

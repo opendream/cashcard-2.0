@@ -54,7 +54,7 @@ class ContractTests extends DomainTestTemplate {
             'dateCreated'   , 'lastUpdated'     , 'advancedInterestKeep',
             'advancedInterestBalance'           , 'maxInterestRate',
             'signedDate'    , 'processor'       , 'interestProcessor',
-			'periodProcessor', 'periodGeneratorProcessor'
+			'periodProcessor', 'periodGeneratorProcessor', 'canPayAllDebt'
         ]
 
         def instanceProperties = Contract.metaClass.properties*.name

@@ -13,6 +13,7 @@ class ContractService {
         contract.periodGeneratorProcessor = loanType.periodGeneratorProcessor
         contract.interestRate = loanType.interestRate
         contract.maxInterestRate = loanType.maxInterestRate
+        contract.canPayAllDebt = loanType.canPayAllDebt
 
         contract
     }

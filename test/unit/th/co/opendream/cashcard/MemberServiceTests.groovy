@@ -1,6 +1,6 @@
 package th.co.opendream.cashcard
 
-
+import th.co.opendream.cashcard.Member.Status
 
 import grails.test.mixin.*
 import org.junit.*
@@ -14,9 +14,12 @@ class MemberServiceTests {
 
     @Before
     void setUp() {
-        def utilService = [
+        /*def utilService = [
             check_id_card: { id -> true }
-        ]
+        ]*/
+        def utilService = new Object()
+        utilService.metaClass.check_id_card = { id -> true }
+        Member.metaClass.utilService = utilService
 
         def m1 = new Member(identificationNumber:"1159900100015", firstname:"สมหญิง",
             lastname: "รักเรียน", telNo: "0818526122", gender: "MALE", address: "Opendream", creditUnionMemberId:1, creditUnionMemberNo:'001')
@@ -36,11 +39,12 @@ class MemberServiceTests {
         // new member
         def tmpMember3 = new TempMember(id:3, identificationNumber:'141190081118', creditUnionMemberNo: '003', telNo:'0818526133', gender:"MALE", firstname:"สมหนุ่ม", lastname: "รักเรียน", address: "Opendream", valid:false, validIdentificationNumber:false, validTelNo:false, validFirstname: false, validLastname:false, validGender:false, validCreditUnionMemberNo:false, validCreditUnionMemberId:false, validAddress:false)
 
-        def tmpMember4 = new TempMember(id:4, identificationNumber:'141190081118', creditUnionMemberNo: '004', telNo:'0818526133', gender:"MALE", firstname:"สมหนุ่ม", lastname: "รักเรียน", address: "Opendream", valid:false, validIdentificationNumber:false, validTelNo:false, validFirstname: false, validLastname:false, validGender:false, validCreditUnionMemberNo:false, validCreditUnionMemberId:false, validAddress:false)
+        def tmpMember4 = new TempMember(id:4, identificationNumber:'14119008117', creditUnionMemberNo: '004', telNo:'0818526133', gender:"MALE", firstname:"สมหนุ่ม", lastname: "รักเรียน", address: "Opendream", valid:false, validIdentificationNumber:false, validTelNo:false, validFirstname: false, validLastname:false, validGender:false, validCreditUnionMemberNo:false, validCreditUnionMemberId:false, validAddress:false)
 
-        m1.utilService = utilService
-        m2.utilService = utilService
-        m3.utilService = utilService
+        
+        //m1.utilService = utilService
+        //m2.utilService = utilService
+        //m3.utilService = utilService
 
         m1.save()
         m2.save()
@@ -52,6 +56,7 @@ class MemberServiceTests {
         tmpMember2.save()
         tmpMember3.save()
         tmpMember4.save()
+        
     }
 
     void testValidSearch() {
@@ -112,7 +117,13 @@ class MemberServiceTests {
         assert 1 == members.unchangeMembers.size()
     }
 
-    void testMergeMembers() {
-        
+    void testMergeMembers() {        
+        assert 3 == Member.count()
+        def members = service.mergeMembers()
+
+        assert 5 == Member.count()
+        assert 4 == Member.findAllByStatus(Status.ACTIVE).size()
+
+        assert Status.DELETED == Member.get(3).status
     }
 }

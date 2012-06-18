@@ -144,7 +144,7 @@ class BootStrap {
             name: "เงินกู้ด่วน (ปรับปรุงใหม่)", processor: "Effective", interestRate: 12.00,
             maxInterestRate: 18.00, mustKeepAdvancedInterest: false,
             numberOfPeriod: 3, interestProcessor: "Effective", periodProcessor: "ExpressCash01",
-            periodGeneratorProcessor: "ExpressCash01"
+            periodGeneratorProcessor: "ExpressCash01", canPayAllDebt: true
         ).save(flush: true) // FIXME: Don't know why it must use flush:true with postgres
     }
 
@@ -167,7 +167,8 @@ class BootStrap {
             guarantor1: "Keng",
             guarantor2: "Neung",
             numberOfPeriod: 3,
-            signedDate: Date.parse("yyyy-MM-dd", "2012-03-01")
+            signedDate: Date.parse("yyyy-MM-dd", "2012-03-01"),
+            canPayAllDebt: loanType.canPayAllDebt
         )
     }
 

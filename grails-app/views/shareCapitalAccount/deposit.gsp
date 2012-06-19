@@ -23,6 +23,17 @@
           </div>
       </div>
 
+      <div class="control-group">
+          <label class="control-label">
+              <g:message code="account.deposit.balance.label" />
+          </label>
+          <div class="controls">
+              <span class="input-xlarge uneditable-input">
+                  <g:formatNumber type="number" number="${shareCapitalAccount.balance}" maxFractionDigits="2" minFractionDigits="2" />
+              </span>
+          </div>
+      </div>
+
   		<div class="control-group">
   			<label for="paymentDate" class="control-label">
   				<g:message code="account.deposit.paymentDate.label" />

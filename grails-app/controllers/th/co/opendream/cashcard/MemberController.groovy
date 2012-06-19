@@ -5,7 +5,8 @@ import grails.converters.JSON
 
 class MemberController {
 
-    def utilService, periodService, memberService, kettleService
+    def utilService, periodService, memberService, kettleService,
+        shareCapitalAccountService
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
@@ -47,6 +48,8 @@ class MemberController {
             render(view: "create", model: [memberInstance: memberInstance])
             return
         }
+
+        shareCapitalAccountService.createAccountFromMember(memberInstance, memberInstance.creditUnionMemberNo, new Date())
 
 		flash.message = message(code: 'default.created.message', args: [message(code: 'member.label', default: 'Member'), memberInstance.id])
         redirect(action: "show", id: memberInstance.id)
@@ -91,7 +94,10 @@ class MemberController {
             contract.metaClass.totalDebt = totalDebt
         }
 
-        render view: 'show', model: [memberInstance: memberInstance, contractList: contractList, slip: slip]
+        def shareCapitalAccount = shareCapitalAccountService.getMemberAccount(memberInstance)
+        render view: 'show', model: [memberInstance: memberInstance,
+            contractList: contractList, shareCapitalAccount: shareCapitalAccount,
+            slip: slip]
     }
 
     def edit() {
@@ -160,7 +166,7 @@ class MemberController {
     }
 
     def doUploadMembers() {
-        def originalname
+        def filename
         def memberUpload
         try {
             def f = request.getFile('members')
@@ -169,9 +175,10 @@ class MemberController {
                 render(view: 'uploadMembers')
                 return
             }
-            originalname = f.originalFilename
-            //def result = kettleService.extractMember(f)
-            memberUpload = memberService.findChangedInMemberUpload()
+
+            filename = f.originalFilename
+            def result = kettleService.extractMember(f)
+            memberUpload = memberService.findChangedInMemberUpload(filename)
 
         } catch (e) {
             log.error(e)
@@ -179,11 +186,23 @@ class MemberController {
             render(view: 'uploadMembers')
             return
         }
-        render (view: "uploadMembers", model: [newMembers: memberUpload?.newMembers, updateMembers: memberUpload?.updateMembers, unchangeMembers: memberUpload?.unchangeMembers, disabledMembers: memberUpload?.disabledMembers, fileUpload:originalname])
+        render (view: "confirm", model: [newMembers: memberUpload?.newMembers, updateMembers: memberUpload?.updateMembers, unchangeMembers: memberUpload?.unchangeMembers, disabledMembers: memberUpload?.disabledMembers, filename:filename])
     }
 
-    def updateMembers() {
-        def fileUpload = params.fileUpload
+    def showUpdateMember() {
+        def filename = params.filename
+        memberUpload = memberService.findChangedInMemberUpload(filename)
+        render (view: "confirm", model: [newMembers: memberUpload?.newMembers, updateMembers: memberUpload?.updateMembers, unchangeMembers: memberUpload?.unchangeMembers, disabledMembers: memberUpload?.disabledMembers, filename:filename])
+    }
+
+    def mergeMembers() {
+        def filename = params.filename
+        if(!filename) {
+            render(view: 'uploadMembers')
+            return
+        }
+        memberService.mergeMembers(filename)
+        redirect(action: "list")
     }
 
     def ajaxSearch() {

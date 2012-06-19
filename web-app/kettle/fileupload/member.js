@@ -5,7 +5,8 @@
 		"member_add3": "",
 		"member_po": "",
 		"member_zip": 77110,
-		"member_28": ""
+		"member_28": "",
+		"member_salasum":1000
 	}, 
 	{	"id_card": 3779800203638,
 		"member_name": "ลัดดา  เทพพิทักษ์",
@@ -13,6 +14,7 @@
 		"member_add3": "หัวหิน",
 		"member_po": "ประจวบคีรีขันธ์",	
 		"member_zip": 77110,
-		"member_28": "089-6126327"
+		"member_28": "089-6126327",
+		"member_salasum":1500
 	}
 ]}

@@ -65,6 +65,15 @@
                             <g:else>-</g:else>
                         </td>
                     </tr>
+                    <tr>
+                        <td><strong><g:message code="shareCapitalBalance" /></strong></td>
+                        <td>
+                            <g:if test="${shareCapitalAccount.balance}">
+                                <g:formatNumber type="number" number="${shareCapitalAccount.balance}" maxFractionDigits="2" minFractionDigits="2" />
+                            </g:if>
+                            <g:else>-</g:else>
+                        </td>
+                    </tr>
                 </table>
 
                 <h3><g:message code="contract.list" /></h3>

@@ -11,7 +11,7 @@ class KettleService {
 
     	file.transferTo(new File("${reposPath}/fileupload/${file.originalFilename}"))
 
-    	def process = "${kettle}/pan.sh -file:${reposPath}/extract_member.ktr -param:memberfile=${reposPath}/fileupload/${file.originalFilename} -param:extension=${file.contentType}".execute()
+    	def process = "${kettle}/pan.sh -file:${reposPath}/extract_member.ktr -param:memberfile=${reposPath}/fileupload/${file.originalFilename} -param:extension=${file.contentType} -param:filename=${file.originalFilename}".execute()
 		def result = process.text
 		if(result.contains('ERROR')) {
 			throw new RuntimeException(message:"ExtractMembersNotComplete")

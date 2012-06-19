@@ -118,7 +118,7 @@
                 </tr>
                 <tr class="subtitle">
                     <td class="stringlabel" style="text-align: right;" ><label>งวด</label></td>
-                    <td class="string"><label>${printout.periodNo}</label>
+                    <td class="string"><label>${printout.periodNo}</label></td>
                     <td class="stringlabel"><label>จำนวนเงิน</label></td>
                     <td class="string"><label>${printout.periodAmount}</label></td>
                 </tr>

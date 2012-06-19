@@ -94,6 +94,7 @@
 								<g:formatBoolean boolean="${contract.loanReceiveStatus}" true="${message(code: 'contract.loanReceiveStatus.true')}" false="${message(code: 'contract.loanReceiveStatus.false')}" />
 								<g:if test="${contract.loanReceiveStatus}">
 									<br /><g:formatDate date="${contract.payloanDate}" format="dd MMM yyyy" />
+									<br /> <span class="btn btn-mini reprint" pid="${contract.id}" type="payloan">พิมพ์ซ่อม</span>
 								</g:if>
 							</div>
 						</td>
@@ -179,7 +180,11 @@
 						</td>
 						<g:if test="${contract.approvalStatus}">
 							<td><g:formatDate date="${period.dueDate}" format="EEEE d MMMM yyyy" /></td>
-							<td class="date">${period.payoffStatusText}</td>
+							<td class="date">${period.payoffStatusText}
+								<g:if test="${period.payoffStatus}">
+									<br /> <span class="btn btn-mini reprint" pid="${period.receiveTransaction.id.getAt(0)}" type="payoff">พิมพ์ซ่อม</span>
+								</g:if>
+							</td>
 							<td>
 								<g:if test="${period.payoffStatus}">
 									<g:formatDate date="${period.payoffDate}" format="EEEE dd MMMM yyyy" />
@@ -261,6 +266,15 @@
 		$('.cancel-btn').click(function (e) {
 			var ans = confirm("<g:message code="default.button.delete.confirm.message" />");
 			return ans;
+		});
+
+		// Re print
+		$('.reprint').click(function(e) {
+			var el = $(this);
+
+            var url = '/cashcard/contract/printout/?pid='+ el.attr('pid')+'&type='+el.attr('type');
+			var win = window.open (url,"Printout", "location=0,status=0,scrollbars=0,menubar=0");
+			win.print();
 		});
 	}(jQuery);
 	</r:script>

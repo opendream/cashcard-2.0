@@ -143,6 +143,10 @@ class MemberTests extends DomainTestTemplate {
 
         verifyNotNull(member, field)
 
+        def exists = generateValidMember()
+        member[field] = exists.memberNo
+        verifyUnique(member, field)
+
         member[field] = ''
         verifyNotBlank(member, field)
 

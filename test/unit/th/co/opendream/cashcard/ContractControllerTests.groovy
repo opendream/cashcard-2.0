@@ -24,8 +24,8 @@ class ContractControllerTests {
             numberOfPeriod: 3
         ).save()
 
-        def m1 = new Member(identificationNumber: "1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")
-        def m2 = new Member(identificationNumber: "1119900100015", firstname: "Noomz", lastname: "Siriwat", telNo: "111111111", gender: "MALE", address: "Opendream2")
+        def m1 = new Member(identificationNumber: "1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream", memberNo: "001")
+        def m2 = new Member(identificationNumber: "1119900100015", firstname: "Noomz", lastname: "Siriwat", telNo: "111111111", gender: "MALE", address: "Opendream2", memberNo: "002")
 
         utilService = [ check_id_card: { id -> true }, isPayable: { Contract c -> true } ] as UtilService
 

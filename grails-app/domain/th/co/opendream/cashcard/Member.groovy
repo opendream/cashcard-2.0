@@ -55,6 +55,6 @@ class Member {
         status(nullable: false, blank: false, inList: Status.list())
         creditUnionMemberId(nullable: true, blank: true)
         creditUnionMemberNo(nullable: true, blank: true)
-        memberNo(blank: false)
+        memberNo(blank: false, unique: true)
     }
 }

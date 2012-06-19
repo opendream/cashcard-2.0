@@ -5,7 +5,8 @@ import grails.converters.JSON
 
 class MemberController {
 
-    def utilService, periodService, memberService, kettleService
+    def utilService, periodService, memberService, kettleService,
+        shareCapitalAccountService
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
@@ -48,6 +49,8 @@ class MemberController {
             return
         }
 
+        shareCapitalAccountService.createAccountFromMember(memberInstance, memberInstance.creditUnionMemberNo, new Date())
+
 		flash.message = message(code: 'default.created.message', args: [message(code: 'member.label', default: 'Member'), memberInstance.id])
         redirect(action: "show", id: memberInstance.id)
     }
@@ -85,7 +88,8 @@ class MemberController {
             contract.metaClass.totalDebt = totalDebt
         }
 
-        render view: 'show', model: [memberInstance: memberInstance, contractList: contractList]
+        def shareCapitalAccount = shareCapitalAccountService.getMemberAccount(memberInstance)
+        render view: 'show', model: [memberInstance: memberInstance, contractList: contractList, shareCapitalAccount: shareCapitalAccount]
     }
 
     def edit() {
@@ -165,8 +169,8 @@ class MemberController {
             }
             originalname = f.originalFilename
             def result = kettleService.extractMember(f)
-            memberUpload = memberService.findChangedInMemberUpload()   
-             
+            memberUpload = memberService.findChangedInMemberUpload()
+
         } catch (e) {
             log.error(e)
             flash.error = message(code: 'errors.extractMembersNotComplete')
@@ -177,8 +181,8 @@ class MemberController {
     }
 
     def updateMembers() {
-        def fileUpload = params.fileUpload    
-        memberService.mergeMembers()    
+        def fileUpload = params.fileUpload
+        memberService.mergeMembers()
     }
 
     def ajaxSearch() {

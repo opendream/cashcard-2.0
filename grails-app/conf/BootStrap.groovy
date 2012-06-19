@@ -11,6 +11,7 @@ import grails.util.Environment
 import th.co.opendream.cashcard.LoanType
 import th.co.opendream.cashcard.Contract
 import th.co.opendream.cashcard.Period
+import th.co.opendream.cashcard.ShareCapitalAccount
 
 class BootStrap {
     def grailsApplication
@@ -53,6 +54,8 @@ class BootStrap {
             contract.save()
 
             generatePeriod(contract)
+            generateShareCapitalAccount(m1, user)
+            generateShareCapitalAccount(m2, user)
         }
     }
     def destroy = {
@@ -193,5 +196,19 @@ class BootStrap {
             payoffStatus: false, interestAmount: 20.00, interestOutstanding: 20.00,
             outstanding: 686.00
         ).save()
+    }
+
+    def generateShareCapitalAccount(member, user) {
+        def account = new ShareCapitalAccount(
+            accountNumber: "55-${member.id}",
+            member: member,
+            createdBy: user,
+            balance: 1000.00,
+            registeredDate: new Date()
+        )
+
+        account.save()
+
+        account
     }
 }

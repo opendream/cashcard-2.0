@@ -55,11 +55,19 @@ class ShareCapitalAccountServiceTests {
         def member = generateMember(),
             account = createAccount(member)
 
-        service.deposit(account, 100.00, new Date())
+        def date = new Date()
+        service.deposit(account, 100.00, date)
 
         // Reload account data
         account = ShareCapitalAccount.get(account.id)
         assert account.balance == 1100.00
         assert AccountTransaction.list().size() == 1
+
+        // load recent transaction
+        def accountTx = AccountTransaction.list()[0]
+        assert accountTx.balance == 1100.00
+        assert accountTx.balanceForward == 1000.00
+        assert accountTx.amount == 100.00
+        assert accountTx.paymentDate == date
     }
 }

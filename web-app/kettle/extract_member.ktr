@@ -11,12 +11,17 @@
     <parameters>
         <parameter>
             <name>extension</name>
-            <default_value>text&#47;csv</default_value>
+            <default_value/>
+            <description/>
+        </parameter>
+        <parameter>
+            <name>filename</name>
+            <default_value/>
             <description/>
         </parameter>
         <parameter>
             <name>memberfile</name>
-            <default_value>&#47;home&#47;boyone&#47;workspace&#47;opendreamspace&#47;docs&#47;creditUnion&#47;memberformat&#47;member.csv</default_value>
+            <default_value/>
             <description/>
         </parameter>
     </parameters>
@@ -83,11 +88,11 @@
     <name>cashcard</name>
     <server>localhost</server>
     <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>cashcard_alpha</database>
+    <access>JNDI</access>
+    <database>cashcard</database>
     <port>5432</port>
-    <username>postgres</username>
-    <password>Encrypted 2be98afc86aa7f2e4bb16bd64d980aac9</password>
+    <username/>
+    <password>Encrypted </password>
     <servername/>
     <data_tablespace/>
     <index_tablespace/>
@@ -102,7 +107,7 @@
     </attributes>
   </connection>
   <order>
-  <hop> <from>remove unused fields</from><to>validate fields</to><enabled>Y</enabled> </hop>  <hop> <from>Filter title</from><to>remove unused fields</to><enabled>Y</enabled> </hop>  <hop> <from>Filter title</from><to>lookup title</to><enabled>Y</enabled> </hop>  <hop> <from>read Json</from><to>spilt member_name and group address</to><enabled>Y</enabled> </hop>  <hop> <from>lookup title</from><to>Select title and fname</to><enabled>Y</enabled> </hop>  <hop> <from>Select title and fname</from><to>validate fields</to><enabled>Y</enabled> </hop>  <hop> <from>spilt member_name and group address</from><to>Replace &apos;-&apos; with &apos;&apos;</to><enabled>Y</enabled> </hop>  <hop> <from>Replace &apos;-&apos; with &apos;&apos;</from><to>Filter title</to><enabled>Y</enabled> </hop>  <hop> <from>read csv</from><to>spilt member_name and group address</to><enabled>Y</enabled> </hop>  <hop> <from>Get Variables</from><to>Switch &#47; Case</to><enabled>Y</enabled> </hop>  <hop> <from>Switch &#47; Case</from><to>read csv</to><enabled>Y</enabled> </hop>  <hop> <from>Switch &#47; Case</from><to>read Json</to><enabled>Y</enabled> </hop>  <hop> <from>Switch &#47; Case</from><to>Abort</to><enabled>Y</enabled> </hop>  <hop> <from>check credit union member id</from><to>insert to temp table</to><enabled>Y</enabled> </hop>  <hop> <from>lookup gender</from><to>lookup firstname</to><enabled>Y</enabled> </hop>  <hop> <from>lookup firstname</from><to>lookup lastname</to><enabled>Y</enabled> </hop>  <hop> <from>lookup lastname</from><to>lookup address</to><enabled>Y</enabled> </hop>  <hop> <from>lookup address</from><to>check credit union member id</to><enabled>Y</enabled> </hop>  <hop> <from>lookup identification number</from><to>lookup credit union member no</to><enabled>Y</enabled> </hop>  <hop> <from>lookup credit union member no</from><to>lookup gender</to><enabled>Y</enabled> </hop>  <hop> <from>validate fields</from><to>lookup credit union member id</to><enabled>Y</enabled> </hop>  <hop> <from>lookup credit union member id</from><to>lookup identification number</to><enabled>Y</enabled> </hop>  </order>
+  <hop> <from>remove unused fields</from><to>validate fields</to><enabled>Y</enabled> </hop>  <hop> <from>Filter title</from><to>remove unused fields</to><enabled>Y</enabled> </hop>  <hop> <from>Filter title</from><to>lookup title</to><enabled>Y</enabled> </hop>  <hop> <from>read Json</from><to>spilt member_name and group address</to><enabled>Y</enabled> </hop>  <hop> <from>lookup title</from><to>Select title and fname</to><enabled>Y</enabled> </hop>  <hop> <from>Select title and fname</from><to>validate fields</to><enabled>Y</enabled> </hop>  <hop> <from>spilt member_name and group address</from><to>Replace &apos;-&apos; with &apos;&apos;</to><enabled>Y</enabled> </hop>  <hop> <from>Replace &apos;-&apos; with &apos;&apos;</from><to>Filter title</to><enabled>Y</enabled> </hop>  <hop> <from>read csv</from><to>spilt member_name and group address</to><enabled>Y</enabled> </hop>  <hop> <from>Get Variables</from><to>Switch &#47; Case</to><enabled>Y</enabled> </hop>  <hop> <from>Switch &#47; Case</from><to>read csv</to><enabled>Y</enabled> </hop>  <hop> <from>Switch &#47; Case</from><to>read Json</to><enabled>Y</enabled> </hop>  <hop> <from>Switch &#47; Case</from><to>Abort</to><enabled>Y</enabled> </hop>  <hop> <from>check credit union member id</from><to>insert to temp table</to><enabled>Y</enabled> </hop>  <hop> <from>lookup gender</from><to>lookup firstname</to><enabled>Y</enabled> </hop>  <hop> <from>lookup firstname</from><to>lookup lastname</to><enabled>Y</enabled> </hop>  <hop> <from>lookup identification number</from><to>lookup credit union member no</to><enabled>Y</enabled> </hop>  <hop> <from>lookup credit union member no</from><to>lookup gender</to><enabled>Y</enabled> </hop>  <hop> <from>validate fields</from><to>lookup credit union member id</to><enabled>Y</enabled> </hop>  <hop> <from>lookup credit union member id</from><to>lookup identification number</to><enabled>Y</enabled> </hop>  <hop> <from>lookup lastname</from><to>lookup address</to><enabled>Y</enabled> </hop>  <hop> <from>lookup address</from><to>lookup telNo</to><enabled>Y</enabled> </hop>  <hop> <from>lookup telNo</from><to>check credit union member id</to><enabled>Y</enabled> </hop>  </order>
   <step>
     <name>Abort</name>
     <type>Abort</type>
@@ -278,6 +283,14 @@
         <rename/>
         <length>-2</length>
         <precision>-2</precision>
+      </field>      <field>        <name>member_salasum</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>filename</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
       </field>        <select_unspecified>N</select_unspecified>
     </fields>     <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
@@ -372,6 +385,10 @@ if(has_address &gt; 0) {
 	valid_address = true;
 }
 
+if(has_tel_no &gt; 0) {
+	valid_member_tel = true;
+}
+
 if(valid_member_tel &amp;&amp; valid_identification_number &amp;&amp; valid_credit_union_member_no &amp;&amp; valid_gender &amp;&amp; valid_firstname &amp;&amp; valid_lastname &amp;&amp; valid_address) {
 	valid = true;
 }</jsScript_script>
@@ -425,8 +442,8 @@ if(valid_member_tel &amp;&amp; valid_identification_number &amp;&amp; valid_cred
         <replace>N</replace>
       </field>    </fields>     <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>74</xloc>
-      <yloc>352</yloc>
+      <xloc>73</xloc>
+      <yloc>350</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -527,58 +544,19 @@ if(valid_member_tel &amp;&amp; valid_identification_number &amp;&amp; valid_cred
           <column_name>valid_credit_union_member_no</column_name>
           <stream_name>valid_credit_union_member_no</stream_name>
         </field>
+        <field>
+          <column_name>share_capital</column_name>
+          <stream_name>member_salasum</stream_name>
+        </field>
+        <field>
+          <column_name>filename</column_name>
+          <stream_name>filename</stream_name>
+        </field>
     </fields>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
       <xloc>73</xloc>
       <yloc>481</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>lookup address</name>
-    <type>DBLookup</type>
-    <description/>
-    <distribute>Y</distribute>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <connection>cashcard</connection>
-    <cache>Y</cache>
-    <cache_load_all>N</cache_load_all>
-    <cache_size>0</cache_size>
-    <lookup>
-      <schema/>
-      <table>member</table>
-      <orderby/>
-      <fail_on_multiple>N</fail_on_multiple>
-      <eat_row_on_failure>N</eat_row_on_failure>
-      <key>
-        <name>member_id</name>
-        <field>credit_union_member_id</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <key>
-        <name>address</name>
-        <field>address</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <value>
-        <name>id</name>
-        <rename>has_address</rename>
-        <default>0</default>
-        <type>Integer</type>
-      </value>
-    </lookup>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>216</xloc>
-      <yloc>352</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -665,7 +643,7 @@ if(valid_member_tel &amp;&amp; valid_identification_number &amp;&amp; valid_cred
     </lookup>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>737</xloc>
+      <xloc>751</xloc>
       <yloc>352</yloc>
       <draw>Y</draw>
       </GUI>
@@ -712,7 +690,7 @@ if(valid_member_tel &amp;&amp; valid_identification_number &amp;&amp; valid_cred
     </lookup>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>474</xloc>
+      <xloc>510</xloc>
       <yloc>352</yloc>
       <draw>Y</draw>
       </GUI>
@@ -759,7 +737,7 @@ if(valid_member_tel &amp;&amp; valid_identification_number &amp;&amp; valid_cred
     </lookup>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>598</xloc>
+      <xloc>618</xloc>
       <yloc>352</yloc>
       <draw>Y</draw>
       </GUI>
@@ -853,7 +831,7 @@ if(valid_member_tel &amp;&amp; valid_identification_number &amp;&amp; valid_cred
     </lookup>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>347</xloc>
+      <xloc>406</xloc>
       <yloc>352</yloc>
       <draw>Y</draw>
       </GUI>
@@ -939,6 +917,19 @@ if(fname!=undefined &amp;&amp; fname!=&apos;&apos;) {
       <include_subfolders>N</include_subfolders>
     </file>
     <fields>
+      <field>
+        <name>member_id</name>
+        <path>$..member_id</path>
+        <type>Integer</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>both</trim_type>
+        <repeat>N</repeat>
+      </field>
       <field>
         <name>id_card</name>
         <path>$..id_card</path>
@@ -1057,15 +1048,15 @@ if(fname!=undefined &amp;&amp; fname!=&apos;&apos;) {
         <repeat>N</repeat>
       </field>
       <field>
-        <name>member_id</name>
-        <path>$..member_id</path>
-        <type>String</type>
+        <name>member_salasum</name>
+        <path>$..member_salasum</path>
+        <type>Number</type>
         <format/>
         <currency/>
         <decimal/>
         <group/>
-        <length>-1</length>
-        <precision>-1</precision>
+        <length>19</length>
+        <precision>6</precision>
         <trim_type>both</trim_type>
         <repeat>N</repeat>
       </field>
@@ -1288,6 +1279,21 @@ if(fname!=undefined &amp;&amp; fname!=&apos;&apos;) {
         <trim_type>none</trim_type>
         <repeat>N</repeat>
       </field>
+      <field>
+        <name>member_salasum</name>
+        <type>Number</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <ifnull/>
+        <position>-1</position>
+        <length>19</length>
+        <precision>6</precision>
+        <trim_type>none</trim_type>
+        <repeat>N</repeat>
+      </field>
     </fields>
     <limit>0</limit>
     <error_ignored>N</error_ignored>
@@ -1364,6 +1370,14 @@ if(fname!=undefined &amp;&amp; fname!=&apos;&apos;) {
         <rename/>
         <length>-2</length>
         <precision>-2</precision>
+      </field>      <field>        <name>member_salasum</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>filename</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
       </field>        <select_unspecified>N</select_unspecified>
     </fields>     <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
@@ -1399,6 +1413,8 @@ if(member_name){
 
 var address = (member_add2?member_add2:&apos;&apos;)+&apos; &apos;+(member_add3?member_add3:&apos;&apos;)+&apos; &apos;+(member_po?member_po:&apos; &apos;)+&apos; &apos;+(member_zip?member_zip:&apos;&apos;);
 address = trim(address);
+
+var filename = getVariable(&apos;filename&apos;, &apos;&apos;);
 </jsScript_script>
       </jsScript>    </jsScripts>    <fields>      <field>        <name>fname</name>
         <rename>fname</rename>
@@ -1418,10 +1434,16 @@ address = trim(address);
         <length>-1</length>
         <precision>-1</precision>
         <replace>N</replace>
+      </field>      <field>        <name>filename</name>
+        <rename>filename</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
       </field>    </fields>     <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
       <xloc>336</xloc>
-      <yloc>112</yloc>
+      <yloc>110</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -1500,6 +1522,100 @@ if(title!=&apos;&apos;){
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
       <xloc>915</xloc>
       <yloc>113</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>lookup address</name>
+    <type>DBLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <connection>cashcard</connection>
+    <cache>Y</cache>
+    <cache_load_all>N</cache_load_all>
+    <cache_size>0</cache_size>
+    <lookup>
+      <schema>public</schema>
+      <table>member</table>
+      <orderby/>
+      <fail_on_multiple>N</fail_on_multiple>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <key>
+        <name>member_id</name>
+        <field>credit_union_member_id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>address</name>
+        <field>address</field>
+        <condition>LIKE</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>id</name>
+        <rename>has_address</rename>
+        <default>0</default>
+        <type>Integer</type>
+      </value>
+    </lookup>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>309</xloc>
+      <yloc>351</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>lookup telNo</name>
+    <type>DBLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <connection>cashcard</connection>
+    <cache>Y</cache>
+    <cache_load_all>N</cache_load_all>
+    <cache_size>0</cache_size>
+    <lookup>
+      <schema/>
+      <table>member</table>
+      <orderby/>
+      <fail_on_multiple>N</fail_on_multiple>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <key>
+        <name>member_id</name>
+        <field>credit_union_member_id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>member_tel</name>
+        <field>tel_no</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>id</name>
+        <rename>has_tel_no</rename>
+        <default>0</default>
+        <type>Integer</type>
+      </value>
+    </lookup>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>205</xloc>
+      <yloc>350</yloc>
       <draw>Y</draw>
       </GUI>
     </step>

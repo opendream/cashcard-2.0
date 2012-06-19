@@ -154,7 +154,7 @@ class MemberController {
     }
 
     def doUploadMembers() {
-        def originalname
+        def filename
         def memberUpload
         try {
             def f = request.getFile('members')
@@ -163,22 +163,32 @@ class MemberController {
                 render(view: 'uploadMembers')
                 return
             }
-            originalname = f.originalFilename
+            filename = f.originalFilename
             def result = kettleService.extractMember(f)
-            memberUpload = memberService.findChangedInMemberUpload()   
-             
+            memberUpload = memberService.findChangedInMemberUpload(filename)                
         } catch (e) {
             log.error(e)
             flash.error = message(code: 'errors.extractMembersNotComplete')
             render(view: 'uploadMembers')
             return
         }
-        render (view: "uploadMembers", model: [newMembers: memberUpload?.newMembers, updateMembers: memberUpload?.updateMembers, unchangeMembers: memberUpload?.unchangeMembers, disabledMembers: memberUpload?.disabledMembers, fileUpload:originalname])
+        render (view: "confirm", model: [newMembers: memberUpload?.newMembers, updateMembers: memberUpload?.updateMembers, unchangeMembers: memberUpload?.unchangeMembers, disabledMembers: memberUpload?.disabledMembers, filename:filename])
     }
 
-    def updateMembers() {
-        def fileUpload = params.fileUpload    
-        memberService.mergeMembers()    
+    def showUpdateMember() {
+        def filename = params.filename
+        memberUpload = memberService.findChangedInMemberUpload(originalname)   
+        render (view: "confirm", model: [newMembers: memberUpload?.newMembers, updateMembers: memberUpload?.updateMembers, unchangeMembers: memberUpload?.unchangeMembers, disabledMembers: memberUpload?.disabledMembers, filename:filename])
+    }
+
+    def mergeMembers() {
+        def filename = params.filename 
+        if(!filename) {
+            render(view: 'uploadMembers')
+            return
+        }
+        memberService.mergeMembers(filename)
+        redirect(action: "list")
     }
 
     def ajaxSearch() {

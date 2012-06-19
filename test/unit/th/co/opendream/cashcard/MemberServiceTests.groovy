@@ -11,7 +11,7 @@ import org.junit.*
 @TestFor(MemberService)
 @Mock([Member, UtilService, TempMember])
 class MemberServiceTests {
-
+    def filename
     @Before
     void setUp() {
         /*def utilService = [
@@ -30,16 +30,17 @@ class MemberServiceTests {
         def m3 = new Member(identificationNumber:"141190088111", firstname:"delete",
             lastname: "deleteme", telNo: "0818526133", gender: "MALE", address: "Opendream", creditUnionMemberId:5, creditUnionMemberNo:'005')
 
+        filename = 'member.csv'
         // not update member   
-        def tmpMember1 = new TempMember(id:1, identificationNumber:'1159900100015', creditUnionMemberNo: '001', telNo:'0818526122', gender:"MALE", firstname:"สมหญิง", lastname: "รักเรียน", address: "Opendream", valid:true, validIdentificationNumber:true, validTelNo:true, validFirstname: true, validLastname:true, validGender:true, validCreditUnionMemberNo:true, validCreditUnionMemberId:true, validAddress:true)
+        def tmpMember1 = new TempMember(id:1, identificationNumber:'1159900100015', creditUnionMemberNo: '001', telNo:'0818526122', gender:"MALE", firstname:"สมหญิง", lastname: "รักเรียน", address: "Opendream", valid:true, validIdentificationNumber:true, validTelNo:true, validFirstname: true, validLastname:true, validGender:true, validCreditUnionMemberNo:true, validCreditUnionMemberId:true, validAddress:true, filename:filename)
 
         // update member with firstname
-        def tmpMember2 = new TempMember(id:2, identificationNumber:'141190088198', creditUnionMemberNo: '002', telNo:'0818526133', gender:"MALE", firstname:"สมหนุ่ม", lastname: "รักเรียน", address: "Opendream", valid:false, validIdentificationNumber:true, validTelNo:true, validFirstname: false, validLastname:true, validGender:true, validCreditUnionMemberNo:true, validCreditUnionMemberId:true, validAddress:true)
+        def tmpMember2 = new TempMember(id:2, identificationNumber:'141190088198', creditUnionMemberNo: '002', telNo:'0818526133', gender:"MALE", firstname:"สมหนุ่ม", lastname: "รักเรียน", address: "Opendream", valid:false, validIdentificationNumber:true, validTelNo:true, validFirstname: false, validLastname:true, validGender:true, validCreditUnionMemberNo:true, validCreditUnionMemberId:true, validAddress:true, filename:filename)
 
         // new member
-        def tmpMember3 = new TempMember(id:3, identificationNumber:'141190081118', creditUnionMemberNo: '003', telNo:'0818526133', gender:"MALE", firstname:"สมหนุ่ม", lastname: "รักเรียน", address: "Opendream", valid:false, validIdentificationNumber:false, validTelNo:false, validFirstname: false, validLastname:false, validGender:false, validCreditUnionMemberNo:false, validCreditUnionMemberId:false, validAddress:false)
+        def tmpMember3 = new TempMember(id:3, identificationNumber:'141190081118', creditUnionMemberNo: '003', telNo:'0818526133', gender:"MALE", firstname:"สมหนุ่ม", lastname: "รักเรียน", address: "Opendream", valid:false, validIdentificationNumber:false, validTelNo:false, validFirstname: false, validLastname:false, validGender:false, validCreditUnionMemberNo:false, validCreditUnionMemberId:false, validAddress:false, filename:filename)
 
-        def tmpMember4 = new TempMember(id:4, identificationNumber:'14119008117', creditUnionMemberNo: '004', telNo:'0818526133', gender:"MALE", firstname:"สมหนุ่ม", lastname: "รักเรียน", address: "Opendream", valid:false, validIdentificationNumber:false, validTelNo:false, validFirstname: false, validLastname:false, validGender:false, validCreditUnionMemberNo:false, validCreditUnionMemberId:false, validAddress:false)
+        def tmpMember4 = new TempMember(id:4, identificationNumber:'14119008117', creditUnionMemberNo: '004', telNo:'0818526133', gender:"MALE", firstname:"สมหนุ่ม", lastname: "รักเรียน", address: "Opendream", valid:false, validIdentificationNumber:false, validTelNo:false, validFirstname: false, validLastname:false, validGender:false, validCreditUnionMemberNo:false, validCreditUnionMemberId:false, validAddress:false, filename:filename)
 
         
         //m1.utilService = utilService
@@ -83,33 +84,33 @@ class MemberServiceTests {
     }
 
     void testFindNewMember() {
-        def list = service.findNewMembers()
+        def list = service.findNewMembers(filename)
         assert null != list
         assert 2 == list.size()
     }
 
     void testFindUpdateMember() {        
-        def list = service.findUpdateMembers()
+        def list = service.findUpdateMembers(filename)
         assert null != list
         assert 1 == list.size()
     }
 
     void testFindDisabledMember() {
-        def list = service.findDisabledMembers()
+        def list = service.findDisabledMembers(filename)
         list.each { println "creditUnionMemberId "+it.creditUnionMemberId }
         assert null != list
         assert 1 == list.size()
     }
 
     void testUnChangeMember() {
-        def list = service.findUnChangeMembers()
+        def list = service.findUnChangeMembers(filename)
         assert null != list
         assert 1 == list.size()
         println list.size()
     }
 
     void testFindChangedInMemberUpload() {
-        def members = service.findChangedInMemberUpload()
+        def members = service.findChangedInMemberUpload(filename)
 
         assert 2 == members.newMembers.size()
         assert 1 == members.updateMembers.size()
@@ -117,9 +118,10 @@ class MemberServiceTests {
         assert 1 == members.unchangeMembers.size()
     }
 
-    void testMergeMembers() {        
+    void testMergeMembers() {   
+            
         assert 3 == Member.count()
-        def members = service.mergeMembers()
+        def members = service.mergeMembers(filename)
 
         assert 5 == Member.count()
         assert 4 == Member.findAllByStatus(Status.ACTIVE).size()

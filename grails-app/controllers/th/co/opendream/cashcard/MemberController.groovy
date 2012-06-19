@@ -6,7 +6,7 @@ import grails.converters.JSON
 class MemberController {
 
     def utilService, periodService, memberService, kettleService,
-        shareCapitalAccountService
+        shareCapitalAccountService, runNoService
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
@@ -44,6 +44,10 @@ class MemberController {
 
     def save() {
         def memberInstance = new Member(params)
+
+        // Assign running number.
+        memberInstance.memberNo = runNoService.next('Member')
+
         if (!memberInstance.save()) {
             render(view: "create", model: [memberInstance: memberInstance])
             return

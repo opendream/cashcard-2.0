@@ -16,7 +16,8 @@ class MemberTests extends DomainTestTemplate {
             'identificationNumber', 'firstname'       , 'lastname',
             'dateCreated'         , 'lastUpdated'     , 'gender'  ,
             'telNo'               , 'address'         , 'balance' ,
-            'status'
+            'status'              , 'creditUnionMemberId',
+            'creditUnionMemberNo' , 'memberNo'
         ]
 
         def instanceProperties = Member.metaClass.properties*.name
@@ -131,6 +132,25 @@ class MemberTests extends DomainTestTemplate {
         assert "matches" == member.errors[field]
 
         member.telNo = '1234567890'
+        assertTrue member.validate([field])
+    }
+
+    void testValidateMemberNo() {
+        def field = 'memberNo',
+            member = new Member()
+
+        mockForConstraintsTests(Member, [member])
+
+        verifyNotNull(member, field)
+
+        def exists = generateValidMember()
+        member[field] = exists.memberNo
+        verifyUnique(member, field)
+
+        member[field] = ''
+        verifyNotBlank(member, field)
+
+        member[field] = '1234567890'
         assertTrue member.validate([field])
     }
 }

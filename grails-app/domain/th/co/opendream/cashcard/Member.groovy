@@ -16,6 +16,7 @@ class Member {
     Date lastUpdated
     Long creditUnionMemberId // ref to credit union member id
     String creditUnionMemberNo // ref to credit union member no
+    String memberNo
 
     static transients = ["utilService"]
 
@@ -54,5 +55,6 @@ class Member {
         status(nullable: false, blank: false, inList: Status.list())
         creditUnionMemberId(nullable: true, blank: true)
         creditUnionMemberNo(nullable: true, blank: true)
+        memberNo(blank: false, unique: true)
     }
 }

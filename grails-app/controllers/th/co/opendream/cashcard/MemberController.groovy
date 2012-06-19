@@ -54,9 +54,11 @@ class MemberController {
 
     def show() {
         def memberInstance = Member.get(params.id)
-        def isPrintSlip = false
-        if (params.receiveTxId) {
-            isPrintSlip = params.receiveTxId
+        def slip = [doPrint: false]
+        if (params.pid) {
+            slip.id = params.pid
+            slip.type = params.type
+            slip.doPrint = true
         }
         if (!memberInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'member.label', default: 'Member'), params.id])
@@ -89,7 +91,7 @@ class MemberController {
             contract.metaClass.totalDebt = totalDebt
         }
 
-        render view: 'show', model: [memberInstance: memberInstance, contractList: contractList, printSlip: isPrintSlip]
+        render view: 'show', model: [memberInstance: memberInstance, contractList: contractList, slip: slip]
     }
 
     def edit() {

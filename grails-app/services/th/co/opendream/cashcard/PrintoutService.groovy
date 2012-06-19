@@ -20,4 +20,23 @@ class PrintoutService {
     	result.periodBalance = trans.period.amount - trans.amount
     	result
     }
+
+    def getPayloanPrintout(contractId) {
+        def result = [:]
+        def contract = Contract.get(contractId)
+
+        def member = contract.member
+
+        result.identificationNumber = member.identificationNumber
+        result.creditUnionMemberNo = member.creditUnionMemberNo
+        result.loanAmount = contract.loanAmount
+        result.member = member.toString()
+        result.contractCode = contract.code
+        result.loanType = contract.loanType.name
+        result.numberOfPeriod = contract.numberOfPeriod
+        result.code = contract.id
+        result.payloanDate = contract.payloanDate
+
+        result
+    }
 }

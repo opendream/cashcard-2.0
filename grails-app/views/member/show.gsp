@@ -151,10 +151,10 @@
         <r:script>
             !(function ($) {
                 $('.btn-info').tipsy({gravity: 's'});
-                <g:if test="${printSlip}">
-                var url = '<g:createLink controller="contract" action="payoffPrintout" params ="[receiveTxId: printSlip]" />';
+                <g:if test="${slip.doPrint}">
+                var url = '<g:createLink controller="contract" action="printout" params ="[pid: slip.id, type: slip.type]" />';
                 var win = window.open (url,"mywindow");
-                win.print();
+                //win.print();
                 </g:if>
 
             })(jQuery);

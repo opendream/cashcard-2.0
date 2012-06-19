@@ -146,6 +146,7 @@ body#login-page #row-wrapper {
   border-radius: 4px 4px 4px 4px;
 }
 
+<<<<<<< Updated upstream
 .period-transaction-row > td {
   padding: 0;
 }
@@ -221,4 +222,44 @@ section {
 
 section#contract-basic-info > div {
   margin-left: 0;
+=======
+table.printout {
+  width: 625px;
+  font-size: 12px;
+}
+
+tr.title {
+  height: 40px ;
+}
+
+tr.subtitle {
+  height: 20px ;
+}
+
+table.printout .string {
+  text-align: left;
+  padding: 0px 0px 0px 10px;
+}
+
+table.printout .stringlabel {
+  text-align: right;
+  padding: 0px 0px 0px 10px;
+}
+
+table.printout .number {
+  text-align: right;
+  padding: 0px 10px 0px 0px;
+}
+
+table.printout .date, table.printout .action, table.printout .id {
+  text-align: center;
+}
+
+.printoutbody {
+  background-color: #ffffff;
+  background-image: url(../images/logo_creditunion_bg.gif);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+>>>>>>> Stashed changes
 }

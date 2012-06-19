@@ -147,9 +147,16 @@
 
         </div>
 
+
         <r:script>
             !(function ($) {
                 $('.btn-info').tipsy({gravity: 's'});
+                <g:if test="${slip.doPrint}">
+                var url = '<g:createLink controller="contract" action="printout" params ="[pid: slip.id, type: slip.type]" />';
+                var win = window.open (url,"mywindow");
+                //win.print();
+                </g:if>
+
             })(jQuery);
         </r:script>
 

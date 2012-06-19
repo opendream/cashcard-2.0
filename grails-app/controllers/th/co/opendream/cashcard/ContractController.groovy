@@ -14,7 +14,9 @@ class ContractController {
         periodGeneratorProcessorService,
         interestProcessorService,
         messageService,
-        contractService
+        contractService,
+        printoutService,
+        springSecurityService
 
     def create() {
         def member = Member.get(params.memberId)
@@ -248,7 +250,9 @@ class ContractController {
         def transaction = new Transaction(amount: existsContract.loanAmount, sign: -1)
 
         if (transaction.save() && existsContract.save()) {
-            redirect controller: 'member', action: 'show', id: existsContract.member.id
+            redirect controller: 'member', action: 'show',
+                id: existsContract.member.id,
+                params: [pid: existsContract.id, type: 'payloan']
         }
     }
 
@@ -305,7 +309,7 @@ class ContractController {
                         messageService.sendPayoff(receiveTx)
                     }
 
-                    redirect url: "/member/show/${period.contract.member.id}"
+                    redirect url: "/member/show/${period.contract.member.id}?pid=${receiveTx.id}&type=payoff"
                 }
                 catch (e) {
                     println e
@@ -328,4 +332,24 @@ class ContractController {
         render (contractService.getInterestAmountOnCloseContract(period, date) as JSON)
     }
 
+    def printout() {
+        println "DO PRINTING OUT"
+        def method = "${params.type}Printout"
+        def username = springSecurityService.principal?.username
+        println method
+        this."$method"(username: username, id: params.pid)
+    }
+
+    def payoffPrintout(map) {
+        println map
+        def printout = printoutService.getPayoffPrintout(map.id)
+        printout.username = map.username
+        render view: 'payoffPrintout', model: [printout: printout]
+    }
+
+    def payloanPrintout(map) {
+        def printout = printoutService.getPayloanPrintout(map.id)
+        printout.username = map.username
+        render view: 'payloanPrintout', model: [printout: printout]
+    }
 }

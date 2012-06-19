@@ -54,6 +54,12 @@ class MemberController {
 
     def show() {
         def memberInstance = Member.get(params.id)
+        def slip = [doPrint: false]
+        if (params.pid) {
+            slip.id = params.pid
+            slip.type = params.type
+            slip.doPrint = true
+        }
         if (!memberInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'member.label', default: 'Member'), params.id])
             redirect(action: "list")
@@ -85,7 +91,7 @@ class MemberController {
             contract.metaClass.totalDebt = totalDebt
         }
 
-        render view: 'show', model: [memberInstance: memberInstance, contractList: contractList]
+        render view: 'show', model: [memberInstance: memberInstance, contractList: contractList, slip: slip]
     }
 
     def edit() {
@@ -165,8 +171,8 @@ class MemberController {
             }
             originalname = f.originalFilename
             //def result = kettleService.extractMember(f)
-            memberUpload = memberService.findChangedInMemberUpload()   
-             
+            memberUpload = memberService.findChangedInMemberUpload()
+
         } catch (e) {
             log.error(e)
             flash.error = message(code: 'errors.extractMembersNotComplete')
@@ -177,7 +183,7 @@ class MemberController {
     }
 
     def updateMembers() {
-        def fileUpload = params.fileUpload        
+        def fileUpload = params.fileUpload
     }
 
     def ajaxSearch() {

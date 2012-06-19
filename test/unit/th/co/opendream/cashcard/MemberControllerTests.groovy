@@ -68,7 +68,15 @@ class MemberControllerTests {
     void testSaveValidMember() {
         populateValidParams(params)
         Member.metaClass.save = { -> delegate.id = 3 }
+
+        def count = 0
+
+        controller.shareCapitalAccountService = [
+            createAccountFromMember: { a, b, c -> count++ }
+        ]
+
         controller.save()
+        assert count == 1
         assert response.redirectedUrl == '/member/show/3'
     }
 

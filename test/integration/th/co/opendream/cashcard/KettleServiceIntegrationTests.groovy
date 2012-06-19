@@ -26,7 +26,7 @@ class KettleServiceIntegrationTests extends GroovyTestCase {
         def result = kettleService.extractMember(file)
 
         assert false == result.contains('ERROR')
-        println result
+        //println result
     }
 
     @Test
@@ -47,7 +47,7 @@ class KettleServiceIntegrationTests extends GroovyTestCase {
         def result = kettleService.extractMember(file)
 
         assert false == result.contains('ERROR')
-        println result
+        //println result
     }
 
     @Test

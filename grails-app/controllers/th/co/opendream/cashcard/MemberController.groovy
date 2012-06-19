@@ -61,6 +61,12 @@ class MemberController {
 
     def show() {
         def memberInstance = Member.get(params.id)
+        def slip = [doPrint: false]
+        if (params.pid) {
+            slip.id = params.pid
+            slip.type = params.type
+            slip.doPrint = true
+        }
         if (!memberInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'member.label', default: 'Member'), params.id])
             redirect(action: "list")
@@ -93,7 +99,9 @@ class MemberController {
         }
 
         def shareCapitalAccount = shareCapitalAccountService.getMemberAccount(memberInstance)
-        render view: 'show', model: [memberInstance: memberInstance, contractList: contractList, shareCapitalAccount: shareCapitalAccount]
+        render view: 'show', model: [memberInstance: memberInstance,
+            contractList: contractList, shareCapitalAccount: shareCapitalAccount,
+            slip: slip]
     }
 
     def edit() {
@@ -162,7 +170,7 @@ class MemberController {
     }
 
     def doUploadMembers() {
-        def originalname
+        def filename
         def memberUpload
         try {
             def f = request.getFile('members')
@@ -171,9 +179,10 @@ class MemberController {
                 render(view: 'uploadMembers')
                 return
             }
-            originalname = f.originalFilename
+
+            filename = f.originalFilename
             def result = kettleService.extractMember(f)
-            memberUpload = memberService.findChangedInMemberUpload()
+            memberUpload = memberService.findChangedInMemberUpload(filename)
 
         } catch (e) {
             log.error(e)
@@ -181,12 +190,23 @@ class MemberController {
             render(view: 'uploadMembers')
             return
         }
-        render (view: "uploadMembers", model: [newMembers: memberUpload?.newMembers, updateMembers: memberUpload?.updateMembers, unchangeMembers: memberUpload?.unchangeMembers, disabledMembers: memberUpload?.disabledMembers, fileUpload:originalname])
+        render (view: "confirm", model: [newMembers: memberUpload?.newMembers, updateMembers: memberUpload?.updateMembers, unchangeMembers: memberUpload?.unchangeMembers, disabledMembers: memberUpload?.disabledMembers, filename:filename])
     }
 
-    def updateMembers() {
-        def fileUpload = params.fileUpload
-        memberService.mergeMembers()
+    def showUpdateMember() {
+        def filename = params.filename
+        memberUpload = memberService.findChangedInMemberUpload(filename)
+        render (view: "confirm", model: [newMembers: memberUpload?.newMembers, updateMembers: memberUpload?.updateMembers, unchangeMembers: memberUpload?.unchangeMembers, disabledMembers: memberUpload?.disabledMembers, filename:filename])
+    }
+
+    def mergeMembers() {
+        def filename = params.filename
+        if(!filename) {
+            render(view: 'uploadMembers')
+            return
+        }
+        memberService.mergeMembers(filename)
+        redirect(action: "list")
     }
 
     def ajaxSearch() {

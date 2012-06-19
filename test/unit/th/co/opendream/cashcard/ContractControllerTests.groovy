@@ -329,7 +329,7 @@ class ContractControllerTests {
         }
 
         controller.doPayloan()
-        assert response.redirectedUrl == "/member/show/${member.id}"
+        assertTrue response.redirectedUrl.contains("/member/show/${member.id}")
     }
 
     void testPayoff() {
@@ -393,7 +393,7 @@ class ContractControllerTests {
         params.isShareCapital = ''
 
         controller.periodProcessorService = [
-            process: { period, amount, fine, isShareCapital, date, Object... args -> true }
+            process: { period, amount, fine, isShareCapital, date, Object... args -> [id: 1] }
         ] as PeriodProcessorService
 
         Period.metaClass.static.get = { Serializable pid ->
@@ -412,7 +412,7 @@ class ContractControllerTests {
 
         // untick the box
         controller.doPayoff()
-        assert response.redirectUrl == '/member/show/1'
+        assertTrue response.redirectUrl.contains('/member/show/1')
         assert sendCounter == 0
         response.reset()
 
@@ -423,7 +423,7 @@ class ContractControllerTests {
 
         params.sendsms = 'send'
         controller.doPayoff()
-        assert response.redirectUrl == '/member/show/1'
+        assert response.redirectUrl.contains('/member/show/1')
         assert sendCounter == 1
 
         response.reset()

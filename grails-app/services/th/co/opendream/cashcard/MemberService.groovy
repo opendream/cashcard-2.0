@@ -28,56 +28,70 @@ class MemberService {
         }
     }
 
-    def findNewMembers() {
-        def newMembers = TempMember.findAllByValidAndValidCreditUnionMemberId(false, false)
+    def findNewMembers(def filename) {
+        // change ValidCreditUnionMemberId -> ValidCreditUnionMemberNo
+        def newMembers = TempMember.findAllByValidAndValidCreditUnionMemberNoAndFilename(false, false, filename)
     }
 
-    def findUpdateMembers() {
-        def updateMembers = TempMember.findAllByValidAndValidCreditUnionMemberId(false, true)
+    def findUpdateMembers(def filename) {
+        // change ValidCreditUnionMemberId -> ValidCreditUnionMemberNo
+        def updateMembers = TempMember.findAllByValidAndValidCreditUnionMemberNoAndFilename(false, true, filename)
     }
 
-    def findUnChangeMembers() {
-        def unchangeMembers = TempMember.findAllByValid(true)
+    def findUnChangeMembers(def filename) {
+        def unchangeMembers = TempMember.findAllByValidAndFilename(true, filename)
     }
 
-    def findDisabledMembers() {
+    def findDisabledMembers(def filename) {
         def uploadMembers = []
-        TempMember.list().collect(uploadMembers) { it.id }
-
+        TempMember.findAllByFilename(filename).collect(uploadMembers) { it.creditUnionMemberNo }
         def c = Member.createCriteria()
         def disabledMembers = c.list(sort:"firstname") {
             not {
-                    inList ('creditUnionMemberId', uploadMembers)
+                    inList ('creditUnionMemberNo', uploadMembers)
                 }
         }
         disabledMembers
     }
 
-    def findChangedInMemberUpload() {
+    def findChangedInMemberUpload(def filename) {
         def members = [:]
-        members.newMembers = findNewMembers()
-        members.updateMembers = findUpdateMembers()
-        members.unchangeMembers = findUnChangeMembers()
-        members.disabledMembers = findDisabledMembers()
+        members.newMembers = findNewMembers(filename)
+        members.updateMembers = findUpdateMembers(filename)
+        members.unchangeMembers = findUnChangeMembers(filename)
+        members.disabledMembers = findDisabledMembers(filename)
         members
     }
 
-    def mergeMembers() {
-        def members = findChangedInMemberUpload()
+    def mergeMembers(def filename) {
+        def members = findChangedInMemberUpload(filename)
 
         def disableMembers = members.disabledMembers
         disableMembers.each {
-            def member = Member.findByCreditUnionMemberId(it.creditUnionMemberId)
+            def member = Member.findByCreditUnionMemberNo(it.creditUnionMemberNo)
             member.status = Status.DELETED
             member.save()
         }
 
         def updateMembers = members.updateMembers
         updateMembers.each {
-            def member = Member.findByCreditUnionMemberId(it.creditUnionMemberId)
+            def member = Member.findByCreditUnionMemberNo(it.creditUnionMemberNo)
+            def currentIdentificationNumber = member.identificationNumber
+            def currentAddress = member.address
+            def currentTelNo = member.telNo
             member.properties = it.properties
+            if(!it.identificationNumber) {
+                member.identificationNumber = currentIdentificationNumber
+            }
+            if(!it.address) {
+                member.address = it.address
+            }
+            if(!it.telNo) {
+                member.telNo = it.telNo
+            }
             member.status = Status.ACTIVE
             member.save()
+            // update share capital
         }
 
         def newMembers = members.newMembers
@@ -88,6 +102,7 @@ class MemberService {
                 member.memberNo = runNoService.next('Member', member.dateCreated)
             }
             member.save()
+            //insert new share capital
         }
     }
 }

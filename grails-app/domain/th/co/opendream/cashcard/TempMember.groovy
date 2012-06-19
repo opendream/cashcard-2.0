@@ -12,6 +12,8 @@ class TempMember {
 	String firstname
 	String lastname
 	String address
+	BigDecimal shareCapital 
+	String filename
 	Boolean valid
 	Boolean validIdentificationNumber
 	Boolean validTelNo
@@ -20,7 +22,7 @@ class TempMember {
 	Boolean validGender
 	Boolean validCreditUnionMemberNo
 	Boolean validCreditUnionMemberId
-	Boolean validAddress
+	Boolean validAddress	
 
 	static transients = ['creditUnionMemberId']
 
@@ -36,6 +38,7 @@ class TempMember {
     	firstname(nullable: true, blank: true)
     	lastname(nullable: true, blank: true)
     	address(nullable: true, blank: true)
+    	shareCapital(nullable: true, blank: true)
     }
 
     static mapping = {

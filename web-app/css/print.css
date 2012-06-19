@@ -1,0 +1,19 @@
+body {
+   background: white;
+   font-size: 8pt;
+   margin-left: 2cm;
+   margin-top: 1.5cm;
+}
+
+.noprint {
+	display:none;
+}
+
+.stringlabel {
+	text-align: right;
+	color: red;
+}
+
+table {
+	border-width;
+}

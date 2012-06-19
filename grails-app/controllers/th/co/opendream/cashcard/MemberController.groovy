@@ -88,7 +88,8 @@ class MemberController {
             contract.metaClass.totalDebt = totalDebt
         }
 
-        render view: 'show', model: [memberInstance: memberInstance, contractList: contractList]
+        def shareCapitalAccount = shareCapitalAccountService.getMemberAccount(memberInstance)
+        render view: 'show', model: [memberInstance: memberInstance, contractList: contractList, shareCapitalAccount: shareCapitalAccount]
     }
 
     def edit() {

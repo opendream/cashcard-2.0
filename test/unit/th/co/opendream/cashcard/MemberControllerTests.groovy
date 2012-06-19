@@ -117,6 +117,11 @@ class MemberControllerTests {
     void testShow() {
     	params.id = '1'
 
+        // Mocking
+        controller.shareCapitalAccountService = [
+            getMemberAccount: { m -> true }
+        ]
+
     	controller.show()
     	assert view == '/member/show'
     }

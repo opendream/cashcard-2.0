@@ -12,6 +12,7 @@ import th.co.opendream.cashcard.LoanType
 import th.co.opendream.cashcard.Contract
 import th.co.opendream.cashcard.Period
 import th.co.opendream.cashcard.ShareCapitalAccount
+import th.co.opendream.cashcard.RunNo
 
 class BootStrap {
     def grailsApplication
@@ -56,6 +57,7 @@ class BootStrap {
             generatePeriod(contract)
             generateShareCapitalAccount(m1, user)
             generateShareCapitalAccount(m2, user)
+            generateMemberRunningNumberConfig('Member')
         }
     }
     def destroy = {
@@ -85,8 +87,8 @@ class BootStrap {
     }
 
     def generateMember() {
-        def m1 = new Member(identificationNumber:"1159900100015", firstname:"สมหญิง", lastname: "รักเรียน", telNo: "0818526122", gender: "MALE", address: "Opendream")
-        def m2 = new Member(identificationNumber:"3710600357102", firstname:"สม", lastname: "ขำคม", telNo: "0818526122", gender: "MALE", address: "Opendream")
+        def m1 = new Member(identificationNumber:"1159900100015", firstname:"สมหญิง", lastname: "รักเรียน", telNo: "0818526122", gender: "MALE", address: "Opendream", memberNo: "001")
+        def m2 = new Member(identificationNumber:"3710600357102", firstname:"สม", lastname: "ขำคม", telNo: "0818526122", gender: "MALE", address: "Opendream", memberNo: "002")
 
         m1.save()
         m2.save()
@@ -210,5 +212,17 @@ class BootStrap {
         account.save()
 
         account
+    }
+
+    def generateMemberRunningNumberConfig(key) {
+        def runno = new RunNo(
+            key: key,
+            description: '',
+            currentNo: 0,
+            padSize: 4
+        )
+
+        runno.save()
+        runno
     }
 }

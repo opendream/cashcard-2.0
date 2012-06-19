@@ -271,8 +271,10 @@
 		// Re print
 		$('.reprint').click(function(e) {
 			var el = $(this);
+
             var url = '/cashcard/contract/printout/?pid='+ el.attr('pid')+'&type='+el.attr('type');
-			var win = window.open (url,"mywindow");
+			var win = window.open (url,"Printout", "location=0,status=0,scrollbars=0,menubar=0");
+			win.print();
 		});
 	}(jQuery);
 	</r:script>

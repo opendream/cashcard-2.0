@@ -2,17 +2,18 @@ body {
    background: white;
    font-size: 8pt;
    margin-left: 2cm;
-}
-
-.counter {
-  padding-top: 4cm;
-
-}
-
-table.printout {
-  width: 10 cm;
+   margin-top: 1.5cm;
 }
 
 .noprint {
-		display:none;
+	display:none;
+}
+
+.stringlabel {
+	text-align: right;
+	color: red;
+}
+
+table {
+	border-width;
 }

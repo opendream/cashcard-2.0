@@ -147,9 +147,16 @@
 
         </div>
 
+
         <r:script>
             !(function ($) {
                 $('.btn-info').tipsy({gravity: 's'});
+                <g:if test="${printSlip}">
+                var url = '<g:createLink controller="contract" action="payoffPrintout" params ="[receiveTxId: printSlip]" />';
+                var win = window.open (url,"mywindow");
+                win.print();
+                </g:if>
+
             })(jQuery);
         </r:script>
 

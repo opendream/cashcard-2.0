@@ -17,7 +17,10 @@ class PrintoutServiceTests {
 		def loanType = new LoanType(name: 'Common')
         loanType.save()
 
-        def member = new Member(identificationNumber:"1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")
+        def member = new Member(identificationNumber:"1159900100015", firstname:"Nat",
+            lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream",
+            creditUnionMemberNo: "1001-1-00001", creditUnionMemberId: 1
+            )
         member.utilService = [
             check_id_card: { id -> true }
         ]
@@ -72,7 +75,7 @@ class PrintoutServiceTests {
 
     void testPayoffPrintout() {
         def p1 = Period.get(1)
-        assert p1.amount == 706.00        
+        assert p1.amount == 706.00
 
         def receiveTx = ReceiveTransaction.get(1)
         assert receiveTx.amount == 706.00
@@ -80,14 +83,17 @@ class PrintoutServiceTests {
         def member = Member.findByIdentificationNumber('1159900100015')
 
         def printout = service.getPayoffPrintout(receiveTx.id)
+
         assert printout.identificationNumber == '1159900100015'
+        assert printout.creditUnionMemberNo == '1001-1-00001'
         assert printout.member == "Nat Weerawan"
         assert printout.paymentDate == p1.dueDate
         assert printout.loanType == 'Common'
         assert printout.code == receiveTx.id // hove to change to code
         assert printout.periodAmount == p1.amount
         assert printout.amount == 706.00
-        assert printout.peroidNo == 1
-        assert printout.peroidBalance == 0.00
+        assert printout.periodNo ==  p1.id
+        assert printout.periodBalance == 0.00
+    }
     }
 }

@@ -3,10 +3,12 @@ package th.co.opendream.cashcard
 class PrintoutService {
 
     def getPayoffPrintout(transId) {
-    	def result = [:]    	
+    	def result = [:]
     	def trans = ReceiveTransaction.get(transId)
     	def member = trans.period.contract.member
+
     	result.identificationNumber = member.identificationNumber
+        result.creditUnionMemberNo  = member.creditUnionMemberNo
     	result.member = member.toString()
     	result.loanType = trans.period.contract.loanType.name
     	result.contractCode = trans.period.contract.code

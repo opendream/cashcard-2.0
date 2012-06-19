@@ -1,7 +1,9 @@
 package th.co.opendream.cashcard
 
 class ShareCapitalAccountController {
-	def springSecurityService
+	def springSecurityService,
+        shareCapitalAccountService
+
     def index() { }
 
     def create() {
@@ -37,5 +39,39 @@ class ShareCapitalAccountController {
     	else {
     		redirect url: '/error'
     	}
+    }
+
+    def deposit() {
+        def member = Member.get(params.id)
+
+        if (member) {
+            def accountTx = new AccountTransaction()
+            def shareCapitalAccount = shareCapitalAccountService.getMemberAccount(member)
+            render view: 'deposit', model: [member: member, accountTx: accountTx, shareCapitalAccount: shareCapitalAccount]
+        }
+        else {
+            redirect url: '/error'
+        }
+    }
+
+    def doDeposit() {
+        def member = Member.get(params.id)
+
+        if (member) {
+            def accountTx = new AccountTransaction(params)
+            def shareCapitalAccount = shareCapitalAccountService.getMemberAccount(member)
+
+            def amount = params.amount as BigDecimal,
+                paymentDate = params.paymentDate
+
+            if (!shareCapitalAccountService.deposit(shareCapitalAccount, amount, paymentDate)) {
+                render view: 'deposit', model: [member: member, accountTx: accountTx, shareCapitalAccount: shareCapitalAccount]
+            }
+
+            redirect controller: 'member', action: 'show', id: member.id
+        }
+        else {
+            redirect url: '/error'
+        }
     }
 }

@@ -76,4 +76,59 @@ class ShareCapitalAccountControllerTests {
         controller.doCreate()
         assert response.redirectUrl == '/error'
     }
+
+    void testDeposit() {
+        generateMember()
+
+        params.id = '1'
+
+        // Mocking
+        controller.shareCapitalAccountService = [
+            getMemberAccount: { m -> true }
+        ]
+
+        controller.deposit()
+        assert view == "/shareCapitalAccount/deposit"
+
+        params.id = '42'
+        controller.deposit()
+        assert response.redirectUrl == '/error'
+    }
+
+    void testDoDeposit() {
+        generateMember()
+
+        params.id = '1'
+        params.paymentDate = 'date.struct'
+        params.paymentDate_day = '10'
+        params.paymentDate_month = '1'
+        params.paymentDate_year = '2012'
+        params.amount = '300.00'
+
+        // Mocking
+        def inDepositCount = 0
+        controller.shareCapitalAccountService = [
+            getMemberAccount: { m -> true },
+            deposit: { a, b, d -> inDepositCount++ }
+        ]
+
+        controller.doDeposit()
+        assert response.redirectUrl == '/member/show/1'
+
+        response.reset()
+
+        controller.shareCapitalAccountService = [
+            getMemberAccount: { m -> true },
+            deposit: { a, b, d -> false }
+        ]
+
+        controller.doDeposit()
+        assert view == '/shareCapitalAccount/deposit'
+
+        response.reset()
+
+        params.id = '42'
+        controller.doDeposit()
+        assert response.redirectUrl == '/error'
+    }
 }

@@ -22,7 +22,8 @@ class ContractServiceTests {
             periodGeneratorProcessor: "effective",
             interestRate: 12.00,
             maxInterestRate: 18.00,
-            numberOfPeriod: 3
+            numberOfPeriod: 3,
+            canPayAllDebt: false
         )
         loanType.save()
         println loanType.errors
@@ -50,6 +51,7 @@ class ContractServiceTests {
         assert contract.periodGeneratorProcessor == "effective"
         assert contract.interestRate == 12.00
         assert contract.maxInterestRate == 18.00
+        assert contract.canPayAllDebt == false
 
         loanType.interestProcessor = "flat"
         loanType.periodProcessor = "effective"

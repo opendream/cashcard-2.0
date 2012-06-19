@@ -5,7 +5,8 @@ import grails.converters.JSON
 
 class MemberController {
 
-    def utilService, periodService, memberService, kettleService
+    def utilService, periodService, memberService, kettleService,
+        shareCapitalAccountService
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
@@ -48,6 +49,8 @@ class MemberController {
             return
         }
 
+        shareCapitalAccountService.createAccountFromMember(memberInstance, memberInstance.creditUnionMemberNo, new Date())
+
 		flash.message = message(code: 'default.created.message', args: [message(code: 'member.label', default: 'Member'), memberInstance.id])
         redirect(action: "show", id: memberInstance.id)
     }
@@ -85,7 +88,8 @@ class MemberController {
             contract.metaClass.totalDebt = totalDebt
         }
 
-        render view: 'show', model: [memberInstance: memberInstance, contractList: contractList]
+        def shareCapitalAccount = shareCapitalAccountService.getMemberAccount(memberInstance)
+        render view: 'show', model: [memberInstance: memberInstance, contractList: contractList, shareCapitalAccount: shareCapitalAccount]
     }
 
     def edit() {
@@ -165,7 +169,7 @@ class MemberController {
             }
             filename = f.originalFilename
             def result = kettleService.extractMember(f)
-            memberUpload = memberService.findChangedInMemberUpload(filename)                
+            memberUpload = memberService.findChangedInMemberUpload(filename) 
         } catch (e) {
             log.error(e)
             flash.error = message(code: 'errors.extractMembersNotComplete')
@@ -177,7 +181,7 @@ class MemberController {
 
     def showUpdateMember() {
         def filename = params.filename
-        memberUpload = memberService.findChangedInMemberUpload(originalname)   
+        memberUpload = memberService.findChangedInMemberUpload(filename)   
         render (view: "confirm", model: [newMembers: memberUpload?.newMembers, updateMembers: memberUpload?.updateMembers, unchangeMembers: memberUpload?.unchangeMembers, disabledMembers: memberUpload?.disabledMembers, filename:filename])
     }
 

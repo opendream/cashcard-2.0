@@ -11,6 +11,7 @@ import grails.util.Environment
 import th.co.opendream.cashcard.LoanType
 import th.co.opendream.cashcard.Contract
 import th.co.opendream.cashcard.Period
+import th.co.opendream.cashcard.ShareCapitalAccount
 
 class BootStrap {
     def grailsApplication
@@ -53,6 +54,8 @@ class BootStrap {
             contract.save()
 
             generatePeriod(contract)
+            generateShareCapitalAccount(m1, user)
+            generateShareCapitalAccount(m2, user)
         }
     }
     def destroy = {
@@ -144,7 +147,7 @@ class BootStrap {
             name: "เงินกู้ด่วน (ปรับปรุงใหม่)", processor: "Effective", interestRate: 12.00,
             maxInterestRate: 18.00, mustKeepAdvancedInterest: false,
             numberOfPeriod: 3, interestProcessor: "Effective", periodProcessor: "ExpressCash01",
-            periodGeneratorProcessor: "ExpressCash01"
+            periodGeneratorProcessor: "ExpressCash01", canPayAllDebt: true
         ).save(flush: true) // FIXME: Don't know why it must use flush:true with postgres
     }
 
@@ -167,7 +170,8 @@ class BootStrap {
             guarantor1: "Keng",
             guarantor2: "Neung",
             numberOfPeriod: 3,
-            signedDate: Date.parse("yyyy-MM-dd", "2012-03-01")
+            signedDate: Date.parse("yyyy-MM-dd", "2012-03-01"),
+            canPayAllDebt: loanType.canPayAllDebt
         )
     }
 
@@ -192,5 +196,19 @@ class BootStrap {
             payoffStatus: false, interestAmount: 20.00, interestOutstanding: 20.00,
             outstanding: 686.00
         ).save()
+    }
+
+    def generateShareCapitalAccount(member, user) {
+        def account = new ShareCapitalAccount(
+            accountNumber: "55-${member.id}",
+            member: member,
+            createdBy: user,
+            balance: 1000.00,
+            registeredDate: new Date()
+        )
+
+        account.save()
+
+        account
     }
 }

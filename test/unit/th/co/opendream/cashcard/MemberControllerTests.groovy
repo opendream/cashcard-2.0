@@ -23,8 +23,8 @@ class MemberControllerTests {
 
     @Before
     void setUp() {
-        def m1 = new Member(identificationNumber:"1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream")
-        def m2 = new Member(identificationNumber: "1234567891234", firstname: "Noomz", lastname: "Siriwat", telNo: "111111111", gender: "MALE", address: "Opendream2")
+        def m1 = new Member(identificationNumber:"1159900100015", firstname:"Nat", lastname: "Weerawan", telNo: "111111111", gender: "MALE", address: "Opendream", memberNo: "001")
+        def m2 = new Member(identificationNumber: "1234567891234", firstname: "Noomz", lastname: "Siriwat", telNo: "111111111", gender: "MALE", address: "Opendream2", memberNo: "002")
 
         utilService = [ check_id_card: { id -> true } ] as UtilService
 
@@ -51,6 +51,9 @@ class MemberControllerTests {
     }
 
     void testSaveInvalidMember() {
+        controller.runNoService = [
+            next: { key -> "001" }
+        ]
         controller.save()
 
         assert model.memberInstance != null
@@ -73,6 +76,10 @@ class MemberControllerTests {
 
         controller.shareCapitalAccountService = [
             createAccountFromMember: { a, b, c -> count++ }
+        ]
+
+        controller.runNoService = [
+            next: { key -> "001" }
         ]
 
         controller.save()

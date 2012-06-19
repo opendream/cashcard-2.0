@@ -4,6 +4,8 @@ import th.co.opendream.cashcard.Member.Status
 
 class MemberService {
 
+    def runNoService
+
     def search(input) {
         def (name, surname) = input.tokenize(" ")
         def c = Member.createCriteria()
@@ -41,14 +43,14 @@ class MemberService {
     def findDisabledMembers() {
         def uploadMembers = []
         TempMember.list().collect(uploadMembers) { it.id }
-        
+
         def c = Member.createCriteria()
         def disabledMembers = c.list(sort:"firstname") {
             not {
                     inList ('creditUnionMemberId', uploadMembers)
                 }
         }
-        disabledMembers        
+        disabledMembers
     }
 
     def findChangedInMemberUpload() {
@@ -56,8 +58,8 @@ class MemberService {
         members.newMembers = findNewMembers()
         members.updateMembers = findUpdateMembers()
         members.unchangeMembers = findUnChangeMembers()
-        members.disabledMembers = findDisabledMembers()  
-        members      
+        members.disabledMembers = findDisabledMembers()
+        members
     }
 
     def mergeMembers() {
@@ -81,7 +83,10 @@ class MemberService {
         def newMembers = members.newMembers
         newMembers.each {
             def member = new Member()
-            member.properties = it.properties 
+            member.properties = it.properties
+            if (!member.memberNo) {
+                member.memberNo = runNoService.next('Member', member.dateCreated)
+            }
             member.save()
         }
     }

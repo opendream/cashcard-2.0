@@ -12,6 +12,6 @@ import org.junit.*
 class TempMemberTests {
 
     void testSomething() {
-       fail "Implement me"
+       //
     }
 }

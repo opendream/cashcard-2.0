@@ -89,7 +89,8 @@ abstract class DomainTestTemplate {
             telNo: '0841291342',
             address: "299/99 Areeya Mandarina\nSuthisarn Vinijchai Rd.\nSamsen Nok Huaykwang\nBangkok 10310",
             balance: 0.000000,
-            status: Member.Status.ACTIVE
+            status: Member.Status.ACTIVE,
+            memberNo: '001'
         )
         m.utilService = utilService
         m.save()

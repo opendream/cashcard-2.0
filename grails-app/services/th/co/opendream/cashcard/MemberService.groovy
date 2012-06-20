@@ -90,6 +90,9 @@ class MemberService {
             if(!it.telNo) {
                 member.telNo = it.telNo
             }
+            if (!member.memberNo) {
+                member.memberNo = runNoService.next('Member')
+            }
             member.status = Status.ACTIVE
             member.save()
             upsertShareCapitalAccount(member, it.shareCapital)
@@ -100,17 +103,21 @@ class MemberService {
             def member = new Member()
             member.properties = it.properties
             if (!member.memberNo) {
-                member.memberNo = runNoService.next('Member', member.dateCreated)
+                member.memberNo = runNoService.next('Member')
             }
-            member.save()
-            //insert new share capital
-           upsertShareCapitalAccount(member, it.shareCapital)
+            if(member.save()) {                
+                upsertShareCapitalAccount(member, it.shareCapital)
+            }
         }
 
         def unchangeMembers = members.unchangeMembers
         unchangeMembers.each {
             def member = Member.findByCreditUnionMemberNo(it.creditUnionMemberNo)
+            if (!member.memberNo) {
+                member.memberNo = runNoService.next('Member')
+            }
             upsertShareCapitalAccount(member, it.shareCapital)
+            member.save()
         }
     }
 

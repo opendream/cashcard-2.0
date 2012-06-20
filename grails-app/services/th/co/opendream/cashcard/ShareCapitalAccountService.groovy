@@ -5,13 +5,13 @@ class ShareCapitalAccountService {
     // Service
     def springSecurityService
 
-    def createAccountFromMember(memberInstance, memberAccountNumber, date) {
+    def createAccountFromMember(memberInstance, memberAccountNumber, date, shareCapital = 0.00) {
         def shareCapitalAccount = new ShareCapitalAccount()
 
         shareCapitalAccount.with {
             member = memberInstance
             createdBy = Users.get(springSecurityService.principal.id)
-            balance = 0.00
+            balance = shareCapital
             registeredDate = date
             accountNumber = memberAccountNumber
         }

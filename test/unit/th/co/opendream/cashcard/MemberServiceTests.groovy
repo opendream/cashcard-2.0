@@ -141,10 +141,16 @@ class MemberServiceTests {
 
         assert 5 == Member.count()
         assert 4 == Member.findAllByStatus(Status.ACTIVE).size()
-        assert Status.DELETED == Member.get(3).status
+        def disableMember = Member.get(3)
+        assert Status.DELETED == disableMember.status
+        def disableShareCapitalAcc = ShareCapitalAccount.findByMember(disableMember)
+        assert 0.00 == disableShareCapitalAcc.balance
+
         ShareCapitalAccount.list().each {
             println it.balance
         }
-        assert 4 == ShareCapitalAccount.count()
+        assert 5 == ShareCapitalAccount.count()
+        assert 4 == ShareCapitalAccount.findAllByBalanceGreaterThan(0.00).size()
+        assert 1 == ShareCapitalAccount.findAllByBalance(0.00).size()
     }
 }

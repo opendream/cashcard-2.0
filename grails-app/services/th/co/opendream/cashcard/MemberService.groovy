@@ -71,6 +71,7 @@ class MemberService {
             def member = Member.findByCreditUnionMemberNo(it.creditUnionMemberNo)
             member.status = Status.DELETED
             member.save()
+            upsertShareCapitalAccount(member, 0.00)
         }
 
         def updateMembers = members.updateMembers
@@ -103,7 +104,7 @@ class MemberService {
             }
             member.save()
             //insert new share capital
-            shareCapitalAccountService.createAccountFromMember(member, member.creditUnionMemberNo, member.dateCreated,  it.shareCapital)
+           upsertShareCapitalAccount(member, it.shareCapital)
         }
 
         def unchangeMembers = members.unchangeMembers

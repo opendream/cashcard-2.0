@@ -3,9 +3,9 @@ package th.co.opendream.cashcard
 import th.co.opendream.cashcard.Member.Status
 
 class MemberService {
-
     def runNoService
-
+    def shareCapitalAccountService
+    
     def search(input) {
         def (name, surname) = input.tokenize(" ")
         def c = Member.createCriteria()
@@ -91,7 +91,7 @@ class MemberService {
             }
             member.status = Status.ACTIVE
             member.save()
-            // update share capital
+            upsertShareCapitalAccount(member, it.shareCapital)
         }
 
         def newMembers = members.newMembers
@@ -103,6 +103,23 @@ class MemberService {
             }
             member.save()
             //insert new share capital
+            shareCapitalAccountService.createAccountFromMember(member, member.creditUnionMemberNo, member.dateCreated,  it.shareCapital)
         }
+
+        def unchangeMembers = members.unchangeMembers
+        unchangeMembers.each {
+            def member = Member.findByCreditUnionMemberNo(it.creditUnionMemberNo)
+            upsertShareCapitalAccount(member, it.shareCapital)
+        }
+    }
+
+    def upsertShareCapitalAccount(member, balance) {
+        def shareCapitalAccount = ShareCapitalAccount.findByMember(member)
+            if(shareCapitalAccount) {
+                shareCapitalAccount.balance = balance
+                shareCapitalAccount.save()
+            } else {
+                shareCapitalAccountService.createAccountFromMember(member, member.creditUnionMemberNo, member.dateCreated,  balance)                
+            }
     }
 }

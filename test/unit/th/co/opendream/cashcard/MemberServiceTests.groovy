@@ -62,7 +62,7 @@ class MemberServiceTests {
 
         service.shareCapitalAccountService = shareCapitalAccountService
         
-        m1.save()
+        m1.save(flush:true)
         m2.save()
         m3.save()
 
@@ -135,7 +135,7 @@ class MemberServiceTests {
 
         def count = 999
         service.runNoService = [
-            next: { a, b -> "00" + count++ }
+            next: { a, b = '' -> "00" + count++ }
         ]
         def members = service.mergeMembers(filename)
 

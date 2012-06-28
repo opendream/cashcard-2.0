@@ -24,3 +24,4 @@ update contract set period_processor = processor where period_processor = '';
 
 alter table member add column credit_union_member_id bigint;
 alter table member add column credit_union_member_no character varying(255);
+alter table member add column member_no character varying(255)  not null default '';

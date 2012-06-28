@@ -90,6 +90,28 @@
       <attribute><code>USE_POOLING</code><attribute>N</attribute></attribute>
     </attributes>
   </connection>
+  <connection>
+    <name>dev cashcard</name>
+    <server>119.59.97.9</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>cashcard_alpha</database>
+    <port>5432</port>
+    <username>cashcard_alpha</username>
+    <password>Encrypted 2bef7dfad04d78786b21cbd62d186a69b</password>
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
+    <attributes>
+      <attribute><code>FORCE_IDENTIFIERS_TO_LOWERCASE</code><attribute>N</attribute></attribute>
+      <attribute><code>FORCE_IDENTIFIERS_TO_UPPERCASE</code><attribute>N</attribute></attribute>
+      <attribute><code>IS_CLUSTERED</code><attribute>N</attribute></attribute>
+      <attribute><code>PORT_NUMBER</code><attribute>5432</attribute></attribute>
+      <attribute><code>QUOTE_ALL_FIELDS</code><attribute>N</attribute></attribute>
+      <attribute><code>SUPPORTS_BOOLEAN_DATA_TYPE</code><attribute>N</attribute></attribute>
+      <attribute><code>USE_POOLING</code><attribute>N</attribute></attribute>
+    </attributes>
+  </connection>
   <order>
   <hop> <from>Filter title</from><to>lookup title</to><enabled>Y</enabled> </hop>  <hop> <from>Filter title</from><to>remove unused fields</to><enabled>Y</enabled> </hop>  <hop> <from>Replace &apos;-&apos; with &apos;&apos;</from><to>Filter title</to><enabled>Y</enabled> </hop>  <hop> <from>Select title and fname</from><to>validate fields</to><enabled>Y</enabled> </hop>  <hop> <from>lookup title</from><to>Select title and fname</to><enabled>Y</enabled> </hop>  <hop> <from>remove unused fields</from><to>validate fields</to><enabled>Y</enabled> </hop>  <hop> <from>spilt member_name and group address</from><to>Replace &apos;-&apos; with &apos;&apos;</to><enabled>Y</enabled> </hop>  <hop> <from>get member.csv</from><to>spilt member_name and group address</to><enabled>Y</enabled> </hop>  <hop> <from>validate fields</from><to>lookup by  identificationNo or (firstname and lastname)</to><enabled>Y</enabled> </hop>  <hop> <from>lookup by  identificationNo or (firstname and lastname)</from><to>Update</to><enabled>Y</enabled> </hop>  </order>
   <step>

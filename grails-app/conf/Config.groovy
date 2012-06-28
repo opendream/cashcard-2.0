@@ -78,8 +78,8 @@ environments {
         rest.https.cert.hostnameVerifier='ALLOW_ALL'
 
         //path to Kettle home
-        kettle.engine.path='/home/cashcard/data-integration'
-        //kettle.engine.path='/home/boyone/data-integration'
+        //kettle.engine.path='/home/cashcard/data-integration'
+        kettle.engine.path='/var/lib/data-integration' 
     }
     production {
         grails.logging.jul.usebridge = false
@@ -100,14 +100,13 @@ environments {
         rest.https.cert.hostnameVerifier='ALLOW_ALL'
 
         //path to Kettle home
-        kettle.engine.path='/home/cashcard/data-integration'
+        kettle.engine.path='/var/lib/data-integration' 
     }
     test {
         grails.logging.jul.usebridge = false
 
         //path to Kettle home
-        kettle.engine.path='/home/boyone/data-integration'
-        //kettle.engine.path='/home/boyone/pentaho/design-tools/data-integration4.3'
+        kettle.engine.path='/var/lib/data-integration'        
     }
 }
 

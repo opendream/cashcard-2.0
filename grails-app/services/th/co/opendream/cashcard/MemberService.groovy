@@ -3,9 +3,9 @@ package th.co.opendream.cashcard
 import th.co.opendream.cashcard.Member.Status
 
 class MemberService {
-
     def runNoService
-
+    def shareCapitalAccountService
+    
     def search(input) {
         def (name, surname) = input.tokenize(" ")
         def c = Member.createCriteria()
@@ -71,6 +71,7 @@ class MemberService {
             def member = Member.findByCreditUnionMemberNo(it.creditUnionMemberNo)
             member.status = Status.DELETED
             member.save()
+            upsertShareCapitalAccount(member, 0.00)
         }
 
         def updateMembers = members.updateMembers
@@ -89,9 +90,12 @@ class MemberService {
             if(!it.telNo) {
                 member.telNo = it.telNo
             }
+            if (!member.memberNo) {
+                member.memberNo = runNoService.next('Member')
+            }
             member.status = Status.ACTIVE
             member.save()
-            // update share capital
+            upsertShareCapitalAccount(member, it.shareCapital)
         }
 
         def newMembers = members.newMembers
@@ -99,10 +103,31 @@ class MemberService {
             def member = new Member()
             member.properties = it.properties
             if (!member.memberNo) {
-                member.memberNo = runNoService.next('Member', member.dateCreated)
+                member.memberNo = runNoService.next('Member')
             }
-            member.save()
-            //insert new share capital
+            if(member.save()) {                
+                upsertShareCapitalAccount(member, it.shareCapital)
+            }
         }
+
+        def unchangeMembers = members.unchangeMembers
+        unchangeMembers.each {
+            def member = Member.findByCreditUnionMemberNo(it.creditUnionMemberNo)
+            if (!member.memberNo) {
+                member.memberNo = runNoService.next('Member')
+            }
+            upsertShareCapitalAccount(member, it.shareCapital)
+            member.save()
+        }
+    }
+
+    def upsertShareCapitalAccount(member, balance) {
+        def shareCapitalAccount = ShareCapitalAccount.findByMember(member)
+            if(shareCapitalAccount) {
+                shareCapitalAccount.balance = balance
+                shareCapitalAccount.save()
+            } else {
+                shareCapitalAccountService.createAccountFromMember(member, member.creditUnionMemberNo, member.dateCreated,  balance)                
+            }
     }
 }

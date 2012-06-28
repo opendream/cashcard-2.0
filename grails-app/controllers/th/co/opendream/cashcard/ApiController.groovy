@@ -9,8 +9,7 @@ class ApiController {
     }
 
     def uploadMembers() {
-    	println params
-    	try {
+        try {
             def f = request.getFile('members')
             if (f.empty) {
                 render 'file cannot be empty'

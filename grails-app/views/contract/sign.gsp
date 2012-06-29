@@ -129,7 +129,6 @@
                 },
                 onselect: function(member) {
                     var guarantorId = this.$element.attr('id');
-                    console.log('set ', member['id'])
                     $('#_' + guarantorId).val(member['id']);
                 }
             });

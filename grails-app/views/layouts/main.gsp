@@ -76,10 +76,7 @@
                       <a href="${createLink(controller:'report', action:'overdue')}">${message(code: 'main.menu.overduepaymentReport', default: 'รายงานหนี้ที่เกินวันกำหนดชำระจ่าย')}</a>
                     </li>
                     <li>
-                      <a href="${createLink(controller:'report', action:'payment', params:[paymenttype:'daily-payloan'])}">${message(code: 'main.menu.payloanReport', default: 'รายงานการจ่ายเงินกู้')}</a>
-                    </li>
-                    <li>
-                      <a href="${createLink(controller:'report', action:'payment', params:[paymenttype:'daily-payoff'])}">${message(code: 'main.menu.payoffReport', default: 'รายงานการชำระเงินกู้ของลูกหนี้')}</a>
+                      <a href="${createLink(controller:'report', action:'payment', params:[paymenttype:'daily-payoff'])}">${message(code: 'main.menu.payoffDetailReport', default: 'รายงานการชำระเงินกู้ของลูกหนี้ (แบบละเอียด)')}</a>
                     </li>
                     <li>
                       <a href="${createLink(controller:'report', action:'payment', params:[paymenttype:'daily-report'])}">${message(code: 'main.menu.dailyReport', default: 'รายงานประจำวัน')}</a>

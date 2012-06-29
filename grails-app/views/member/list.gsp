@@ -20,6 +20,14 @@
 		        </div>
 
 		        <div class="control-group">
+		          <label for="credit-union-number" class="control-label">${message(code: 'member.label.creditUnionMemberNo', default: 'Credit union member Number')}</label>
+		          <div class="controls">
+		            <input id="credit-union-number" name="creditUnionMemberNo" type="text" placeholder="${message(code: 'member.placeholder.creditUnionMemberNo', default: 'Credit union member Number')}" value="${params?.creditUnionMemberNo}">
+		            <span class="help-block"><g:message code="id_card_help" /></span>
+		          </div>
+		        </div>
+
+		        <div class="control-group">
 		          <label for="first-name" class="control-label">${message(code: 'member.label.firstName', default: 'First Name')}</label>
 		          <div class="controls">
 		            <input id="first-name" name="firstname" type="text" placeholder="${message(code: 'member.label.firstName', default: 'First Name')}" value="${params?.firstname}">
@@ -52,6 +60,7 @@
 				<thead>
 					<tr>
 						<th class='identificationNumber span2'><g:message code="member.label.identificationNumber"></g:message></th>
+						<th class='creditUnionMemberNo'><g:message code="member.label.creditUnionMemberNo"></g:message></th>
 						<th><g:message code="member.label.name"></g:message></th>
 						<th><g:message code="member.label.telNo"></g:message></th>
 						<th><g:message code="member.label.gender"></g:message></th>
@@ -63,6 +72,7 @@
 					<g:each var="member" in ="${memberList}">
 						<tr>
 							<td class='identificationNumber span2'><a href="${createLink(controller:'member', action:'show', params:[id: member.id])}">${member.identificationNumber}</a></td>
+							<td class='creditUnionMemberNo'>${member.creditUnionMemberNo}</td>
 							<td>${member.firstname} ${member.lastname}</td>
 							<td>${member.telNo}</td>
 							<td>${message(code: 'member.label.'+member?.gender.toString().toLowerCase(), default: member?.gender.toString())}</td>

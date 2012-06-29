@@ -23,6 +23,9 @@ class MemberController {
             if (params.identificationNumber) {
                 ilike('identificationNumber', "%${params.identificationNumber}%")
             }
+            if (params.creditUnionMemberNo) {
+                ilike('creditUnionMemberNo', "%${params.creditUnionMemberNo}%")
+            }
             if (params.firstname) {
                 ilike('firstname', '%' + params.firstname + '%')
             }
@@ -157,7 +160,12 @@ class MemberController {
             redirect(action: "show", id: memberInstance.id)
         }
         else if (! memberInstance && cardId) {
-            flash.error = "ไม่พบสมาชิกที่มีหมายเลขบัตรประชาชน ${cardId}, ต้องการลงทะเบียนสมาชิกใหม่? โปรดไปที่ " + link(controller: "member", action: "create") { "ลงทะเบียน" }
+            if(utilService.check_id_card(cardId)){
+                flash.error = "ไม่พบสมาชิกที่มีหมายเลขบัตรประชาชน ${cardId}, ต้องการลงทะเบียนสมาชิกใหม่? โปรดไปที่ " + link(controller: "member", action: "create" , params:[identificationNumber:cardId]) { "ลงทะเบียน" }
+            }
+            else{
+                flash.error = "ไม่พบสมาชิกที่มีหมายเลขบัตรประชาชน ${cardId}, ต้องการลงทะเบียนสมาชิกใหม่? โปรดไปที่ " + link(controller: "member", action: "create") { "ลงทะเบียน" }
+            }
             render(view: 'verifyCard')
         }
         else {

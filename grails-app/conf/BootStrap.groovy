@@ -17,7 +17,14 @@ import th.co.opendream.cashcard.RunNo
 class BootStrap {
     def grailsApplication
     def init = { servletContext ->
+        //asign roport & kettle realPath to system
+        def reports = grailsApplication.config.jasper.dir.reports
+        def realPath =  servletContext.getRealPath(reports)
+        grailsApplication.config.jasper.dir.reports = realPath
 
+        def kettle = grailsApplication.config.kettle.repository.path
+        grailsApplication.config.kettle.repository.path = servletContext.getRealPath(kettle)
+        
         def currentEnv = Environment.current
 
         if (currentEnv == Environment.PRODUCTION && Users.count() != 0) {
@@ -39,17 +46,8 @@ class BootStrap {
         */
         createRequestMaps();
 
-        generateLoanType()
-
-        //asign roport realPath to system
-
-        def reports = grailsApplication.config.jasper.dir.reports
-        def realPath =  servletContext.getRealPath(reports)
-        grailsApplication.config.jasper.dir.reports = realPath
-
-        def kettle = grailsApplication.config.kettle.repository.path
-        grailsApplication.config.kettle.repository.path = servletContext.getRealPath(kettle)
-
+        generateLoanType()        
+        
         development {
             def contract = generateContract(m1, LoanType.list().last())
             contract.save()

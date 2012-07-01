@@ -166,7 +166,8 @@ class MemberController {
     }
 
     def uploadMembers() {
-        render view: "uploadMembers"
+        def filename = memberService.findUploadMembersFilename()
+        render view: "uploadMembers", model: [filename:filename?:null]
     }
 
     def doUploadMembers() {
@@ -195,7 +196,7 @@ class MemberController {
 
     def showUpdateMember() {
         def filename = params.filename
-        memberUpload = memberService.findChangedInMemberUpload(filename)
+        def memberUpload = memberService.findChangedInMemberUpload(filename)
         render (view: "confirm", model: [newMembers: memberUpload?.newMembers, updateMembers: memberUpload?.updateMembers, unchangeMembers: memberUpload?.unchangeMembers, disabledMembers: memberUpload?.disabledMembers, filename:filename])
     }
 
@@ -206,6 +207,7 @@ class MemberController {
             return
         }
         memberService.mergeMembers(filename)
+        //memberService.removeUploadMembers(filename)
         redirect(action: "list")
     }
 

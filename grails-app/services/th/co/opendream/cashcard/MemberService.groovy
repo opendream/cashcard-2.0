@@ -130,4 +130,13 @@ class MemberService {
                 shareCapitalAccountService.createAccountFromMember(member, member.creditUnionMemberNo, member.dateCreated,  balance)                
             }
     }
+
+    def findUploadMembersFilename() {
+        def c = TempMember.createCriteria() 
+        def memberFilename = c.get {            
+            projections {
+                distinct "filename"
+            }
+        }
+    }
 }

@@ -154,6 +154,11 @@ class MemberServiceTests {
         assert 1 == ShareCapitalAccount.findAllByBalance(0.00).size()
 
         // the identificationNo not change
-        assert '141190088198' == Member.findByMemberNo('002').memberNo
+        assert '141190088198' == Member.findByMemberNo('002').identificationNumber
+    }
+
+    void testFindUploadMembersFilename() {
+        def targetFilename = service.findUploadMembersFilename()
+        assert filename == targetFilename
     }
 }

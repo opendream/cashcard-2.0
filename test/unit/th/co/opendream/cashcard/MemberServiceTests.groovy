@@ -53,7 +53,7 @@ class MemberServiceTests {
         def tmpMember1 = new TempMember(id:1, identificationNumber:'1159900100015', creditUnionMemberNo: '001', telNo:'0818526122', gender:"MALE", firstname:"สมหญิง", lastname: "รักเรียน", address: "Opendream", valid:true, validIdentificationNumber:true, validTelNo:true, validFirstname: true, validLastname:true, validGender:true, validCreditUnionMemberNo:true, validCreditUnionMemberId:true, validAddress:true, filename:filename, shareCapital:123.00)
 
         // update member with firstname
-        def tmpMember2 = new TempMember(id:2, identificationNumber:'141190088198', creditUnionMemberNo: '002', telNo:'0818526133', gender:"MALE", firstname:"สมหนุ่ม", lastname: "รักเรียน", address: "Opendream", valid:false, validIdentificationNumber:true, validTelNo:true, validFirstname: false, validLastname:true, validGender:true, validCreditUnionMemberNo:true, validCreditUnionMemberId:true, validAddress:true, filename:filename, shareCapital:124.00)
+        def tmpMember2 = new TempMember(id:2, identificationNumber:'141190088199', creditUnionMemberNo: '002', telNo:'0818526133', gender:"MALE", firstname:"สมหนุ่ม", lastname: "รักเรียน", address: "Opendream", valid:false, validIdentificationNumber:true, validTelNo:true, validFirstname: false, validLastname:true, validGender:true, validCreditUnionMemberNo:true, validCreditUnionMemberId:true, validAddress:true, filename:filename, shareCapital:124.00)
 
         // new member
         def tmpMember3 = new TempMember(id:3, identificationNumber:'141190081118', creditUnionMemberNo: '003', telNo:'0818526133', gender:"MALE", firstname:"สมหนุ่ม", lastname: "รักเรียน", address: "Opendream", valid:false, validIdentificationNumber:false, validTelNo:false, validFirstname: false, validLastname:false, validGender:false, validCreditUnionMemberNo:false, validCreditUnionMemberId:false, validAddress:false, filename:filename, shareCapital:125.00)
@@ -152,5 +152,8 @@ class MemberServiceTests {
         assert 5 == ShareCapitalAccount.count()
         assert 4 == ShareCapitalAccount.findAllByBalanceGreaterThan(0.00).size()
         assert 1 == ShareCapitalAccount.findAllByBalance(0.00).size()
+
+        // the identificationNo not change
+        assert '141190088198' == Member.findByMemberNo('002').memberNo
     }
 }

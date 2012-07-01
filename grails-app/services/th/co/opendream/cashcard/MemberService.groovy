@@ -81,7 +81,7 @@ class MemberService {
             def currentAddress = member.address
             def currentTelNo = member.telNo
             member.properties = it.properties
-            if(!it.identificationNumber) {
+            if(!it.identificationNumber || currentIdentificationNumber) {
                 member.identificationNumber = currentIdentificationNumber
             }
             if(!it.address) {

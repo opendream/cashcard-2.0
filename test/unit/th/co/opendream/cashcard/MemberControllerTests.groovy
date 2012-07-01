@@ -216,4 +216,18 @@ class MemberControllerTests {
         def json_output = output as JSON
         assert json_output.toString() == response.text
     }
+
+    void testUploadMembers() {
+        controller.memberService = [findUploadMembersFilename: {'member.csv'} ]
+        controller.uploadMembers()
+        assert view == '/member/uploadMembers'
+        assert model.filename == 'member.csv'
+    }
+
+     void testUploadMembersWithoutFilename() {
+        controller.memberService = [findUploadMembersFilename: {null} ]
+        controller.uploadMembers()
+        assert view == '/member/uploadMembers'
+        assert model.filename == null
+    }
 }

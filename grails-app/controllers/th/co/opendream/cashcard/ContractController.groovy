@@ -333,15 +333,12 @@ class ContractController {
     }
 
     def printout() {
-        println "DO PRINTING OUT"
         def method = "${params.type}Printout"
         def username = springSecurityService.principal?.username
-        println method
         this."$method"(username: username, id: params.pid)
     }
 
     def payoffPrintout(map) {
-        println map
         def printout = printoutService.getPayoffPrintout(map.id)
         printout.username = map.username
         render view: 'payoffPrintout', model: [printout: printout]

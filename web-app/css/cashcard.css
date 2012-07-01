@@ -104,6 +104,10 @@ table.member-list .identificationNumber {
   text-align: center;
 }
 
+table.member-list .creditUnionMemberNo {
+  text-align: center;
+}
+
 .tipsy-inner {
   font-size: 180%;
 }

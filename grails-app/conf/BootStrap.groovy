@@ -85,8 +85,8 @@ class BootStrap {
     }
 
     def generateMember() {
-        def m1 = new Member(identificationNumber:"1159900100015", firstname:"สมหญิง", lastname: "รักเรียน", telNo: "0818526122", gender: "MALE", address: "Opendream", memberNo: "001")
-        def m2 = new Member(identificationNumber:"3710600357102", firstname:"สม", lastname: "ขำคม", telNo: "0818526122", gender: "MALE", address: "Opendream", memberNo: "002")
+        def m1 = new Member(identificationNumber:"1159900100015", firstname:"สมหญิง", lastname: "รักเรียน", telNo: "0818526122", gender: "MALE", address: "Opendream",  creditUnionMemberId: (long)1111, creditUnionMemberNo: "55-1", memberNo: "001")
+        def m2 = new Member(identificationNumber:"3710600357102", firstname:"สม", lastname: "ขำคม", telNo: "0818526122", gender: "MALE", address: "Opendream", creditUnionMemberId: (long)2222, creditUnionMemberNo: "55-2", memberNo: "002")
 
         m1.save()
         m2.save()

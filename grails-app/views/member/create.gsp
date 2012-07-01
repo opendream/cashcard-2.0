@@ -79,16 +79,6 @@
           </div>
         </div>
 
-        <div class="control-group ${hasErrors(bean: memberInstance, field: 'creditUnionMemberNo', 'error')}">
-          <label class="control-label" for="creditUnionMemberNo">
-            <g:message code='member.label.creditUnionMemberNo' />
-          </label>
-          <div class="controls">
-            <input id="creditUnionMemberNo" name="creditUnionMemberNo" type="text" value="${memberInstance?.creditUnionMemberNo}" required="true">
-            <span class="help-block"><g:message code="creditUnionMemberNo_help" /></span>
-          </div>
-        </div>
-
 
         <div class="form-actions">
           <button class="btn btn-primary" type="submit"><i class="icon-ok icon-white"></i>

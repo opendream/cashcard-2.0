@@ -26,6 +26,13 @@
                     </tr>
 
                     <tr>
+                        <td class='creditUnionMemberNo'><strong><g:message code="credit_union_number" /></strong></div>
+                        <td class='creditUnionMemberNo'>
+                            ${memberInstance?.creditUnionMemberNo}
+                        </td>
+                    </tr>
+
+                    <tr>
                         <td><strong><g:message code="firstname" /></strong></div>
                         <td>
                             ${memberInstance?.firstname}

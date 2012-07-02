@@ -11,7 +11,7 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT
-     transaction."amount" AS transaction_amount,
+     (transaction."amount" + transaction."fee" + transaction."fine") AS transaction_amount,
      transaction."interest_paid" AS transaction_interest_paid,
      transaction."balance_paid" AS transaction_balance_paid,
      transaction."class" AS transaction_class,

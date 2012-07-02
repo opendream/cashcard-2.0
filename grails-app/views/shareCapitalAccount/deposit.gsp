@@ -18,7 +18,7 @@
           </label>
           <div class="controls">
               <span class="input-xlarge uneditable-input">
-                  ${shareCapitalAccount.accountNumber}
+                  ${shareCapitalAccount?.accountNumber}
               </span>
           </div>
       </div>
@@ -29,7 +29,7 @@
           </label>
           <div class="controls">
               <span class="input-xlarge uneditable-input">
-                  <g:formatNumber type="number" number="${shareCapitalAccount.balance}" maxFractionDigits="2" minFractionDigits="2" />
+                  <g:formatNumber type="number" number="${shareCapitalAccount?.balance}" maxFractionDigits="2" minFractionDigits="2" />
               </span>
           </div>
       </div>

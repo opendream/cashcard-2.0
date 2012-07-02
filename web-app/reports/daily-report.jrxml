@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="daily-report" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="24"/>
+	<property name="ireport.x" value="73"/>
+	<property name="ireport.y" value="23"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -14,6 +14,9 @@
 	<field name="reportType" class="java.lang.String"/>
 	<field name="toDate" class="java.lang.String"/>
 	<field name="fromDate" class="java.lang.String"/>
+	<variable name="amount_sum" class="java.math.BigDecimal" resetType="Group" resetGroup="reportType" calculation="Sum">
+		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
+	</variable>
 	<group name="reportType" minHeightToStartNewPage="30">
 		<groupExpression><![CDATA[$F{reportType}]]></groupExpression>
 		<groupHeader>
@@ -64,13 +67,13 @@
 		</groupHeader>
 		<groupFooter>
 			<band height="50">
-				<textField pattern="#,##0.00">
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
 					<reportElement stretchType="RelativeToTallestObject" x="480" y="15" width="75" height="20" isPrintWhenDetailOverflows="true"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
 						<font fontName="TH SarabunPSK" size="16"/>
 						<paragraph rightIndent="3"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{amount_sum}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="405" y="15" width="75" height="20"/>

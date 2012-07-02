@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="daily-overdue" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="92"/>
 	<parameter name="selectedDate" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -20,7 +20,8 @@ SELECT
      period."amount" AS period_amount,
      period."no" AS period_no,
      loan_type."name" AS loan_type_name,
-     period."payoff_status" AS period_payoff_status
+     period."payoff_status" AS period_payoff_status,
+     period."cancelled_due_to_debt_clearance" AS period_canceled
 FROM
      "public"."member" member INNER JOIN "public"."contract" contract ON member."id" = contract."member_id"
      INNER JOIN "public"."period" period ON contract."id" = period."contract_id"
@@ -44,7 +45,8 @@ ORDER BY
      member."firstname" ASC,
      member."lastname" ASC,
      period."due_date" DESC ) AS results
-WHERE period_payoff_status = FALSE]]>
+WHERE period_payoff_status = FALSE
+AND period_canceled = FALSE]]>
 	</queryString>
 	<field name="transaction_amount" class="java.math.BigDecimal"/>
 	<field name="period_due_date" class="java.sql.Timestamp"/>
@@ -56,6 +58,7 @@ WHERE period_payoff_status = FALSE]]>
 	<field name="period_no" class="java.lang.Integer"/>
 	<field name="loan_type_name" class="java.lang.String"/>
 	<field name="period_payoff_status" class="java.lang.Boolean"/>
+	<field name="period_canceled" class="java.lang.Boolean"/>
 	<group name="loan_type">
 		<groupExpression><![CDATA[$F{loan_type_name}]]></groupExpression>
 		<groupHeader>
@@ -235,6 +238,6 @@ WHERE period_payoff_status = FALSE]]>
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="42" splitType="Stretch"/>
+		<band splitType="Stretch"/>
 	</summary>
 </jasperReport>

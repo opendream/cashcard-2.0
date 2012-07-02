@@ -70,13 +70,13 @@
   </notepads>
   <connection>
     <name>cashcard</name>
-    <server>localhost</server>
+    <server>cashcard.opendream.co.th</server>
     <type>POSTGRESQL</type>
     <access>Native</access>
     <database>cashcard_alpha</database>
     <port>5432</port>
-    <username>postgres</username>
-    <password>Encrypted 2be98afc86aa7f2e4bb16bd64d980aac9</password>
+    <username>cashcard_alpha</username>
+    <password>Encrypted 2bef7dfad04d78786b21cbd62d186a69b</password>
     <servername/>
     <data_tablespace/>
     <index_tablespace/>

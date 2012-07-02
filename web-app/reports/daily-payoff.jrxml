@@ -12,6 +12,8 @@
 	<queryString>
 		<![CDATA[SELECT
      transaction."amount" AS transaction_amount,
+     transaction."interest_paid" AS transaction_interest_paid,
+     transaction."balance_paid" AS transaction_balance_paid,
      transaction."class" AS transaction_class,
      transaction."differential" AS transaction_differential,
      transaction."fee" AS transaction_fee,
@@ -22,6 +24,7 @@
      contract."loan_balance" AS contract_loan_balance,
      member."firstname" AS member_firstname,
      member."lastname" AS member_lastname,
+     concat(member."firstname" ,' ', member."lastname") AS member_name,
      period."payoff_date" AS period_payoff_date,
      period."payoff_status" AS period_payoff_status,
      period."status" AS period_status,
@@ -45,6 +48,8 @@ member."lastname",
 period."no"]]>
 	</queryString>
 	<field name="transaction_amount" class="java.math.BigDecimal"/>
+	<field name="transaction_interest_paid" class="java.math.BigDecimal"/>
+	<field name="transaction_balance_paid" class="java.math.BigDecimal"/>
 	<field name="transaction_class" class="java.lang.String"/>
 	<field name="transaction_differential" class="java.math.BigDecimal"/>
 	<field name="transaction_fee" class="java.math.BigDecimal"/>
@@ -55,12 +60,36 @@ period."no"]]>
 	<field name="contract_loan_balance" class="java.math.BigDecimal"/>
 	<field name="member_firstname" class="java.lang.String"/>
 	<field name="member_lastname" class="java.lang.String"/>
+	<field name="member_name" class="java.lang.String"/>
 	<field name="period_payoff_date" class="java.sql.Timestamp"/>
 	<field name="period_payoff_status" class="java.lang.Boolean"/>
 	<field name="period_status" class="java.lang.Boolean"/>
 	<field name="transaction_payment_date" class="java.sql.Timestamp"/>
 	<field name="period_no" class="java.lang.Integer"/>
 	<field name="loan_type_name" class="java.lang.String"/>
+	<variable name="transaction_interest_paid_sum" class="java.math.BigDecimal" resetType="Group" resetGroup="loan_type" calculation="Sum">
+		<variableExpression><![CDATA[$F{transaction_interest_paid}]]></variableExpression>
+	</variable>
+	<variable name="transaction_balance_paid_sum" class="java.math.BigDecimal" resetType="Group" resetGroup="loan_type" calculation="Sum">
+		<variableExpression><![CDATA[$F{transaction_balance_paid}]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="transaction_fee_sum" class="java.math.BigDecimal" resetType="Group" resetGroup="loan_type" calculation="Sum">
+		<variableExpression><![CDATA[$F{transaction_fee}]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="transaction_differential_sum" class="java.math.BigDecimal" resetType="Group" resetGroup="loan_type" calculation="Sum">
+		<variableExpression><![CDATA[$F{transaction_differential}]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="transaction_fine_sum" class="java.math.BigDecimal" resetType="Group" resetGroup="loan_type" calculation="Sum">
+		<variableExpression><![CDATA[$F{transaction_fine}]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="transaction_amount_sum" class="java.math.BigDecimal" resetType="Group" resetGroup="loan_type" calculation="Sum">
+		<variableExpression><![CDATA[$F{transaction_amount}]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
 	<group name="loan_type">
 		<groupExpression><![CDATA[$F{loan_type_name}]]></groupExpression>
 		<groupHeader>
@@ -73,49 +102,49 @@ period."no"]]>
 					<text><![CDATA[วันที่รับชำระ]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="532" y="25" width="60" height="25"/>
+					<reportElement x="512" y="25" width="60" height="25"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H"/>
 					</textElement>
-					<text><![CDATA[ชำระสุทธิ]]></text>
+					<text><![CDATA[ชำระเงินต้น]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="87" y="25" width="260" height="25"/>
+					<reportElement x="87" y="25" width="205" height="25"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H"/>
 					</textElement>
 					<text><![CDATA[ชื่อผู้ชำระ]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="437" y="25" width="70" height="25"/>
+					<reportElement x="377" y="25" width="70" height="25"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H"/>
 					</textElement>
 					<text><![CDATA[เงินต้น]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="592" y="25" width="40" height="25"/>
+					<reportElement x="472" y="25" width="40" height="25"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H"/>
 					</textElement>
 					<text><![CDATA[ดอกเบี้ย]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="632" y="25" width="60" height="25"/>
+					<reportElement x="572" y="25" width="60" height="25"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H"/>
 					</textElement>
 					<text><![CDATA[ค่าธรรมเนียม]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="692" y="25" width="60" height="25"/>
+					<reportElement x="632" y="25" width="60" height="25"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H"/>
 					</textElement>
 					<text><![CDATA[ส่วนต่าง]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="752" y="25" width="50" height="25"/>
+					<reportElement x="692" y="25" width="50" height="25"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H"/>
 					</textElement>
@@ -129,14 +158,14 @@ period."no"]]>
 					<text><![CDATA[ลำดับ]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="507" y="25" width="25" height="25"/>
+					<reportElement x="447" y="25" width="25" height="25"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H"/>
 					</textElement>
 					<text><![CDATA[งวด]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="347" y="25" width="90" height="25"/>
+					<reportElement x="292" y="25" width="85" height="25"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H"/>
 					</textElement>
@@ -149,10 +178,74 @@ period."no"]]>
 					</textElement>
 					<textFieldExpression><![CDATA["ประเภท"+$F{loan_type_name}]]></textFieldExpression>
 				</textField>
+				<staticText>
+					<reportElement x="742" y="25" width="60" height="25"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H"/>
+					</textElement>
+					<text><![CDATA[ชำระสุทธิ]]></text>
+				</staticText>
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="50"/>
+			<band height="50">
+				<staticText>
+					<reportElement x="377" y="0" width="95" height="25"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H"/>
+						<paragraph rightIndent="3"/>
+					</textElement>
+					<text><![CDATA[รวมทั้งสิ้น]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="472" y="0" width="40" height="25" isPrintWhenDetailOverflows="true"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H"/>
+						<paragraph rightIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{transaction_interest_paid_sum}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="692" y="0" width="50" height="25" isPrintWhenDetailOverflows="true"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H"/>
+						<paragraph rightIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{transaction_fine_sum}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="512" y="0" width="60" height="25" isPrintWhenDetailOverflows="true"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H"/>
+						<paragraph rightIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{transaction_balance_paid_sum}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="742" y="0" width="60" height="25" isPrintWhenDetailOverflows="true"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H"/>
+						<paragraph rightIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{transaction_amount_sum}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="572" y="0" width="60" height="25" isPrintWhenDetailOverflows="true"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H"/>
+						<paragraph rightIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{transaction_fee_sum}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="632" y="0" width="60" height="25" isPrintWhenDetailOverflows="true"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H"/>
+						<paragraph rightIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{transaction_differential_sum}]]></textFieldExpression>
+				</textField>
+			</band>
 		</groupFooter>
 	</group>
 	<background>
@@ -221,47 +314,48 @@ period."no"]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{transaction_payment_date}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.00">
-				<reportElement stretchType="RelativeToTallestObject" x="532" y="0" width="60" height="20"/>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="512" y="0" width="60" height="20" isPrintWhenDetailOverflows="true"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H"/>
 					<paragraph rightIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{transaction_amount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{transaction_balance_paid}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement stretchType="RelativeToTallestObject" x="437" y="0" width="70" height="20"/>
+				<reportElement stretchType="RelativeToTallestObject" x="377" y="0" width="70" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H"/>
 					<paragraph rightIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{contract_loan_amount}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement stretchType="RelativeToTallestObject" x="592" y="0" width="40" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="472" y="0" width="40" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H"/>
+					<paragraph rightIndent="3"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{contract_interest_rate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{transaction_interest_paid}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="632" y="0" width="60" height="20"/>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="572" y="0" width="60" height="20" isPrintWhenDetailOverflows="true"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H"/>
 					<paragraph rightIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{transaction_fee}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="692" y="0" width="60" height="20"/>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="632" y="0" width="60" height="20" isPrintWhenDetailOverflows="true"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H"/>
 					<paragraph rightIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{transaction_differential}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="752" y="0" width="50" height="20"/>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="692" y="0" width="50" height="20" isPrintWhenDetailOverflows="true"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H"/>
 					<paragraph rightIndent="5"/>
@@ -269,15 +363,15 @@ period."no"]]>
 				<textFieldExpression><![CDATA[$F{transaction_fine}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0">
-				<reportElement stretchType="RelativeToTallestObject" x="507" y="0" width="25" height="20"/>
+				<reportElement stretchType="RelativeToTallestObject" x="447" y="0" width="25" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H"/>
 					<paragraph rightIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{period_no}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="347" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="292" y="0" width="85" height="20" isPrintWhenDetailOverflows="true"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="TH SarabunPSK" size="16"/>
 				</textElement>
@@ -290,13 +384,21 @@ period."no"]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{loan_type_COUNT}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="87" y="0" width="260" height="20"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="87" y="0" width="205" height="20" isPrintWhenDetailOverflows="true"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H"/>
 					<paragraph leftIndent="3"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{member_firstname}+" "+$F{member_lastname}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{member_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="742" y="0" width="60" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{transaction_amount}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -315,6 +417,6 @@ period."no"]]>
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="42" splitType="Stretch"/>
+		<band splitType="Stretch"/>
 	</summary>
 </jasperReport>

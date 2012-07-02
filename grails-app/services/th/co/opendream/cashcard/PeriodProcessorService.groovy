@@ -386,7 +386,12 @@ class PeriodProcessorService {
                 }
             }
         }
+
         receiveTx.differential = amount + diff
+        if (receiveTx.differential < 0) {
+            receiveTx.differential = 0.00
+            receiveTx.interestPaid = receiveTx.periodVirtualInterestPaid
+        }
         receiveTx.save()
         contract.save()
 

@@ -111,6 +111,7 @@ class MemberControllerTests {
     }
 
     void testVerifyMemberWithInvalidCardId() {
+        controller.utilService = utilService
         controller.verifyCard()
         assert view == '/member/verifyCard'
 

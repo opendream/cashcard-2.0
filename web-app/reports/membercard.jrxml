@@ -5,18 +5,12 @@
 	<property name="ireport.y" value="0"/>
 	<parameter name="report_path" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT
-     member."firstname" AS member_firstname,
-     member."lastname" AS member_lastname,
-     member."credit_union_member_no" AS member_credit_union_member_no,
-     member."identification_number" AS member_identification_number
-FROM
-     "public"."member" member]]>
+		<![CDATA[]]>
 	</queryString>
-	<field name="member_firstname" class="java.lang.String"/>
-	<field name="member_lastname" class="java.lang.String"/>
-	<field name="member_credit_union_member_no" class="java.lang.String"/>
-	<field name="member_identification_number" class="java.lang.String"/>
+	<field name="firstname" class="java.lang.String"/>
+	<field name="lastname" class="java.lang.String"/>
+	<field name="creditUnionMemberNo" class="java.lang.String"/>
+	<field name="identificationNumber" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>

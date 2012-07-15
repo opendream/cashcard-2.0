@@ -223,4 +223,12 @@ class MemberController {
         def result = memberService.search(params.name)
         render result as JSON
     }
+
+    def printMemberCard() {
+        def memberIds = params.list('memberIds')
+        def members = memberService.getMemberByMemberIds(memberIds)
+        params.report_path = grailsApplication.config.jasper.dir.reports
+                
+        chain(controller:'jasper',action:'index',params:params, model: [data: members])        
+    }
 }

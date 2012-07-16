@@ -71,7 +71,7 @@ FROM
 			</line>
 			<image scaleImage="RetainShape" hAlign="Center" vAlign="Middle">
 				<reportElement x="13" y="24" width="90" height="20"/>
-				<imageExpression><![CDATA["/home/boyone/workspace/opendreamspace/cashcard-2.0/web-app/reports/cashcard.png"]]></imageExpression>
+				<imageExpression><![CDATA[$P{report_path}+"/cashcard.png"]]></imageExpression>
 			</image>
 			<line>
 				<reportElement x="1" y="0" width="239" height="1">

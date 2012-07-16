@@ -254,13 +254,13 @@ class MemberControllerTests {
 
                                     }
         
-        params.memberIds = "1,2,3"
+        params.memberIds = ['1','2','3']
         controller.printMemberCard()
 
         assert true == printStatus
         assert '/reports' == reportPath
 
-        params.memberIds = ""
+        params.memberIds = []
         controller.memberService = [getMemberByMemberIds: {List memberIds -> null} ]
         controller.printMemberCard()
 

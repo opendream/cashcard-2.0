@@ -67,7 +67,7 @@
 				<g:hiddenField id="name" name="name" value="membercard"/>
 				<g:hiddenField id="format" name="format" value="PDF"/>
 				<button id="print-membercard-button" class="btn btn-primary pull-right" type="submit" >
-					<g:message code="default.button.print.label"></g:message>
+					<i class="icon-print icon-white"></i> <g:message code="default.button.print.label"></g:message>
 				</button>
 				
 								
@@ -126,8 +126,6 @@
 				$('#print-membercard-button').attr('disabled', value);
 			}
 
-			disabledMemberCardButton(true);	
-			
 			function on_checked() {
 				console.log($("input[name=memberIds]").length);
 				console.log($("#memberIds:checked").length);
@@ -146,7 +144,9 @@
 					}
 					disabledMemberCardButton(false);
 				}				
-			};
+			}
+
+			on_checked(true);
 
 		</script>	
 	</body>

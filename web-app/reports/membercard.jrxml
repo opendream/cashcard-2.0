@@ -5,7 +5,13 @@
 	<property name="ireport.y" value="0"/>
 	<parameter name="report_path" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[]]>
+		<![CDATA[SELECT
+     member."firstname" AS firstname,
+     member."lastname" AS lastname,
+     member."credit_union_member_no" AS creditUnionMemberNo,
+     member."identification_number" AS identificationNumber
+FROM
+     "public"."member" member]]>
 	</queryString>
 	<field name="firstname" class="java.lang.String"/>
 	<field name="lastname" class="java.lang.String"/>
@@ -26,9 +32,9 @@
 	<detail>
 		<band height="155" splitType="Stretch">
 			<componentElement>
-				<reportElement x="13" y="50" width="214" height="55"/>
+				<reportElement positionType="FixRelativeToBottom" x="13" y="52" width="214" height="55"/>
 				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code39 (Extended)" drawText="true" checksumRequired="false">
-					<jr:codeExpression><![CDATA[$F{member_identification_number}.replace( "-", "" )]]></jr:codeExpression>
+					<jr:codeExpression><![CDATA[$F{identificationNumber}.replace( "-", "" )]]></jr:codeExpression>
 				</jr:barbecue>
 			</componentElement>
 			<line>
@@ -38,11 +44,11 @@
 				</graphicElement>
 			</line>
 			<textField>
-				<reportElement x="13" y="120" width="214" height="20"/>
+				<reportElement x="13" y="110" width="214" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="TH SarabunPSK" size="14"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{member_firstname}+" "+$F{member_lastname}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{firstname}+" "+$F{lastname}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="135" y="26" width="92" height="20"/>
@@ -63,9 +69,9 @@
 					<pen lineStyle="Dotted"/>
 				</graphicElement>
 			</line>
-			<image scaleImage="RetainShape">
-				<reportElement x="13" y="27" width="90" height="20"/>
-				<imageExpression><![CDATA[$P{report_path}+"/cashcard.png"]]></imageExpression>
+			<image scaleImage="RetainShape" hAlign="Center" vAlign="Middle">
+				<reportElement x="13" y="24" width="90" height="20"/>
+				<imageExpression><![CDATA["/home/boyone/workspace/opendreamspace/cashcard-2.0/web-app/reports/cashcard.png"]]></imageExpression>
 			</image>
 			<line>
 				<reportElement x="1" y="0" width="239" height="1">

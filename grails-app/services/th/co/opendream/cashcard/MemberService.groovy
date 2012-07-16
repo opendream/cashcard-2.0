@@ -28,6 +28,14 @@ class MemberService {
         }
     }
 
+    def getMemberByMemberIds(def memberIds) {
+        def c = Member.createCriteria()
+        def members = c.list(sort:"id") {
+            inList ('id', memberIds)
+        }
+        members
+    }
+
     def findNewMembers(def filename) {
         // change ValidCreditUnionMemberId -> ValidCreditUnionMemberNo
         def newMembers = TempMember.findAllByValidAndValidCreditUnionMemberNoAndFilename(false, false, filename)

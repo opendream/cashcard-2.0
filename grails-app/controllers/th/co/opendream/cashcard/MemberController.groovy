@@ -6,7 +6,7 @@ import grails.converters.JSON
 class MemberController {
 
     def utilService, periodService, memberService, kettleService,
-        shareCapitalAccountService, runNoService
+        shareCapitalAccountService, runNoService, grailsApplication
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
@@ -222,5 +222,23 @@ class MemberController {
     def ajaxSearch() {
         def result = memberService.search(params.name)
         render result as JSON
+    }
+
+    def printMemberCard() {        
+        def memberIds = []
+        try {
+        params.list('memberIds').each { memberIds << it.toLong() }
+        def members = memberService.getMemberByMemberIds(memberIds)
+        params.report_path = grailsApplication.config.jasper.dir.reports
+        params._name = params.name
+        params._file = params.file
+        params._format = params.format
+
+        chain(controller:'jasper',action:'index',params:params, model: [data: members])   
+        } catch(e) {
+            log.error(e)
+            redirect(action: "list")
+            return
+        }     
     }
 }

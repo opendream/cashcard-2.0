@@ -161,4 +161,11 @@ class MemberServiceTests {
         def targetFilename = service.findUploadMembersFilename()
         assert filename == targetFilename
     }
+
+    void testGetMemberByMemberIds() {
+        assert 3 == Member.count()
+        def memberIds = [1,2,3]
+        def results = service.getMemberByMemberIds(memberIds)
+        assert 3 == results.size()
+    }
 }

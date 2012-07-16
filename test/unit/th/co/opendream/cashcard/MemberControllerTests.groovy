@@ -225,10 +225,46 @@ class MemberControllerTests {
         assert model.filename == 'member.csv'
     }
 
-     void testUploadMembersWithoutFilename() {
+    void testUploadMembersWithoutFilename() {
         controller.memberService = [findUploadMembersFilename: {null} ]
         controller.uploadMembers()
         assert view == '/member/uploadMembers'
         assert model.filename == null
+    }
+
+    void testPrintMemberCard() {
+        def printStatus
+        def reportPath
+        controller.memberService = [getMemberByMemberIds: {List memberIds ->
+                                        [ [id:1, firstname:'one', lastname:'lastone', 
+                                        identificationNumber:'1234567890121', creditUnionMemberNo:'110-00001-0001'],
+                                        [id:2, firstname:'two', lastname:'lasttwo', 
+                                        identificationNumber:'1234567890122', creditUnionMemberNo:'110-00001-0002'],
+                                        [id:3, firstname:'three', lastname:'lastthree', 
+                                        identificationNumber:'1234567890123', creditUnionMemberNo:'110-00001-0003']]
+                                    } ]
+        controller.metaClass.chain = {Map map -> 
+                                        if(map.model.data != null) {
+                                            printStatus = true
+                                            reportPath = map.params.report_path
+                                        } else {
+                                            printStatus = false
+                                            reportPath = map.params.report_path
+                                        }
+
+                                    }
+        
+        params.memberIds = "1,2,3"
+        controller.printMemberCard()
+
+        assert true == printStatus
+        assert '/reports' == reportPath
+
+        params.memberIds = ""
+        controller.memberService = [getMemberByMemberIds: {List memberIds -> null} ]
+        controller.printMemberCard()
+
+        assert false == printStatus
+        assert '/reports' == reportPath
     }
 }

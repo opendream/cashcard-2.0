@@ -54,39 +54,100 @@
 		        </div>
 			</g:form>
 		
+			
+			<div class="print-member-card">
+				<h3 class= "pull-left">ผลการค้นหา</h3>
 
+				<g:jasperForm controller="member"
+			    action="printMemberCard"
+			    id="1497"
+			    jasper="membercard" 			    			    
+			    >
+				<g:hiddenField id="file" name="file" value="membercard"/>
+				<g:hiddenField id="name" name="name" value="membercard"/>
+				<g:hiddenField id="format" name="format" value="PDF"/>
+				<button id="print-membercard-button" class="btn btn-primary pull-right" type="submit" >
+					<g:message code="default.button.print.label"></g:message>
+				</button>
+				
+								
+			</div>
 	  
-			<table class="table table-striped table-bordered table-condensed member-list">
-				<thead>
-					<tr>
-						<th class='identificationNumber span2'><g:message code="member.label.identificationNumber"></g:message></th>
-						<th class='creditUnionMemberNo'><g:message code="member.label.creditUnionMemberNo"></g:message></th>
-						<th><g:message code="member.label.name"></g:message></th>
-						<th><g:message code="member.label.telNo"></g:message></th>
-						<th><g:message code="member.label.gender"></g:message></th>
-						<th><g:message code="member.label.address"></g:message></th>
-						<th><g:message code="member.label.status"></g:message></th>
-					</tr>
-				</thead>
-				<tbody>
-					<g:each var="member" in ="${memberList}">
+	  		
+				<table class="table table-striped table-bordered table-condensed member-list">
+					<thead>
 						<tr>
-							<td class='identificationNumber span2'><a href="${createLink(controller:'member', action:'show', params:[id: member.id])}">${member.identificationNumber}</a></td>
-							<td class='creditUnionMemberNo'>${member.creditUnionMemberNo}</td>
-							<td>${member.firstname} ${member.lastname}</td>
-							<td>${member.telNo}</td>
-							<td>${message(code: 'member.label.'+member?.gender.toString().toLowerCase(), default: member?.gender.toString())}</td>
-							<td>${member.address}</td>
-							<td><g:message code="member.label.status.${member.status}"></g:message></td>
+							<th>
+								<input id="groupmember" type="checkbox" name="groupmember" />
+							</th>
+							<th class='identificationNumber span2'><g:message code="member.label.identificationNumber"></g:message></th>
+							<th class='creditUnionMemberNo'><g:message code="member.label.creditUnionMemberNo"></g:message></th>
+							<th><g:message code="member.label.name"></g:message></th>
+							<th><g:message code="member.label.telNo"></g:message></th>
+							<th><g:message code="member.label.gender"></g:message></th>
+							<th><g:message code="member.label.address"></g:message></th>
+							<th><g:message code="member.label.status"></g:message></th>
 						</tr>
-					</g:each>
-				</tbody>
-			</table>
+					</thead>
 
+					<tbody>
+						<g:each var="member" in ="${memberList}">
+							<tr>
+								<td><input id="memberIds" type="checkbox" value="${member.id}" name="memberIds" onclick="on_checked(this)"/></td>
+								<td class='identificationNumber span2'><a href="${createLink(controller:'member', action:'show', params:[id: member.id])}">${member.identificationNumber}</a></td>
+								<td class='creditUnionMemberNo'>${member.creditUnionMemberNo}</td>
+								<td>${member.firstname} ${member.lastname}</td>
+								<td>${member.telNo}</td>
+								<td>${message(code: 'member.label.'+member?.gender.toString().toLowerCase(), default: member?.gender.toString())}</td>
+								<td>${member.address}</td>
+								<td><g:message code="member.label.status.${member.status}"></g:message></td>
+							</tr>
+						</g:each>
+					</tbody>
+				</table>
+			</g:jasperForm>
 			<div class="pagination">
 				<cashcard:paginate controller="member" action="list" total="${memberCount}" />
 			</div>
 	  
+		<script>
 
+			$('#groupmember').click( function() {
+						if($('#groupmember').is(':checked')) {
+							$('input[name=memberIds]').attr('checked', true);	
+							disabledMemberCardButton(false);				
+						} else {
+							$('input[name=memberIds]').attr('checked', false);
+							disabledMemberCardButton(true);						
+						}
+					});
+
+			function disabledMemberCardButton(value) {
+				$('#print-membercard-button').attr('disabled', value);
+			}
+
+			disabledMemberCardButton(true);	
+			
+			function on_checked() {
+				console.log($("input[name=memberIds]").length);
+				console.log($("#memberIds:checked").length);
+
+				var checkedNum = $("#memberIds:checked").length;
+				var checkboxNum = $("input[name=memberIds]").length;
+
+				if(checkedNum==0) {
+					disabledMemberCardButton(true);
+				} else {
+
+					if(checkboxNum == checkedNum) {
+						$('#groupmember').attr('checked', true);
+					} else {
+						$('#groupmember').attr('checked', false);
+					}
+					disabledMemberCardButton(false);
+				}				
+			};
+
+		</script>	
 	</body>
 </html>

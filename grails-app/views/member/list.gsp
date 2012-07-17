@@ -8,7 +8,6 @@
 			<h1>${message(code: 'member.list.title', default: 'List Members')}</h1>
 		</header>
 
-		
 			<g:form action="list" class="form-horizontal">
 
 				<div class="control-group">
@@ -107,7 +106,9 @@
 				</table>
 			</g:jasperForm>
 			<div class="pagination">
-				<cashcard:paginate controller="member" action="list" total="${memberCount}" />
+				<cashcard:paginate controller="member" action="list" total="${memberCount}" 
+					params="['identificationNumber':params.identificationNumber, 'creditUnionMemberNo':params.creditUnionMemberNo, 'firstname':params.firstname, 'lastname':params.lastname, 'telNo':params.telNo]"
+				/>
 			</div>
 	  
 		<script>

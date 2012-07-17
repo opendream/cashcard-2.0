@@ -32,9 +32,9 @@ FROM
 	<detail>
 		<band height="155" splitType="Stretch">
 			<componentElement>
-				<reportElement positionType="FixRelativeToBottom" x="13" y="52" width="214" height="55"/>
-				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code39 (Extended)" drawText="true" checksumRequired="false">
-					<jr:codeExpression><![CDATA[$F{identificationNumber}.replace( "-", "" )]]></jr:codeExpression>
+				<reportElement positionType="FixRelativeToBottom" x="13" y="52" width="214" height="35"/>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code39" drawText="false" checksumRequired="false" barHeight="0">
+					<jr:codeExpression><![CDATA[$F{identificationNumber}]]></jr:codeExpression>
 				</jr:barbecue>
 			</componentElement>
 			<line>
@@ -81,6 +81,13 @@ FROM
 					<pen lineStyle="Dotted"/>
 				</graphicElement>
 			</line>
+			<textField>
+				<reportElement x="13" y="80" width="214" height="15"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{identificationNumber}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<columnFooter>

@@ -35,6 +35,7 @@ grails.project.dependency.resolution = {
 
         // runtime 'mysql:mysql-connector-java:5.1.16'
         runtime 'net.sourceforge.barbecue:barbecue:1.5-beta1'
+        runtime 'postgresql:postgresql:9.1-901.jdbc4'
     }
 
     plugins {

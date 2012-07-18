@@ -38,7 +38,7 @@ FROM
 				</jr:barbecue>
 			</componentElement>
 			<line>
-				<reportElement x="1" y="154" width="240" height="1"/>
+				<reportElement x="1" y="154" width="239" height="1"/>
 				<graphicElement>
 					<pen lineStyle="Dotted"/>
 				</graphicElement>
@@ -58,13 +58,15 @@ FROM
 				<text><![CDATA[เครดิตยูเนี่ยน หัวหินร่วมใจ]]></text>
 			</staticText>
 			<line direction="BottomUp">
-				<reportElement x="240" y="0" width="1" height="154"/>
+				<reportElement x="239" y="0" width="1" height="154"/>
 				<graphicElement>
 					<pen lineStyle="Dotted"/>
 				</graphicElement>
 			</line>
 			<line direction="BottomUp">
-				<reportElement x="0" y="0" width="1" height="154"/>
+				<reportElement x="0" y="0" width="1" height="155">
+					<printWhenExpression><![CDATA[$V{COLUMN_NUMBER}.intValue()==1]]></printWhenExpression>
+				</reportElement>
 				<graphicElement>
 					<pen lineStyle="Dotted"/>
 				</graphicElement>
@@ -74,7 +76,7 @@ FROM
 				<imageExpression><![CDATA[$P{report_path}+"/cashcard.png"]]></imageExpression>
 			</image>
 			<line>
-				<reportElement x="1" y="0" width="239" height="1">
+				<reportElement x="1" y="0" width="238" height="1">
 					<printWhenExpression><![CDATA[($V{COLUMN_COUNT}.intValue()==1 )]]></printWhenExpression>
 				</reportElement>
 				<graphicElement>

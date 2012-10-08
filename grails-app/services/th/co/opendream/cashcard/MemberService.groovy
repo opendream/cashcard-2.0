@@ -5,7 +5,7 @@ import th.co.opendream.cashcard.Member.Status
 class MemberService {
     def runNoService
     def shareCapitalAccountService
-    
+
     def search(input) {
         def (name, surname) = input.tokenize(" ")
         def c = Member.createCriteria()
@@ -26,6 +26,12 @@ class MemberService {
         members.collect {
             [id: it.id, name: it.toString()]
         }
+    }
+
+    def getMemberByIdentificationNumber(def id) {
+        def member = Member.findByIdentificationNumber(id)
+
+        return member?.telNo ?: -1
     }
 
     def getMemberByMemberIds(def memberIds) {
@@ -113,7 +119,7 @@ class MemberService {
             if (!member.memberNo) {
                 member.memberNo = runNoService.next('Member')
             }
-            if(member.save()) {                
+            if(member.save()) {
                 upsertShareCapitalAccount(member, it.shareCapital)
             }
         }
@@ -135,13 +141,13 @@ class MemberService {
                 shareCapitalAccount.balance = balance
                 shareCapitalAccount.save()
             } else {
-                shareCapitalAccountService.createAccountFromMember(member, member.creditUnionMemberNo, member.dateCreated,  balance)                
+                shareCapitalAccountService.createAccountFromMember(member, member.creditUnionMemberNo, member.dateCreated,  balance)
             }
     }
 
     def findUploadMembersFilename() {
-        def c = TempMember.createCriteria() 
-        def memberFilename = c.get {            
+        def c = TempMember.createCriteria()
+        def memberFilename = c.get {
             projections {
                 distinct "filename"
             }

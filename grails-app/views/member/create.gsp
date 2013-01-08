@@ -25,6 +25,16 @@
           </div>
         </div>
 
+        <div class="control-group ${hasErrors(bean: memberInstance, field: 'creditUnionMemberNo', 'error')}">
+          <label for="shareCapital-account" class="control-label">
+            <g:message code='member.label.creditUnionMemberNo' default='shareCapital' />
+          </label>
+          <div class="controls">
+            <input id="shareCapital-account" name="creditUnionMemberNo" type="text" placeholder="${message(code: 'member.label.creditUnionMemberNo', default: 'shareCapital')}" value="${memberInstance?.creditUnionMemberNo}" required="true" >
+          </div>
+        </div>
+
+
         <div class="control-group ${hasErrors(bean: memberInstance, field: 'firstname', 'error')}">
           <label for="first-name" class="control-label">
             <g:message code='member.label.firstName' default='First Name' />
